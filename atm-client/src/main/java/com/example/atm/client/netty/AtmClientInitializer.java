@@ -35,7 +35,7 @@ import io.netty.handler.codec.string.StringEncoder;
 public class AtmClientInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
-    public void initChannel(SocketChannel ch) throws Exception {
+    public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
 
         pipeline.addLast(new LengthFrameDecoder());
