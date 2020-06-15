@@ -13,19 +13,24 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.example.atm.netty.server;
+package com.example.atm.netty.client;
 
-public final class ChatServerMain {
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 
-    static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
+/**
+ * Handles a client-side channel.
+ */
+public class AtmClientHandler extends SimpleChannelInboundHandler<String> {
 
-    public static void main(String[] args) throws Exception {
-        ChatServer server = new ChatServer(PORT);
-        try {
-            server.start();
-        } finally {
-            server.shutdown();
-        }
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        System.err.println(msg);
     }
 
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        cause.printStackTrace();
+        ctx.close();
+    }
 }

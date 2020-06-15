@@ -22,14 +22,14 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public final class ChatServer {
+public final class AtmServer {
 
     private final int port;
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    public ChatServer(int port) {
+    public AtmServer(int port) {
         this.port = port;
     }
 
@@ -41,7 +41,7 @@ public final class ChatServer {
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler(new ChatServerInitializer());
+                .childHandler(new AtmServerInitializer());
 
         b.bind(port).sync().channel().closeFuture().sync();
     }

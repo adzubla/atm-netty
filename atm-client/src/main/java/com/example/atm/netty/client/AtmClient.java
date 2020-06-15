@@ -23,7 +23,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-public final class ChatClient {
+public final class AtmClient {
 
     private final String host;
     private final int port;
@@ -32,7 +32,7 @@ public final class ChatClient {
     private EventLoopGroup group;
     private Channel channel;
 
-    public ChatClient(String id, String host, int port) {
+    public AtmClient(String id, String host, int port) {
         this.host = host;
         this.port = port;
         this.headerData = new HeaderData(id);
@@ -43,7 +43,7 @@ public final class ChatClient {
         Bootstrap b = new Bootstrap();
         b.group(group)
                 .channel(NioSocketChannel.class)
-                .handler(new ChatClientInitializer());
+                .handler(new AtmClientInitializer());
 
         channel = b.connect(host, port).sync().channel();
     }

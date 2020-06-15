@@ -18,14 +18,14 @@ package com.example.atm.netty.client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-public final class ChatClientMain {
+public final class AtmClientMain {
 
     static final String ID = String.format("%06d", ProcessHandle.current().pid());
     static final String HOST = System.getProperty("host", "127.0.0.1");
     static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
 
     public static void main(String[] args) throws Exception {
-        ChatClient client = new ChatClient(ID, HOST, PORT);
+        AtmClient client = new AtmClient(ID, HOST, PORT);
         try {
             client.connect();
 

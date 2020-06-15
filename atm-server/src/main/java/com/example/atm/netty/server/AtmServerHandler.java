@@ -26,7 +26,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 /**
  * Handles a server-side channel.
  */
-public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
+public class AtmServerHandler extends SimpleChannelInboundHandler<String> {
 
     static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
