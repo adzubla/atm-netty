@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.example.atm.netty.server;
+package com.example.atm.server.netty;
 
 import com.example.atm.netty.codec.header.HeaderData;
 import io.netty.channel.Channel;

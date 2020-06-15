@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package com.example.atm.netty.client;
+package com.example.atm.client.netty;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
