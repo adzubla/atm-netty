@@ -38,12 +38,6 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>com.github.kpavlov.jreactive8583</groupId>
-            <artifactId>netty-iso8583</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-
         <!-- Spring Boot Infrastructure -->
 
         <dependency>
@@ -88,21 +82,7 @@
         <dependency>
             <groupId>com.ibm.mq</groupId>
             <artifactId>mq-jms-spring-boot-starter</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-
-        <!-- Tests -->
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>2.3.1</version>
         </dependency>
 
     </dependencies>
@@ -206,12 +186,12 @@
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
             </plugin>
-<!--
+
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
             </plugin>
-            -->
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -303,20 +283,5 @@
         </extensions>
 
     </build>
-
-    <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>
