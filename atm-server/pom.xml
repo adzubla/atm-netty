@@ -283,7 +283,7 @@
                     <repository>${docker.repository.prefix}/${project.artifactId}</repository>
                 </configuration>
             </plugin>
-<!--
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -296,10 +296,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.example.scterm.ScTermApplication</mainClass>
+                    <mainClass>com.example.atm.server.AtmServerApplication</mainClass>
                 </configuration>
             </plugin>
--->
+
         </plugins>
     </build>
 

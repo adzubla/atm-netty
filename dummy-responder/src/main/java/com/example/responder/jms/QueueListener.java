@@ -17,16 +17,16 @@ public class QueueListener {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @JmsListener(destination = "DEV.QUEUE.1", concurrency = "4")
+    @JmsListener(destination = "DEV.QUEUE.1", concurrency = "2")
     public void receiveMessage(String data, Message message) throws JMSException {
-        LOG.debug("Received from queue: {}", data);
+        LOG.info("Received from queue: {}", data);
 
         Destination replyTo = message.getJMSReplyTo();
 
         jmsTemplate.send(replyTo, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                TextMessage textMessage = session.createTextMessage(data);
+                TextMessage textMessage = session.createTextMessage(data.toUpperCase());
                 textMessage.setJMSCorrelationID(message.getJMSCorrelationID());
                 return textMessage;
             }

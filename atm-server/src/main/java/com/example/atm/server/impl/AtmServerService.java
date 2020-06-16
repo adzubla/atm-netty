@@ -1,4 +1,4 @@
-package com.example.atm.server;
+package com.example.atm.server.impl;
 
 import com.example.atm.server.netty.AtmServer;
 import org.slf4j.Logger;
