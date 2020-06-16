@@ -18,19 +18,19 @@ class HeaderUtilTest {
 
     @BeforeEach
     void setup() {
-        messageBuf = Unpooled.buffer(HeaderUtil.HEADER_LENGTH);
+        messageBuf = Unpooled.buffer(HeaderData.HEADER_LENGTH);
         messageBuf.writeBytes(MESSAGE_ARRAY);
-        assertEquals(HeaderUtil.HEADER_LENGTH, messageBuf.readableBytes());
+        assertEquals(HeaderData.HEADER_LENGTH, messageBuf.readableBytes());
     }
 
     @Test
     void testSerialize() {
         HeaderData headerData = new HeaderData("000000120987");
-        ByteBuf out = Unpooled.buffer(HeaderUtil.HEADER_LENGTH);
+        ByteBuf out = Unpooled.buffer(HeaderData.HEADER_LENGTH);
 
         HeaderUtil.serialize(headerData, out);
 
-        assertEquals(HeaderUtil.HEADER_LENGTH, out.readableBytes());
+        assertEquals(HeaderData.HEADER_LENGTH, out.readableBytes());
         assertEquals(0, ByteBufUtil.compare(messageBuf, out));
     }
 

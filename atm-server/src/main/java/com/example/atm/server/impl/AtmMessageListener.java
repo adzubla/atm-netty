@@ -51,7 +51,6 @@ public class AtmMessageListener implements AtmServerListener {
     @Override
     public void onConnect(ChannelHandlerContext ctx) {
         LOG.info(ctx.channel().remoteAddress() + " connected");
-        ctx.writeAndFlush("\nWelcome to the machine\n");
     }
 
     @Override
@@ -66,8 +65,7 @@ public class AtmMessageListener implements AtmServerListener {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                boolean ok = isMessageValid(msg);
-                if (ok) {
+                if (isMessageValid(msg)) {
                     dispatch(ctx, msg);
                 }
             }

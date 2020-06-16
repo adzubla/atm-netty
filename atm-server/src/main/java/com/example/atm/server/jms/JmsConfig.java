@@ -38,23 +38,19 @@ public class JmsConfig {
 
     @Bean
     public DynamicDestinationResolver destinationResolver() {
-        LOG.debug(">>>>>> destinationResolver");
         DynamicDestinationResolver dynamicDestinationResolver = new DynamicDestinationResolver() {
             @Override
             public Destination resolveDestinationName(Session session, String destinationName, boolean pubSubDomain) throws JMSException {
-                LOG.debug("session = {} destinationName = {}", session, destinationName);
-
                 if ("REPLY_TO_DYNAMIC_QUEUE".equals(destinationName)) {
                     TemporaryQueue temporaryQueue = session.createTemporaryQueue();
                     replyToHolder.setReplyToQueue(temporaryQueue);
-                    LOG.debug("Created temporary queue: {}", temporaryQueue);
+                    LOG.info("Created temporary queue: {}", temporaryQueue);
                     return temporaryQueue;
                 } else {
                     return super.resolveDestinationName(session, destinationName, pubSubDomain);
                 }
             }
         };
-        LOG.debug("<<<<<< destinationResolver");
         return dynamicDestinationResolver;
     }
 

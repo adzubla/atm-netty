@@ -2,23 +2,24 @@ package com.example.atm.netty.codec.atm;
 
 public class AtmMessage {
 
+    public static int ID_LENGTH = 12;
+
     private String id;
     private String body;
+
+    public AtmMessage(String id, String body) {
+        this.id = id;
+        this.body = body;
+        checkId();
+        checkBody();
+    }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getBody() {
         return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 
     @Override
@@ -28,4 +29,26 @@ public class AtmMessage {
                 ", body='" + body + '\'' +
                 '}';
     }
+
+    private void checkId() {
+        if (id == null) {
+            throw new IllegalArgumentException("id nao pode ser null");
+        }
+
+        if (id.length() < ID_LENGTH) {
+            StringBuilder sb = new StringBuilder("000000000000");
+            id = sb.substring(id.length()) + id;
+        }
+
+        if (id.length() > ID_LENGTH) {
+            throw new IllegalArgumentException("id nao pode ser maior que " + ID_LENGTH + ": " + id);
+        }
+    }
+
+    private void checkBody() {
+        if (body == null) {
+            throw new IllegalArgumentException("body nao pode ser null");
+        }
+    }
+
 }

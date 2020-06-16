@@ -6,7 +6,9 @@ public class HeaderData {
 
     public static final AttributeKey<HeaderData> HEADER_DATA_ATTRIBUTE_KEY = AttributeKey.newInstance("HeaderData.attr");
 
-    public static int ID_LENGTH = 12;
+    public static final int HEADER_LENGTH = 30;
+    public static final int ID_LENGTH = 12;
+    public static final int RESERVED_LENGTH = 13;
 
     private byte versao = 1;
     private byte formato = 1;
@@ -15,15 +17,13 @@ public class HeaderData {
     private byte formatoId = 1;
     private byte[] reservado = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    private String id;
+    private final String id;
 
     public HeaderData(String id) {
+        if (id == null || id.length() != ID_LENGTH) {
+            throw new IllegalArgumentException("id invalido: " + id);
+        }
         this.id = id;
-        checkId();
-    }
-
-    public HeaderData(String localidade, String idTerminal) {
-        this(buildId(localidade, idTerminal));
     }
 
     public byte getVersao() {
@@ -71,8 +71,8 @@ public class HeaderData {
     }
 
     public void setReservado(byte[] reservado) {
-        if (reservado == null || reservado.length != 13) {
-            throw new IllegalArgumentException("Reservado invalido");
+        if (reservado == null || reservado.length != RESERVED_LENGTH) {
+            throw new IllegalArgumentException("reservado invalido: " + reservado);
         }
         this.reservado = reservado;
     }
@@ -86,31 +86,6 @@ public class HeaderData {
         return "HeaderData{" +
                 "id='" + id + '\'' +
                 '}';
-    }
-
-    private void checkId() {
-        if (id == null) {
-            throw new IllegalArgumentException("Id nao pode ser null");
-        }
-
-        if (id.length() < ID_LENGTH) {
-            StringBuilder sb = new StringBuilder("000000000000");
-            id = sb.substring(id.length()) + id;
-        }
-
-        if (id.length() > ID_LENGTH) {
-            throw new IllegalArgumentException("Id nao pode ser maior que " + ID_LENGTH);
-        }
-    }
-
-    private static String buildId(String localidade, String idTerminal) {
-        if (localidade == null || localidade.length() != 3) {
-            throw new IllegalArgumentException("Localidade invalida");
-        }
-        if (idTerminal == null || idTerminal.length() != 4) {
-            throw new IllegalArgumentException("IdTerminal invalida");
-        }
-        return localidade + idTerminal;
     }
 
 }

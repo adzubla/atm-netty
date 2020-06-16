@@ -30,8 +30,7 @@ public class MacDecoder extends ByteToMessageDecoder {
     private void verifyMac(ByteBuf body, ByteBuf mac) {
         ByteBuf bodyMac = MacUtil.calculate(body);
         if (ByteBufUtil.compare(bodyMac, mac) != 0) {
-            // o MAC não confere...
-            throw new IllegalStateException("Erro no MAC");
+            throw new IllegalStateException("MAC nao confere");
         }
     }
 

@@ -14,10 +14,10 @@ public class AtmDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
 
-        AtmMessage msg = new AtmMessage();
-        msg.setId(headerData.getId());
-        msg.setBody(in.readCharSequence(in.readableBytes(), Charset.defaultCharset()).toString());
+        String id = headerData.getId();
+        String body = in.readCharSequence(in.readableBytes(), Charset.defaultCharset()).toString();
 
+        AtmMessage msg = new AtmMessage(id, body);
         out.add(msg);
     }
 

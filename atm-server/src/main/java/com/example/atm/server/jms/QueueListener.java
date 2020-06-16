@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
-import static com.example.atm.netty.codec.header.HeaderData.ID_LENGTH;
+import static com.example.atm.netty.codec.atm.AtmMessage.ID_LENGTH;
 
 @Service
 public class QueueListener {
@@ -32,9 +32,7 @@ public class QueueListener {
         } else {
             LOG.debug("Responding to client: {}", body);
 
-            AtmMessage msg = new AtmMessage();
-            msg.setId(cid.getId());
-            msg.setBody(body);
+            AtmMessage msg = new AtmMessage(cid.getId(), body);
 
             connectionData.getChannelHandlerContext().writeAndFlush(msg);
         }

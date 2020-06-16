@@ -10,7 +10,7 @@ public class HeaderEncoder extends MessageToByteEncoder<ByteBuf> {
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception {
         HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
         if (headerData == null) {
-            throw new IllegalStateException("HeaderData not found in pipeline");
+            throw new IllegalStateException("HeaderData nao encontrado no pipeline");
         }
 
         // prepend header to output

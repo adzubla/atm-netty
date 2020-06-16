@@ -15,6 +15,7 @@ public final class AtmClientMain {
         AtmClient client = new AtmClient(ID, HOST, PORT);
         try {
             client.connect();
+            System.err.println("Connected!");
 
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
@@ -23,10 +24,7 @@ public final class AtmClientMain {
                     break;
                 }
 
-                AtmMessage msg = new AtmMessage();
-                msg.setId(ID);
-                msg.setBody(line);
-
+                AtmMessage msg = new AtmMessage(ID, line);
                 client.write(msg);
 
                 if ("bye".equals(line.toLowerCase())) {
