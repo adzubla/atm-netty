@@ -45,7 +45,7 @@ public final class AtmServer {
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .childHandler(new AtmServerInitializer(listener));
 
-        b.bind(port).sync().channel().closeFuture().sync();
+        b.bind(port).sync().await();
     }
 
     public void shutdown() {

@@ -30,14 +30,15 @@ public class AtmServerService {
 
     @PostConstruct
     public void init() throws InterruptedException {
-        LOG.info("Starting...");
+        LOG.info("Starting");
         server = new AtmServer(port, listener);
         server.start();
+        LOG.info("Started");
     }
 
     @PreDestroy
     public void shutdown() {
-        LOG.info("Shutdown...");
+        LOG.info("Shutdown");
         server.shutdown();
     }
 

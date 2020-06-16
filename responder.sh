@@ -2,4 +2,4 @@
 
 cd dummy-responder || exit 1
 
-mvn exec:java
+mvn spring-boot:run

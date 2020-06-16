@@ -23,22 +23,35 @@ import java.util.concurrent.ExecutorService;
 public class AtmMessageListener implements AtmServerListener {
     private static final Logger LOG = LoggerFactory.getLogger(AtmMessageListener.class);
 
-    @Autowired
     private ConnectionManager connectionManager;
-
-    @Autowired
     private JmsTemplate jmsTemplate;
+    private ReplyToHolder replyToHolder;
+    private ExecutorService executorService;
 
     @Autowired
-    ReplyToHolder replyToHolder;
+    public void setConnectionManager(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
 
     @Autowired
-    ExecutorService executorService;
+    public void setJmsTemplate(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+    }
+
+    @Autowired
+    public void setReplyToHolder(ReplyToHolder replyToHolder) {
+        this.replyToHolder = replyToHolder;
+    }
+
+    @Autowired
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
 
     @Override
     public void onConnect(ChannelHandlerContext ctx) {
         LOG.info(ctx.channel().remoteAddress() + " connected");
-        ctx.writeAndFlush("Welcome to the machine\n");
+        ctx.writeAndFlush("\nWelcome to the machine\n");
     }
 
     @Override
@@ -70,13 +83,14 @@ public class AtmMessageListener implements AtmServerListener {
 
         connectionManager.add(id, channelHandlerContext);
 
-        jmsTemplate.send("DEV.QUEUE.1", new MessageCreator() {
+        String destinationName = "DEV.QUEUE.1";
+
+        jmsTemplate.send(destinationName, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                LOG.debug("**** createMessage {}", session);
                 String s = headerData.getIdTerminal() + message;
 
-                LOG.debug("Sending to queue: {}", s);
+                LOG.debug("Sending to {}: {}", destinationName, s);
                 TextMessage message = session.createTextMessage(s);
                 message.setJMSReplyTo(replyToHolder.getReplyToQueue());
                 message.setJMSCorrelationID(id.getId());
