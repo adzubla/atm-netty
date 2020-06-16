@@ -15,7 +15,6 @@ public final class AtmClientMain {
         AtmClient client = new AtmClient(HOST, PORT);
         try {
             client.connect();
-            System.err.println("Connected!");
 
             BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
