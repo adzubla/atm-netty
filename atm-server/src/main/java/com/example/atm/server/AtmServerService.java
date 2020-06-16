@@ -3,6 +3,7 @@ package com.example.atm.server;
 import com.example.atm.server.netty.AtmServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -12,21 +13,25 @@ import javax.annotation.PreDestroy;
 public class AtmServerService {
     private static final Logger LOG = LoggerFactory.getLogger(AtmServerService.class);
 
-    private AtmServer server;
     private int port = 8992;
+    private AtmMessageListener listener;
 
-    public int getPort() {
-        return port;
-    }
+    private AtmServer server;
 
+    @Autowired(required = false)
     public void setPort(int port) {
         this.port = port;
+    }
+
+    @Autowired
+    public void setListener(AtmMessageListener listener) {
+        this.listener = listener;
     }
 
     @PostConstruct
     public void init() throws InterruptedException {
         LOG.info("Starting...");
-        server = new AtmServer(port);
+        server = new AtmServer(port, listener);
         server.start();
     }
 

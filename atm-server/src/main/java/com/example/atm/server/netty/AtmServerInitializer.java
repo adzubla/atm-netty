@@ -34,6 +34,12 @@ import io.netty.handler.codec.string.StringEncoder;
  */
 public class AtmServerInitializer extends ChannelInitializer<SocketChannel> {
 
+    private final AtmServerListener listener;
+
+    public AtmServerInitializer(AtmServerListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void initChannel(SocketChannel ch) {
         ChannelPipeline pipeline = ch.pipeline();
@@ -50,6 +56,7 @@ public class AtmServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new HeaderEncoder());
         pipeline.addLast(new StringEncoder());
 
-        pipeline.addLast(new AtmServerHandler());
+        pipeline.addLast(new AtmServerHandler(listener));
     }
+
 }

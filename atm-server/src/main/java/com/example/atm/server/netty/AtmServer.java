@@ -25,12 +25,14 @@ import io.netty.handler.logging.LoggingHandler;
 public final class AtmServer {
 
     private final int port;
+    private final AtmServerListener listener;
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    public AtmServer(int port) {
+    public AtmServer(int port, AtmServerListener listener) {
         this.port = port;
+        this.listener = listener;
     }
 
     public void start() throws InterruptedException {
@@ -41,7 +43,7 @@ public final class AtmServer {
         b.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler(new AtmServerInitializer());
+                .childHandler(new AtmServerInitializer(listener));
 
         b.bind(port).sync().channel().closeFuture().sync();
     }

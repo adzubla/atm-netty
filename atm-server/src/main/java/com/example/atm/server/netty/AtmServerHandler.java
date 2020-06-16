@@ -16,46 +16,37 @@
 package com.example.atm.server.netty;
 
 import com.example.atm.netty.codec.header.HeaderData;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * Handles a server-side channel.
  */
 public class AtmServerHandler extends SimpleChannelInboundHandler<String> {
 
-    static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private final AtmServerListener listener;
+
+    public AtmServerHandler(AtmServerListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
         HeaderData headerData = new HeaderData("000000");
         ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).set(headerData);
 
-        ctx.writeAndFlush("Welcome to secure chat service!");
-        channels.add(ctx.channel());
+        listener.onConnect(ctx);
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
         HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
+        listener.onMessage(ctx, msg, headerData);
+    }
 
-        // Send the received message to all channels but the current one.
-        for (Channel c : channels) {
-            if (c != ctx.channel()) {
-                c.writeAndFlush("[" + headerData.getId() + "|" + ctx.channel().remoteAddress() + "] " + msg);
-            } else {
-                c.writeAndFlush("[" + headerData.getId() + "|me] " + msg);
-            }
-        }
-
-        // Close the connection if the client has sent 'bye'.
-        if ("bye".equals(msg.toLowerCase())) {
-            ctx.close();
-        }
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        listener.onDisconnect(ctx);
     }
 
     @Override
@@ -63,4 +54,5 @@ public class AtmServerHandler extends SimpleChannelInboundHandler<String> {
         cause.printStackTrace();
         ctx.close();
     }
+
 }
