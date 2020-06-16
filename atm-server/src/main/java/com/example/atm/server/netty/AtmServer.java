@@ -33,7 +33,7 @@ public final class AtmServer {
         this.port = port;
     }
 
-    public void start() throws Exception {
+    public void start() throws InterruptedException {
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
 

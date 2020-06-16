@@ -2,4 +2,4 @@
 
 cd atm-server || exit 1
 
-mvn exec:java -Dexec.mainClass=com.example.atm.server.netty.AtmServerMain
+mvn spring-boot:run
