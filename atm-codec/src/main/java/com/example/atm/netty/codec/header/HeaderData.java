@@ -2,6 +2,8 @@ package com.example.atm.netty.codec.header;
 
 import io.netty.util.AttributeKey;
 
+import java.util.Arrays;
+
 public class HeaderData {
 
     public static final AttributeKey<HeaderData> HEADER_DATA_ATTRIBUTE_KEY = AttributeKey.newInstance("HeaderData.attr");
@@ -72,7 +74,7 @@ public class HeaderData {
 
     public void setReservado(byte[] reservado) {
         if (reservado == null || reservado.length != RESERVED_LENGTH) {
-            throw new IllegalArgumentException("reservado invalido: " + reservado);
+            throw new IllegalArgumentException("reservado invalido: " + Arrays.toString(reservado));
         }
         this.reservado = reservado;
     }

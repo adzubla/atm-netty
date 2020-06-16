@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class ConnectionId {
 
-    private String id;
+    private final String id;
 
     public ConnectionId(String id) {
         this.id = id;
@@ -12,10 +12,6 @@ public class ConnectionId {
 
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     @Override

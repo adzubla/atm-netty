@@ -16,7 +16,7 @@ public final class AtmClient {
     private EventLoopGroup group;
     private Channel channel;
 
-    public AtmClient(String id, String host, int port) {
+    public AtmClient(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -38,8 +38,8 @@ public final class AtmClient {
         }
     }
 
-    public void close() throws InterruptedException {
-        channel.closeFuture().sync();
+    public void close() {
+        channel.close();
     }
 
     public void shutdown() {

@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class AtmServerConfig {
 
     @Value("${atm.server.threads}")
-    public int quantThreads;
+    private int quantThreads;
 
     @Bean
     public ExecutorService threadPoolExecutor() {

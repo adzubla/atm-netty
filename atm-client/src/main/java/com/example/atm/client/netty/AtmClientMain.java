@@ -12,7 +12,7 @@ public final class AtmClientMain {
     static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
 
     public static void main(String[] args) throws Exception {
-        AtmClient client = new AtmClient(ID, HOST, PORT);
+        AtmClient client = new AtmClient(HOST, PORT);
         try {
             client.connect();
             System.err.println("Connected!");
@@ -21,18 +21,18 @@ public final class AtmClientMain {
             while (true) {
                 String line = in.readLine();
                 if (line == null) {
+                    continue;
+                }
+                if ("bye".equals(line.toLowerCase())) {
+                    client.close();
                     break;
                 }
 
                 AtmMessage msg = new AtmMessage(ID, line);
                 client.write(msg);
-
-                if ("bye".equals(line.toLowerCase())) {
-                    client.close();
-                    break;
-                }
             }
         } finally {
+            System.err.println("Shutdown!");
             client.shutdown();
         }
     }

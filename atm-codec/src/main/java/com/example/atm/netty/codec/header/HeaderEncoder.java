@@ -7,7 +7,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class HeaderEncoder extends MessageToByteEncoder<ByteBuf> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) {
         HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
         if (headerData == null) {
             throw new IllegalStateException("HeaderData nao encontrado no pipeline");

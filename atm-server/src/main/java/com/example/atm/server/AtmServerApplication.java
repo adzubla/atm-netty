@@ -19,7 +19,7 @@ public class AtmServerApplication {
     private static final Logger LOG = LoggerFactory.getLogger(AtmServerApplication.class);
 
     @Autowired
-    BuildProperties buildProperties;
+    private BuildProperties buildProperties;
 
     @Autowired
     private Environment environment;

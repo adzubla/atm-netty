@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ConnectionManager {
 
-    private ConcurrentHashMap<ConnectionId, ConnectionData> map = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ConnectionId, ConnectionData> map = new ConcurrentHashMap<>();
 
     public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
         map.put(id, new ConnectionData(id, channelHandlerContext));
@@ -30,9 +30,9 @@ public class ConnectionManager {
     }
 
     public static class ConnectionData {
-        private ConnectionId id;
-        private Instant creationTime;
-        private ChannelHandlerContext channelHandlerContext;
+        private final ConnectionId id;
+        private final Instant creationTime;
+        private final ChannelHandlerContext channelHandlerContext;
 
         public ConnectionData(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
             this.id = id;

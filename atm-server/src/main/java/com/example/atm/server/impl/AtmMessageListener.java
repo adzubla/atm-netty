@@ -10,12 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Component;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
 import javax.jms.TextMessage;
 import java.util.concurrent.ExecutorService;
 
@@ -62,12 +58,9 @@ public class AtmMessageListener implements AtmServerListener {
     public void onMessage(ChannelHandlerContext ctx, AtmMessage msg) {
         LOG.debug("onMessage: {} {}", ctx, msg);
 
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                if (isMessageValid(msg)) {
-                    dispatch(ctx, msg);
-                }
+        executorService.execute(() -> {
+            if (isMessageValid(msg)) {
+                dispatch(ctx, msg);
             }
         });
     }
@@ -83,18 +76,15 @@ public class AtmMessageListener implements AtmServerListener {
 
         String queueName = "DEV.QUEUE.1";
 
-        jmsTemplate.send(queueName, new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                String text = msg.getId() + msg.getBody();
+        jmsTemplate.send(queueName, session -> {
+            String text = msg.getId() + msg.getBody();
 
-                LOG.debug("Sending to {}: {}", queueName, text);
-                TextMessage message = session.createTextMessage(text);
-                message.setJMSReplyTo(replyToHolder.getReplyToQueue());
-                message.setJMSCorrelationID(cid.getId());
+            LOG.debug("Sending to {}: {}", queueName, text);
+            TextMessage message = session.createTextMessage(text);
+            message.setJMSReplyTo(replyToHolder.getReplyToQueue());
+            message.setJMSCorrelationID(cid.getId());
 
-                return message;
-            }
+            return message;
         });
     }
 

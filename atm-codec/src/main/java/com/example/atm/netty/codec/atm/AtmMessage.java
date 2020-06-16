@@ -2,10 +2,10 @@ package com.example.atm.netty.codec.atm;
 
 public class AtmMessage {
 
-    public static int ID_LENGTH = 12;
+    public static final int ID_LENGTH = 12;
 
     private String id;
-    private String body;
+    private final String body;
 
     public AtmMessage(String id, String body) {
         this.id = id;

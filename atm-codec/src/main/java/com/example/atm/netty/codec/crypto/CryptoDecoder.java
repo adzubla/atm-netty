@@ -9,7 +9,7 @@ import java.util.List;
 public class CryptoDecoder extends ByteToMessageDecoder {
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         out.add(decrypt(in));
     }
 

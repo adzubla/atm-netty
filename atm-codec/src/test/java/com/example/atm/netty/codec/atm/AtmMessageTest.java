@@ -1,5 +1,6 @@
 package com.example.atm.netty.codec.atm;
 
+import com.example.atm.netty.codec.header.HeaderData;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,6 +8,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class AtmMessageTest {
 
     private static final String BODY = "abc";
+
+    @Test
+    void testLength() {
+        assertEquals(AtmMessage.ID_LENGTH, HeaderData.ID_LENGTH);
+    }
 
     @Test
     void testId() {
@@ -34,25 +40,19 @@ class AtmMessageTest {
         String idGrande = "1234567890123";
         assertTrue(idGrande.length() > AtmMessage.ID_LENGTH);
 
-        assertThrows(IllegalArgumentException.class, () -> {
-                    new AtmMessage(idGrande, BODY);
-                }
+        assertThrows(IllegalArgumentException.class, () -> new AtmMessage(idGrande, BODY)
         );
     }
 
     @Test
     void testIdNull() {
-        assertThrows(IllegalArgumentException.class, () -> {
-                    AtmMessage m = new AtmMessage(null, BODY);
-                }
+        assertThrows(IllegalArgumentException.class, () -> new AtmMessage(null, BODY)
         );
     }
 
     @Test
     void testBodyNull() {
-        assertThrows(IllegalArgumentException.class, () -> {
-                    new AtmMessage("123456789012", null);
-                }
+        assertThrows(IllegalArgumentException.class, () -> new AtmMessage("123456789012", null)
         );
     }
 

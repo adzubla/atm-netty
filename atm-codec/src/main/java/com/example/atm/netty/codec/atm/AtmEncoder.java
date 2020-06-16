@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 public class AtmEncoder extends MessageToByteEncoder<AtmMessage> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, AtmMessage msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, AtmMessage msg, ByteBuf out) {
         HeaderData headerData = new HeaderData(msg.getId());
         ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).set(headerData);
 

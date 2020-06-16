@@ -5,10 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
 
-import javax.jms.*;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.TextMessage;
 
 @Service
 public class QueueListener {
@@ -23,13 +25,10 @@ public class QueueListener {
 
         Destination replyTo = message.getJMSReplyTo();
 
-        jmsTemplate.send(replyTo, new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                TextMessage textMessage = session.createTextMessage(data.toUpperCase());
-                textMessage.setJMSCorrelationID(message.getJMSCorrelationID());
-                return textMessage;
-            }
+        jmsTemplate.send(replyTo, session -> {
+            TextMessage textMessage = session.createTextMessage(data.toUpperCase());
+            textMessage.setJMSCorrelationID(message.getJMSCorrelationID());
+            return textMessage;
         });
     }
 
