@@ -1,6 +1,6 @@
 package com.example.atm.server.impl;
 
-import com.example.atm.netty.codec.header.HeaderData;
+import com.example.atm.netty.codec.atm.AtmMessage;
 import com.example.atm.server.conn.ConnectionId;
 import com.example.atm.server.conn.ConnectionManager;
 import com.example.atm.server.jms.ReplyToHolder;
@@ -60,40 +60,40 @@ public class AtmMessageListener implements AtmServerListener {
     }
 
     @Override
-    public void onMessage(ChannelHandlerContext ctx, String message, HeaderData headerData) {
-        LOG.debug("onMessage: {} {} {}", ctx, headerData, message);
+    public void onMessage(ChannelHandlerContext ctx, AtmMessage msg) {
+        LOG.debug("onMessage: {} {}", ctx, msg);
 
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                boolean ok = isMessageValid(message);
+                boolean ok = isMessageValid(msg);
                 if (ok) {
-                    dispatch(ctx, message, headerData);
+                    dispatch(ctx, msg);
                 }
             }
         });
     }
 
-    private boolean isMessageValid(String message) {
+    private boolean isMessageValid(AtmMessage msg) {
         return true;
     }
 
-    private void dispatch(ChannelHandlerContext channelHandlerContext, String message, HeaderData headerData) {
-        ConnectionId id = new ConnectionId(headerData.getIdTerminal());
+    private void dispatch(ChannelHandlerContext ctx, AtmMessage msg) {
+        ConnectionId cid = new ConnectionId(msg.getId());
 
-        connectionManager.add(id, channelHandlerContext);
+        connectionManager.add(cid, ctx);
 
-        String destinationName = "DEV.QUEUE.1";
+        String queueName = "DEV.QUEUE.1";
 
-        jmsTemplate.send(destinationName, new MessageCreator() {
+        jmsTemplate.send(queueName, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                String s = headerData.getIdTerminal() + message;
+                String text = msg.getId() + msg.getBody();
 
-                LOG.debug("Sending to {}: {}", destinationName, s);
-                TextMessage message = session.createTextMessage(s);
+                LOG.debug("Sending to {}: {}", queueName, text);
+                TextMessage message = session.createTextMessage(text);
                 message.setJMSReplyTo(replyToHolder.getReplyToQueue());
-                message.setJMSCorrelationID(id.getId());
+                message.setJMSCorrelationID(cid.getId());
 
                 return message;
             }

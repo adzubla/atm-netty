@@ -43,8 +43,6 @@ class HeaderUtilTest {
         assertEquals(3, h.getTipo());
         assertEquals(1, h.getFormatoId());
         assertEquals("000000120987", h.getId());
-        assertEquals("012", h.getLocalidade());
-        assertEquals("0987", h.getIdTerminal());
         assertArrayEquals(THIRTEEN_ZEROES, h.getReservado());
     }
 

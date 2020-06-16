@@ -15,6 +15,8 @@
  */
 package com.example.atm.server.netty;
 
+import com.example.atm.netty.codec.atm.AtmDecoder;
+import com.example.atm.netty.codec.atm.AtmEncoder;
 import com.example.atm.netty.codec.crypto.CryptoDecoder;
 import com.example.atm.netty.codec.crypto.CryptoEncoder;
 import com.example.atm.netty.codec.header.HeaderDecoder;
@@ -26,8 +28,6 @@ import com.example.atm.netty.codec.mac.MacEncoder;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 
 /**
  * Creates a newly configured {@link ChannelPipeline} for a new channel.
@@ -48,13 +48,13 @@ public class AtmServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new CryptoDecoder());
         pipeline.addLast(new MacDecoder());
         pipeline.addLast(new HeaderDecoder());
-        pipeline.addLast(new StringDecoder());
+        pipeline.addLast(new AtmDecoder());
 
         pipeline.addLast(new LengthPrepender());
         pipeline.addLast(new CryptoEncoder());
         pipeline.addLast(new MacEncoder());
         pipeline.addLast(new HeaderEncoder());
-        pipeline.addLast(new StringEncoder());
+        pipeline.addLast(new AtmEncoder());
 
         pipeline.addLast(new AtmServerHandler(listener));
     }

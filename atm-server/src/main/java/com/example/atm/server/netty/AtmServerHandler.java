@@ -15,14 +15,14 @@
  */
 package com.example.atm.server.netty;
 
-import com.example.atm.netty.codec.header.HeaderData;
+import com.example.atm.netty.codec.atm.AtmMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * Handles a server-side channel.
  */
-public class AtmServerHandler extends SimpleChannelInboundHandler<String> {
+public class AtmServerHandler extends SimpleChannelInboundHandler<AtmMessage> {
 
     private final AtmServerListener listener;
 
@@ -32,16 +32,12 @@ public class AtmServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        HeaderData headerData = new HeaderData("000000");
-        ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).set(headerData);
-
         listener.onConnect(ctx);
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) {
-        HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
-        listener.onMessage(ctx, msg, headerData);
+    public void channelRead0(ChannelHandlerContext ctx, AtmMessage msg) {
+        listener.onMessage(ctx, msg);
     }
 
     @Override

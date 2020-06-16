@@ -15,7 +15,7 @@
  */
 package com.example.atm.client.netty;
 
-import com.example.atm.netty.codec.header.HeaderData;
+import com.example.atm.netty.codec.atm.AtmMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -27,7 +27,6 @@ public final class AtmClient {
 
     private final String host;
     private final int port;
-    private final HeaderData headerData;
 
     private EventLoopGroup group;
     private Channel channel;
@@ -35,7 +34,6 @@ public final class AtmClient {
     public AtmClient(String id, String host, int port) {
         this.host = host;
         this.port = port;
-        this.headerData = new HeaderData(id);
     }
 
     public void connect() throws InterruptedException {
@@ -48,10 +46,8 @@ public final class AtmClient {
         channel = b.connect(host, port).sync().channel();
     }
 
-    public void write(String line) throws InterruptedException {
-        channel.attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).set(headerData);
-
-        ChannelFuture lastWriteFuture = channel.writeAndFlush(line);
+    public void write(AtmMessage msg) throws InterruptedException {
+        ChannelFuture lastWriteFuture = channel.writeAndFlush(msg);
         if (lastWriteFuture != null) {
             lastWriteFuture.sync();
         }

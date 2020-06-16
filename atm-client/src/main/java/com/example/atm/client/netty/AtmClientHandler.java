@@ -15,17 +15,18 @@
  */
 package com.example.atm.client.netty;
 
+import com.example.atm.netty.codec.atm.AtmMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * Handles a client-side channel.
  */
-public class AtmClientHandler extends SimpleChannelInboundHandler<String> {
+public class AtmClientHandler extends SimpleChannelInboundHandler<AtmMessage> {
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) {
-        System.err.println(msg);
+    public void channelRead0(ChannelHandlerContext ctx, AtmMessage msg) {
+        System.err.println(msg.getBody());
     }
 
     @Override
@@ -33,4 +34,5 @@ public class AtmClientHandler extends SimpleChannelInboundHandler<String> {
         cause.printStackTrace();
         ctx.close();
     }
+
 }

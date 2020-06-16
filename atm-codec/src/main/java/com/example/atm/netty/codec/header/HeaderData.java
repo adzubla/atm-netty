@@ -88,14 +88,6 @@ public class HeaderData {
                 '}';
     }
 
-    public String getLocalidade() {
-        return id.substring(5, 5 + 3);
-    }
-
-    public String getIdTerminal() {
-        return id.substring(8, 8 + 4);
-    }
-
     private void checkId() {
         if (id == null) {
             throw new IllegalArgumentException("Id nao pode ser null");

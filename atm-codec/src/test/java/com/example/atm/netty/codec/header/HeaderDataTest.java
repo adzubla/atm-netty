@@ -57,8 +57,6 @@ class HeaderDataTest {
         HeaderData h = new HeaderData(localidade, idTerminal);
 
         assertEquals(expected, h.getId());
-        assertEquals(localidade, h.getLocalidade());
-        assertEquals(idTerminal, h.getIdTerminal());
     }
 
     @Test

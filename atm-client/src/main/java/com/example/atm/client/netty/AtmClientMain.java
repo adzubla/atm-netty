@@ -15,6 +15,8 @@
  */
 package com.example.atm.client.netty;
 
+import com.example.atm.netty.codec.atm.AtmMessage;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -36,7 +38,11 @@ public final class AtmClientMain {
                     break;
                 }
 
-                client.write(line);
+                AtmMessage msg = new AtmMessage();
+                msg.setId(ID);
+                msg.setBody(line);
+
+                client.write(msg);
 
                 if ("bye".equals(line.toLowerCase())) {
                     client.close();

@@ -1,6 +1,6 @@
 package com.example.atm.server.netty;
 
-import com.example.atm.netty.codec.header.HeaderData;
+import com.example.atm.netty.codec.atm.AtmMessage;
 import io.netty.channel.ChannelHandlerContext;
 
 public interface AtmServerListener {
@@ -9,5 +9,5 @@ public interface AtmServerListener {
 
     void onDisconnect(ChannelHandlerContext ctx);
 
-    void onMessage(ChannelHandlerContext ctx, String message, HeaderData headerData);
+    void onMessage(ChannelHandlerContext ctx, AtmMessage msg);
 }
