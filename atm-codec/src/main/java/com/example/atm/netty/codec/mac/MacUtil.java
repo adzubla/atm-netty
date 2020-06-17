@@ -37,7 +37,7 @@ public class MacUtil {
         byte[] dataBytes = ByteBufUtil.getBytes(data);
         byte[] macBytes;
         try {
-            macBytes = Hex.decodeHex(new String(ByteBufUtil.getBytes(mac)));
+            macBytes = Hex.decodeHex(mac.readCharSequence(mac.readableBytes(), Charset.defaultCharset()).toString());
         } catch (DecoderException e) {
             throw new RuntimeException(e);
         }
