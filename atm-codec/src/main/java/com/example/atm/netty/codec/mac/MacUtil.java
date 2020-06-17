@@ -25,7 +25,7 @@ public class MacUtil {
 
         byte[] macBytes = calcula_mac_atm(dataBytes);
 
-        String macHex = Hex.encodeHexString(macBytes, true);
+        String macHex = Hex.encodeHexString(macBytes, false);
 
         ByteBuf mac = Unpooled.buffer(MAC_LENGTH);
         mac.writeCharSequence(macHex, Charset.defaultCharset());

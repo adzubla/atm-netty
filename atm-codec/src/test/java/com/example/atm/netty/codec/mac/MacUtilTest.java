@@ -40,7 +40,7 @@ class MacUtilTest {
             + "3130303231303030" + "3930303030303030"
             + "3030";
 
-    String expectedMacString = "afac56f7f14ec8c8276e72185b232f9e";
+    String expectedMacString = "AFAC56F7F14EC8C8276E72185B232F9E";
 
     @Test
     void test_calcula_mac_atm() throws DecoderException {
