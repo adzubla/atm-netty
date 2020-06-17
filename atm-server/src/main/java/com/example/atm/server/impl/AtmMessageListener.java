@@ -19,30 +19,17 @@ import java.util.concurrent.ExecutorService;
 public class AtmMessageListener implements AtmServerListener {
     private static final Logger LOG = LoggerFactory.getLogger(AtmMessageListener.class);
 
+    @Autowired
     private ConnectionManager connectionManager;
+
+    @Autowired
     private JmsTemplate jmsTemplate;
+
+    @Autowired
     private ReplyToHolder replyToHolder;
+
+    @Autowired
     private ExecutorService executorService;
-
-    @Autowired
-    public void setConnectionManager(ConnectionManager connectionManager) {
-        this.connectionManager = connectionManager;
-    }
-
-    @Autowired
-    public void setJmsTemplate(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
-    }
-
-    @Autowired
-    public void setReplyToHolder(ReplyToHolder replyToHolder) {
-        this.replyToHolder = replyToHolder;
-    }
-
-    @Autowired
-    public void setExecutorService(ExecutorService executorService) {
-        this.executorService = executorService;
-    }
 
     @Override
     public void onConnect(ChannelHandlerContext ctx) {

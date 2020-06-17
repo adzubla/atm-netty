@@ -29,12 +29,8 @@ public class JmsConfig {
         }
     */
 
-    private ReplyToHolder replyToHolder;
-
     @Autowired
-    public void setReplyToHolder(ReplyToHolder replyToHolder) {
-        this.replyToHolder = replyToHolder;
-    }
+    private ReplyToHolder replyToHolder;
 
     @Bean
     public DynamicDestinationResolver destinationResolver() {
