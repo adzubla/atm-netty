@@ -75,7 +75,7 @@ public class AtmMessageListener implements AtmServerListener {
 
         connectionManager.add(cid, ctx);
 
-        String queueName = "DEV.QUEUE.1";
+        String queueName = resolveQueueName(msg);
 
         jmsTemplate.send(queueName, session -> {
             String text = msg.getId() + msg.getBody();
@@ -87,6 +87,10 @@ public class AtmMessageListener implements AtmServerListener {
 
             return message;
         });
+    }
+
+    private String resolveQueueName(AtmMessage msg) {
+        return "DEV.QUEUE.1";
     }
 
 }
