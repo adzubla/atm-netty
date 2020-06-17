@@ -52,6 +52,7 @@ public class AtmMessageListener implements AtmServerListener {
     @Override
     public void onDisconnect(ChannelHandlerContext ctx) {
         LOG.info(ctx.channel().remoteAddress() + " disconnected");
+        connectionManager.remove(ctx);
     }
 
     @Override
@@ -73,6 +74,7 @@ public class AtmMessageListener implements AtmServerListener {
         ConnectionId cid = new ConnectionId(msg.getId());
 
         connectionManager.add(cid, ctx);
+        System.out.println("connectionManager size = " + connectionManager.list().size());
 
         String queueName = "DEV.QUEUE.1";
 

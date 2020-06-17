@@ -11,22 +11,25 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class ConnectionManager {
 
-    private final ConcurrentHashMap<ConnectionId, ConnectionData> map = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ConnectionId, ConnectionData> mapById = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ChannelHandlerContext, ConnectionId> mapByCtx = new ConcurrentHashMap<>();
 
     public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
-        map.put(id, new ConnectionData(id, channelHandlerContext));
+        mapById.put(id, new ConnectionData(id, channelHandlerContext));
+        mapByCtx.put(channelHandlerContext, id);
     }
 
     public ConnectionData get(ConnectionId id) {
-        return map.get(id);
+        return mapById.get(id);
     }
 
-    public void remove(ConnectionId id) {
-        map.remove(id);
+    public void remove(ChannelHandlerContext ctx) {
+        ConnectionId id = mapByCtx.remove(ctx);
+        mapById.remove(id);
     }
 
     public Collection<ConnectionData> list() {
-        return map.values();
+        return mapById.values();
     }
 
     public static class ConnectionData {
