@@ -7,7 +7,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class AtmClientHandler extends SimpleChannelInboundHandler<AtmMessage> {
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         System.err.println("Connected: " + ctx.channel());
     }
 

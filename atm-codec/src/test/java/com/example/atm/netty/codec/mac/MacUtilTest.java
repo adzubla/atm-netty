@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MacUtilTest {
 
-    String dataString = "3930303041303030" + "3034303142383835"
+    final String dataString = "3930303041303030" + "3034303142383835"
             + "3130304530303030" + "3030303031303030"
             + "3030353333303230" + "3030303431313130"
             + "3030303132343732" + "3030313130303030"
@@ -40,7 +40,7 @@ class MacUtilTest {
             + "3130303231303030" + "3930303030303030"
             + "3030";
 
-    String expectedMacString = "AFAC56F7F14EC8C8276E72185B232F9E";
+    final String expectedMacString = "AFAC56F7F14EC8C8276E72185B232F9E";
 
     @Test
     void test_calcula_mac_atm() throws DecoderException {

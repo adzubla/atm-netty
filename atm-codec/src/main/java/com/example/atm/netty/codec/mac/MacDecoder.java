@@ -4,7 +4,6 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static com.example.atm.netty.codec.mac.MacUtil.MAC_LENGTH;

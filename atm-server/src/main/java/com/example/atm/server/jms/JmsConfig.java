@@ -47,6 +47,7 @@ public class JmsConfig {
                 }
             }
         };
+        LOG.info("DynamicDestinationResolver configured");
         return dynamicDestinationResolver;
     }
 
