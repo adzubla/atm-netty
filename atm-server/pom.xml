@@ -73,7 +73,7 @@
         </dependency>
 
         <!-- Spring Cloud -->
-<!--
+        <!--
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
@@ -83,7 +83,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zipkin</artifactId>
         </dependency>
--->
+        -->
         <!-- Spring Boot Starter for IBM MQ-->
 
         <dependency>

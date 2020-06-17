@@ -8,9 +8,9 @@ Requisitos para fazer o build:
 
 Nos ambiente de desenvolvimento Linux, macOS e Cygwin, use o [sdkman](https://sdkman.io/) para instalar esses produtos.
 
-Procedimento de instalação:
+###### Procedimento de instalação
 
-1. Instalar o sdkman
+1. Instalar o sdkman:
 
     `curl -s "https://get.sdkman.io" | bash`
 
@@ -46,6 +46,10 @@ Para executar o build
     Password: passw0rd
 
 ### Iniciar aplicação
+
+Executar o dummy-responder
+
+    ./responder.sh
 
 Executar o servidor
 

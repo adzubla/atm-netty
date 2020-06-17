@@ -1,21 +1,56 @@
 package com.example.atm.server.impl;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 @Configuration
+@ConfigurationProperties(prefix = "atm.server")
 public class AtmServerConfig {
 
-    @Value("${atm.server.threads}")
-    private int quantThreads;
+    private int socketPort;
+    private int bossThreads;
+    private int workerThreads;
+    private int handlerThreads;
+    private int cryptoThreads;
 
-    @Bean
-    public ExecutorService threadPoolExecutor() {
-        return Executors.newFixedThreadPool(quantThreads);
+    public int getSocketPort() {
+        return socketPort;
+    }
+
+    public void setSocketPort(int socketPort) {
+        this.socketPort = socketPort;
+    }
+
+    public int getBossThreads() {
+        return bossThreads;
+    }
+
+    public void setBossThreads(int bossThreads) {
+        this.bossThreads = bossThreads;
+    }
+
+    public int getWorkerThreads() {
+        return workerThreads;
+    }
+
+    public void setWorkerThreads(int workerThreads) {
+        this.workerThreads = workerThreads;
+    }
+
+    public int getHandlerThreads() {
+        return handlerThreads;
+    }
+
+    public void setHandlerThreads(int handlerThreads) {
+        this.handlerThreads = handlerThreads;
+    }
+
+    public int getCryptoThreads() {
+        return cryptoThreads;
+    }
+
+    public void setCryptoThreads(int cryptoThreads) {
+        this.cryptoThreads = cryptoThreads;
     }
 
 }

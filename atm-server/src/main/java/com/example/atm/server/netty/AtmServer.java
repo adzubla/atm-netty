@@ -10,6 +10,7 @@ import com.example.atm.netty.codec.length.LengthFrameDecoder;
 import com.example.atm.netty.codec.length.LengthPrepender;
 import com.example.atm.netty.codec.mac.MacDecoder;
 import com.example.atm.netty.codec.mac.MacEncoder;
+import com.example.atm.server.impl.AtmServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -19,23 +20,31 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
+import io.netty.util.concurrent.EventExecutorGroup;
 
 public final class AtmServer {
 
-    private final int port;
+    private final AtmServerConfig config;
     private final AtmServerListener listener;
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
-    public AtmServer(int port, AtmServerListener listener) {
-        this.port = port;
+    private EventExecutorGroup cryptoGroup;
+    private EventExecutorGroup handlerGroup;
+
+    public AtmServer(AtmServerConfig config, AtmServerListener listener) {
+        this.config = config;
         this.listener = listener;
     }
 
     public void start() throws InterruptedException {
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup();
+        bossGroup = new NioEventLoopGroup(config.getBossThreads());
+        workerGroup = new NioEventLoopGroup(config.getWorkerThreads());
+
+        cryptoGroup = new DefaultEventExecutorGroup(config.getCryptoThreads());
+        handlerGroup = new DefaultEventExecutorGroup(config.getHandlerThreads());
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
@@ -47,22 +56,22 @@ public final class AtmServer {
                         ChannelPipeline pipeline = ch.pipeline();
 
                         pipeline.addLast(new LengthFrameDecoder());
-                        pipeline.addLast(new CryptoDecoder());
+                        pipeline.addLast(cryptoGroup, new CryptoDecoder());
                         pipeline.addLast(new MacDecoder());
                         pipeline.addLast(new HeaderDecoder());
                         pipeline.addLast(new AtmDecoder());
 
                         pipeline.addLast(new LengthPrepender());
-                        pipeline.addLast(new CryptoEncoder());
+                        pipeline.addLast(cryptoGroup, new CryptoEncoder());
                         pipeline.addLast(new MacEncoder());
                         pipeline.addLast(new HeaderEncoder());
                         pipeline.addLast(new AtmEncoder());
 
-                        pipeline.addLast(new AtmServerHandler(listener));
+                        pipeline.addLast(handlerGroup, new AtmServerHandler(listener));
                     }
                 });
 
-        b.bind(port).sync().await();
+        b.bind(config.getSocketPort()).sync().await();
     }
 
     public void shutdown() {

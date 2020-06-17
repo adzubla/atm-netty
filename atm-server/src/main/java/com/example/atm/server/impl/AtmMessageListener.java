@@ -13,7 +13,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.jms.TextMessage;
-import java.util.concurrent.ExecutorService;
 
 @Component
 public class AtmMessageListener implements AtmServerListener {
@@ -27,9 +26,6 @@ public class AtmMessageListener implements AtmServerListener {
 
     @Autowired
     private ReplyToHolder replyToHolder;
-
-    @Autowired
-    private ExecutorService executorService;
 
     @Override
     public void onConnect(ChannelHandlerContext ctx) {
@@ -46,11 +42,9 @@ public class AtmMessageListener implements AtmServerListener {
     public void onMessage(ChannelHandlerContext ctx, AtmMessage msg) {
         LOG.debug("onMessage: {} {}", ctx, msg);
 
-        executorService.execute(() -> {
-            if (isMessageValid(msg)) {
-                dispatch(ctx, msg);
-            }
-        });
+        if (isMessageValid(msg)) {
+            dispatch(ctx, msg);
+        }
     }
 
     private boolean isMessageValid(AtmMessage msg) {
