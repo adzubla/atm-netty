@@ -40,20 +40,17 @@ class AtmMessageTest {
         String idGrande = "1234567890123";
         assertTrue(idGrande.length() > AtmMessage.ID_LENGTH);
 
-        assertThrows(IllegalArgumentException.class, () -> new AtmMessage(idGrande, BODY)
-        );
+        assertThrows(IllegalArgumentException.class, () -> new AtmMessage(idGrande, BODY));
     }
 
     @Test
     void testIdNull() {
-        assertThrows(IllegalArgumentException.class, () -> new AtmMessage(null, BODY)
-        );
+        assertThrows(IllegalArgumentException.class, () -> new AtmMessage(null, BODY));
     }
 
     @Test
     void testBodyNull() {
-        assertThrows(IllegalArgumentException.class, () -> new AtmMessage("123456789012", null)
-        );
+        assertThrows(IllegalArgumentException.class, () -> new AtmMessage("123456789012", null));
     }
 
 }
