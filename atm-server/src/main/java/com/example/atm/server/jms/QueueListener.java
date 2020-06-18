@@ -34,6 +34,7 @@ public class QueueListener {
 
             AtmMessage msg = new AtmMessage(cid.getId(), body);
 
+            connectionData.countOutput();
             connectionData.getChannelHandlerContext().writeAndFlush(msg);
         }
     }

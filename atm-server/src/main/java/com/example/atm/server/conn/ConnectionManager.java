@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
 import java.net.SocketAddress;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,8 +20,13 @@ public class ConnectionManager {
     private final ConcurrentHashMap<ChannelHandlerContext, ConnectionId> mapByCtx = new ConcurrentHashMap<>();
 
     public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
-        Object prev = mapById.put(id, new ConnectionData(id, channelHandlerContext));
-        if (prev == null) {
+        ConnectionData data = mapById.get(id);
+        if (data != null) {
+            data.countInput();
+        } else {
+            data = new ConnectionData(id, channelHandlerContext);
+            data.countInput();
+            mapById.put(id, data);
             mapByCtx.put(channelHandlerContext, id);
         }
     }
@@ -61,6 +67,15 @@ public class ConnectionManager {
         private final Instant creationTime;
         private final ChannelHandlerContext channelHandlerContext;
 
+        private Instant lastInputTime;
+        private Instant lastOutputTime;
+        private long inputCount;
+        private long outputCount;
+        private long lastResponseDuration;
+        private long totalResponseDuration;
+        private long minResponseDuration = Long.MAX_VALUE;
+        private long maxResponseDuration;
+
         public ConnectionData(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
             this.id = id;
             this.creationTime = Instant.now();
@@ -73,6 +88,59 @@ public class ConnectionManager {
 
         public Instant getCreationTime() {
             return creationTime;
+        }
+
+        public Instant getLastInputTime() {
+            return lastInputTime;
+        }
+
+        public void countInput() {
+            inputCount++;
+            lastInputTime = Instant.now();
+        }
+
+        public Instant getLastOutputTime() {
+            return lastOutputTime;
+        }
+
+        public void countOutput() {
+            outputCount++;
+            lastOutputTime = Instant.now();
+            if (lastOutputTime.isAfter(lastInputTime)) {
+                long t = Duration.between(lastInputTime, lastOutputTime).toMillis();
+                totalResponseDuration += t;
+                lastResponseDuration = t;
+                if (t < minResponseDuration) {
+                    minResponseDuration = t;
+                }
+                if (t > maxResponseDuration) {
+                    maxResponseDuration = t;
+                }
+            }
+        }
+
+        public long getInputCount() {
+            return inputCount;
+        }
+
+        public long getOutputCount() {
+            return outputCount;
+        }
+
+        public long getLastResponseDuration() {
+            return lastResponseDuration;
+        }
+
+        public long getAverageResponseDuration() {
+            return outputCount == 0 ? 0 : totalResponseDuration / outputCount;
+        }
+
+        public long getMinResponseDuration() {
+            return minResponseDuration;
+        }
+
+        public long getMaxResponseDuration() {
+            return maxResponseDuration;
         }
 
         public ChannelHandlerContext getChannelHandlerContext() {
