@@ -13,6 +13,10 @@ public class AtmServerConfig {
     private int handlerThreads;
     private int cryptoThreads;
 
+    private boolean tcpNodelay = true;
+    private boolean soKeepalive = true;
+    private int soBacklog = 1024;
+
     public int getSocketPort() {
         return socketPort;
     }
@@ -51,6 +55,30 @@ public class AtmServerConfig {
 
     public void setCryptoThreads(int cryptoThreads) {
         this.cryptoThreads = cryptoThreads;
+    }
+
+    public boolean isTcpNodelay() {
+        return tcpNodelay;
+    }
+
+    public void setTcpNodelay(boolean tcpNodelay) {
+        this.tcpNodelay = tcpNodelay;
+    }
+
+    public boolean isSoKeepalive() {
+        return soKeepalive;
+    }
+
+    public void setSoKeepalive(boolean soKeepalive) {
+        this.soKeepalive = soKeepalive;
+    }
+
+    public int getSoBacklog() {
+        return soBacklog;
+    }
+
+    public void setSoBacklog(int soBacklog) {
+        this.soBacklog = soBacklog;
     }
 
 }

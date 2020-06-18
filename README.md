@@ -58,3 +58,8 @@ Executar o servidor
 Abrir um cliente
 
     ./client.sh
+
+Para terminar o servidor
+
+    ./shutdown.sh
+

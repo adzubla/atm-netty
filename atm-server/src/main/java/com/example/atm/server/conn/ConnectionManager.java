@@ -3,6 +3,7 @@ package com.example.atm.server.conn;
 import io.netty.channel.ChannelHandlerContext;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.net.SocketAddress;
 import java.time.Instant;
 import java.util.Collection;
@@ -26,10 +27,18 @@ public class ConnectionManager {
     public void remove(ChannelHandlerContext ctx) {
         ConnectionId id = mapByCtx.remove(ctx);
         mapById.remove(id);
+        ctx.close();
     }
 
     public Collection<ConnectionData> list() {
         return mapById.values();
+    }
+
+    @PreDestroy
+    public void closeAll() {
+        for (ChannelHandlerContext ctx : mapByCtx.keySet()) {
+            remove(ctx);
+        }
     }
 
     public static class ConnectionData {

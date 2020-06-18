@@ -13,6 +13,7 @@ import com.example.atm.netty.codec.mac.MacEncoder;
 import com.example.atm.server.impl.AtmServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -22,34 +23,34 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class AtmServer {
+    private static final Logger LOG = LoggerFactory.getLogger(AtmServer.class);
 
-    private final AtmServerConfig config;
-    private final AtmServerListener listener;
+    private final ServerBootstrap bootstrap;
+    private final EventLoopGroup bossGroup;
+    private final EventLoopGroup workerGroup;
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
-
-    private EventExecutorGroup cryptoGroup;
-    private EventExecutorGroup handlerGroup;
+    private final EventExecutorGroup cryptoGroup;
+    private final EventExecutorGroup handlerGroup;
 
     public AtmServer(AtmServerConfig config, AtmServerListener listener) {
-        this.config = config;
-        this.listener = listener;
-    }
-
-    public void start() throws InterruptedException {
         bossGroup = new NioEventLoopGroup(config.getBossThreads());
         workerGroup = new NioEventLoopGroup(config.getWorkerThreads());
 
         cryptoGroup = new DefaultEventExecutorGroup(config.getCryptoThreads());
         handlerGroup = new DefaultEventExecutorGroup(config.getHandlerThreads());
 
-        ServerBootstrap b = new ServerBootstrap();
-        b.group(bossGroup, workerGroup)
+        bootstrap = new ServerBootstrap();
+        bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
+                .childOption(ChannelOption.TCP_NODELAY, config.isTcpNodelay())
+                .childOption(ChannelOption.SO_KEEPALIVE, config.isSoKeepalive())
+                .childOption(ChannelOption.SO_BACKLOG, config.getSoBacklog())
                 .handler(new LoggingHandler(LogLevel.INFO))
+                .localAddress(config.getSocketPort())
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {
@@ -70,16 +71,30 @@ public final class AtmServer {
                         pipeline.addLast(handlerGroup, new AtmServerHandler(listener));
                     }
                 });
-
-        b.bind(config.getSocketPort()).sync().await();
+        bootstrap.validate();
     }
 
-    public void shutdown() {
-        if (bossGroup != null) {
-            bossGroup.shutdownGracefully();
-        }
+    public void start() throws InterruptedException {
+        LOG.info("Starting");
+        bootstrap.bind().sync().await();
+    }
+
+    public void shutdown() throws InterruptedException {
+        LOG.info("Shutdown workerGroup");
         if (workerGroup != null) {
-            workerGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully().sync().await();
+        }
+        LOG.info("Shutdown bossGroup");
+        if (bossGroup != null) {
+            bossGroup.shutdownGracefully().sync().await();
+        }
+        LOG.info("Shutdown cryptoGroup");
+        if (cryptoGroup != null) {
+            cryptoGroup.shutdownGracefully().sync().await();
+        }
+        LOG.info("Shutdown handlerGroup");
+        if (handlerGroup != null) {
+            handlerGroup.shutdownGracefully().sync().await();
         }
     }
 
