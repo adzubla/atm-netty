@@ -15,26 +15,26 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionManager {
     private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
 
-    private final ConcurrentHashMap<ConnectionKey, ConnectionData> mapById = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<ChannelHandlerContext, ConnectionKey> mapByCtx = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ConnectionId, ConnectionData> mapById = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ChannelHandlerContext, ConnectionId> mapByCtx = new ConcurrentHashMap<>();
 
-    public void add(ConnectionKey id, ChannelHandlerContext channelHandlerContext) {
+    public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
         mapById.put(id, new ConnectionData(id, channelHandlerContext));
         mapByCtx.put(channelHandlerContext, id);
     }
 
-    public ConnectionData get(ConnectionKey id) {
+    public ConnectionData get(ConnectionId id) {
         return mapById.get(id);
     }
 
     public void remove(ChannelHandlerContext ctx) {
         LOG.debug("Removing {}", ctx);
-        ConnectionKey id = mapByCtx.remove(ctx);
+        ConnectionId id = mapByCtx.remove(ctx);
         mapById.remove(id);
         ctx.close();
     }
 
-    public void remove(ConnectionKey id) {
+    public void remove(ConnectionId id) {
         ConnectionData connectionData = mapById.get(id);
         if (connectionData != null) {
             remove(connectionData.channelHandlerContext);
@@ -53,18 +53,18 @@ public class ConnectionManager {
     }
 
     public static class ConnectionData {
-        private final ConnectionKey key;
+        private final ConnectionId id;
         private final Instant creationTime;
         private final ChannelHandlerContext channelHandlerContext;
 
-        public ConnectionData(ConnectionKey key, ChannelHandlerContext channelHandlerContext) {
-            this.key = key;
+        public ConnectionData(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
+            this.id = id;
             this.creationTime = Instant.now();
             this.channelHandlerContext = channelHandlerContext;
         }
 
-        public ConnectionKey getKey() {
-            return key;
+        public ConnectionId getId() {
+            return id;
         }
 
         public Instant getCreationTime() {
