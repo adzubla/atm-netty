@@ -12,7 +12,7 @@ public class AtmClientHandler extends SimpleChannelInboundHandler<AtmMessage> {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) {
         System.err.println("Disconnected: " + ctx.channel());
     }
 

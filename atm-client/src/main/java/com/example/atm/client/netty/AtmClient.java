@@ -67,13 +67,7 @@ public final class AtmClient {
     }
 
     public void close() {
-        channel.close();
-    }
-
-    public void shutdown() {
-        if (group != null) {
-            group.shutdownGracefully();
-        }
+        group.shutdownGracefully();
     }
 
 }

@@ -23,7 +23,6 @@ public final class AtmClientMain {
                     continue;
                 }
                 if ("bye".equals(line.toLowerCase())) {
-                    client.close();
                     break;
                 }
 
@@ -31,8 +30,8 @@ public final class AtmClientMain {
                 client.write(msg);
             }
         } finally {
-            System.err.println("Shutdown!");
-            client.shutdown();
+            client.close();
+            System.err.println("Closed");
         }
     }
 

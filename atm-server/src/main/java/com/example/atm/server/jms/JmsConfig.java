@@ -16,19 +16,6 @@ import javax.jms.TemporaryQueue;
 public class JmsConfig {
     private static final Logger LOG = LoggerFactory.getLogger(JmsConfig.class);
 
-    /*
-        @Bean
-        public DefaultJmsListenerContainerFactory myFactory(DefaultJmsListenerContainerFactoryConfigurer configurer, ConnectionFactory connectionFactory) throws JMSException {
-            DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-            configurer.configure(factory, connectionFactory);
-
-            MQConnectionFactory cf = ((MQConnectionFactory) connectionFactory);
-            cf.setStringProperty(WMQConstants.WMQ_TEMPORARY_MODEL, "DEV.APP.MODEL.QUEUE");
-
-            return factory;
-        }
-    */
-
     @Autowired
     private ReplyToHolder replyToHolder;
 
