@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "atm.server")
 public class AtmServerConfig {
 
+    private int mqListenerConcurrency;
+
     private int socketPort;
     private int bossThreads;
     private int workerThreads;
@@ -16,6 +18,14 @@ public class AtmServerConfig {
     private boolean tcpNodelay = true;
     private boolean soKeepalive = true;
     private int soBacklog = 1024;
+
+    public int getMqListenerConcurrency() {
+        return mqListenerConcurrency;
+    }
+
+    public void setMqListenerConcurrency(int mqListenerConcurrency) {
+        this.mqListenerConcurrency = mqListenerConcurrency;
+    }
 
     public int getSocketPort() {
         return socketPort;
