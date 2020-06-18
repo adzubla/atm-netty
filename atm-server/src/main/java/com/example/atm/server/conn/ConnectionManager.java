@@ -19,18 +19,26 @@ public class ConnectionManager {
     private final ConcurrentHashMap<ChannelHandlerContext, ConnectionId> mapByCtx = new ConcurrentHashMap<>();
 
     public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
-        mapById.put(id, new ConnectionData(id, channelHandlerContext));
-        mapByCtx.put(channelHandlerContext, id);
+        Object prev = mapById.put(id, new ConnectionData(id, channelHandlerContext));
+        if (prev == null) {
+            mapByCtx.put(channelHandlerContext, id);
+        }
     }
 
     public ConnectionData get(ConnectionId id) {
         return mapById.get(id);
     }
 
+    public Collection<ConnectionData> list() {
+        return mapById.values();
+    }
+
     public void remove(ChannelHandlerContext ctx) {
         LOG.debug("Removing {}", ctx);
         ConnectionId id = mapByCtx.remove(ctx);
-        mapById.remove(id);
+        if (id != null) {
+            mapById.remove(id);
+        }
         ctx.close();
     }
 
@@ -39,10 +47,6 @@ public class ConnectionManager {
         if (connectionData != null) {
             remove(connectionData.channelHandlerContext);
         }
-    }
-
-    public Collection<ConnectionData> list() {
-        return mapById.values();
     }
 
     @PreDestroy

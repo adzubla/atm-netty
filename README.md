@@ -67,12 +67,12 @@ Para terminar o servidor
 
 Mostrar conexões ativas
 
-    curl -X GET http://localhost:8081/connection/
+    curl -s -X GET http://localhost:8081/connection/
 
 Mostrar informações de uma conexão
 
-    curl -X GET http://localhost:8081/connection/{ID}
+    curl -s -X GET http://localhost:8081/connection/{ID}
 
 Remover uma conexão
 
-    curl -X DELETE http://localhost:8081/connection/{ID}
+    curl -s -X DELETE http://localhost:8081/connection/{ID}
