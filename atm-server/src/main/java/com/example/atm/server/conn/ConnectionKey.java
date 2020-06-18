@@ -2,11 +2,11 @@ package com.example.atm.server.conn;
 
 import java.util.Objects;
 
-public class ConnectionId {
+public class ConnectionKey {
 
     private final String id;
 
-    public ConnectionId(String id) {
+    public ConnectionKey(String id) {
         this.id = id;
     }
 
@@ -18,7 +18,7 @@ public class ConnectionId {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ConnectionId that = (ConnectionId) o;
+        ConnectionKey that = (ConnectionKey) o;
         return Objects.equals(id, that.id);
     }
 
