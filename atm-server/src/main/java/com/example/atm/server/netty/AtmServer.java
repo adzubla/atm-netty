@@ -46,9 +46,9 @@ public final class AtmServer {
         bootstrap = new ServerBootstrap();
         bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childOption(ChannelOption.TCP_NODELAY, config.isTcpNodelay())
+                .option(ChannelOption.SO_BACKLOG, config.getSoBacklog())
                 .childOption(ChannelOption.SO_KEEPALIVE, config.isSoKeepalive())
-                .childOption(ChannelOption.SO_BACKLOG, config.getSoBacklog())
+                .childOption(ChannelOption.TCP_NODELAY, config.isTcpNodelay())
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .localAddress(config.getSocketPort())
                 .childHandler(new ChannelInitializer<SocketChannel>() {
