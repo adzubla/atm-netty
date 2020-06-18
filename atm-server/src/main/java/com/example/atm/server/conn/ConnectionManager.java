@@ -1,6 +1,8 @@
 package com.example.atm.server.conn;
 
 import io.netty.channel.ChannelHandlerContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -11,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class ConnectionManager {
+    private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
 
     private final ConcurrentHashMap<ConnectionId, ConnectionData> mapById = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<ChannelHandlerContext, ConnectionId> mapByCtx = new ConcurrentHashMap<>();
@@ -25,9 +28,17 @@ public class ConnectionManager {
     }
 
     public void remove(ChannelHandlerContext ctx) {
+        LOG.debug("Removing {}", ctx);
         ConnectionId id = mapByCtx.remove(ctx);
         mapById.remove(id);
         ctx.close();
+    }
+
+    public void remove(ConnectionId id) {
+        ConnectionData connectionData = mapById.get(id);
+        if (connectionData != null) {
+            remove(connectionData.channelHandlerContext);
+        }
     }
 
     public Collection<ConnectionData> list() {
@@ -35,7 +46,7 @@ public class ConnectionManager {
     }
 
     @PreDestroy
-    public void closeAll() {
+    public void removeAll() {
         for (ChannelHandlerContext ctx : mapByCtx.keySet()) {
             remove(ctx);
         }
@@ -64,13 +75,10 @@ public class ConnectionManager {
             return channelHandlerContext;
         }
 
-        public String getName() {
-            return channelHandlerContext.name();
-        }
-
         public SocketAddress getRemoteAddress() {
             return channelHandlerContext.channel().remoteAddress();
         }
+
     }
 
 }
