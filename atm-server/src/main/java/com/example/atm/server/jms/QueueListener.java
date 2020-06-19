@@ -17,7 +17,7 @@ public class QueueListener {
     @Autowired
     private ConnectionManager connectionManager;
 
-    @JmsListener(destination = "REPLY_TO_DYNAMIC_QUEUE", concurrency = "${atm.server.mq-listener-concurrency}")
+    @JmsListener(destination = "REPLY_TO_DYNAMIC_QUEUE", concurrency = "#{atmServerConfig.mqListenerConcurrency}")
     public void receive(String message) {
         LOG.debug("Received from queue: {}", message);
 
