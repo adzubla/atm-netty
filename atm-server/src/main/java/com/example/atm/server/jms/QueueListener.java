@@ -1,7 +1,6 @@
 package com.example.atm.server.jms;
 
 import com.example.atm.netty.codec.atm.AtmMessage;
-import com.example.atm.server.conn.ConnectionKey;
 import com.example.atm.server.conn.ConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +21,17 @@ public class QueueListener {
     public void receive(String message) {
         LOG.debug("Received from queue: {}", message);
 
-        ConnectionKey connectionKey = new ConnectionKey(message.substring(0, ID_LENGTH));
+        String id = message.substring(0, ID_LENGTH);
         String body = message.substring(ID_LENGTH);
 
-        ConnectionManager.ConnectionData connectionData = connectionManager.get(connectionKey);
+        ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
         if (connectionData == null) {
             LOG.debug("Discarding: {}", body);
         } else {
             LOG.debug("Responding to client: {}", body);
 
-            AtmMessage msg = new AtmMessage(connectionKey.getId(), body);
+            AtmMessage msg = new AtmMessage(id, body);
 
             connectionData.countOutput();
             connectionData.getChannelHandlerContext().writeAndFlush(msg);

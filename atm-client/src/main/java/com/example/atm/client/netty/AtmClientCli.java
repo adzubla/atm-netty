@@ -13,7 +13,6 @@ public final class AtmClientCli {
 
     public static void main(String[] args) throws Exception {
 
-        System.out.println("args = " + Arrays.toString(args));
         String id = String.format("%07d", (args.length == 1) ? Long.parseLong(args[0]) : ProcessHandle.current().pid());
 
         AtmClient client = new AtmClient(HOST, PORT);

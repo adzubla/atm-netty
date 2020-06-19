@@ -1,7 +1,6 @@
 package com.example.atm.server.impl;
 
 import com.example.atm.netty.codec.atm.AtmMessage;
-import com.example.atm.server.conn.ConnectionKey;
 import com.example.atm.server.conn.ConnectionManager;
 import com.example.atm.server.jms.ReplyToHolder;
 import com.example.atm.server.netty.AtmServerListener;
@@ -29,18 +28,19 @@ public class AtmMessageListener implements AtmServerListener {
 
     @Override
     public void onConnect(ChannelHandlerContext ctx) {
-        LOG.info(ctx.channel().remoteAddress() + " connected");
+        LOG.info("{} connected", ctx);
+        connectionManager.add(ctx);
     }
 
     @Override
     public void onDisconnect(ChannelHandlerContext ctx) {
-        LOG.info(ctx.channel().remoteAddress() + " disconnected");
+        LOG.info("{} disconnected", ctx);
         connectionManager.remove(ctx);
     }
 
     @Override
     public void onMessage(ChannelHandlerContext ctx, AtmMessage msg) {
-        LOG.debug("onMessage: {} {}", ctx, msg);
+        LOG.debug("{} received {}", ctx, msg);
 
         if (isMessageValid(msg)) {
             dispatch(ctx, msg);
@@ -52,19 +52,20 @@ public class AtmMessageListener implements AtmServerListener {
     }
 
     private void dispatch(ChannelHandlerContext ctx, AtmMessage msg) {
-        ConnectionKey connectionKey = new ConnectionKey(msg.getId());
+        String id = msg.getId();
 
-        connectionManager.add(connectionKey, ctx);
+        connectionManager.add(id, ctx);
 
         String queueName = resolveQueueName(msg);
 
         jmsTemplate.send(queueName, session -> {
-            String text = msg.getId() + msg.getBody();
+            // coloca o id na mensagem a ser transmitida
+            String text = id + msg.getBody();
 
             LOG.debug("Sending to {}: {}", queueName, text);
             TextMessage message = session.createTextMessage(text);
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
-            message.setJMSCorrelationID(connectionKey.getId());
+            message.setJMSCorrelationID(id);
 
             return message;
         });

@@ -19,7 +19,7 @@ public class ConnectionManagerController {
 
     @GetMapping("/{id}")
     public ConnectionManager.ConnectionData get(@PathVariable String id) {
-        return connectionManager.get(new ConnectionKey(id));
+        return connectionManager.get(id);
     }
 
     @DeleteMapping("/{id}")
@@ -27,7 +27,7 @@ public class ConnectionManagerController {
         if ("all".equals(id)) {
             connectionManager.removeAll();
         } else {
-            connectionManager.remove(new ConnectionKey(id));
+            connectionManager.remove(id);
         }
     }
 

@@ -16,42 +16,48 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionManager {
     private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
 
-    private final ConcurrentHashMap<ConnectionKey, ConnectionData> mapById = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<ChannelHandlerContext, ConnectionKey> mapByCtx = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ConnectionKey, ConnectionData> mapByKey = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ChannelHandlerContext, ConnectionData> mapByCtx = new ConcurrentHashMap<>();
 
-    public void add(ConnectionKey key, ChannelHandlerContext ctx) {
-        ConnectionData data = mapById.get(key);
-        if (data != null) {
-            data.countInput();
-        } else {
-            data = new ConnectionData(key, ctx);
-            data.countInput();
-            mapById.put(key, data);
-            mapByCtx.put(ctx, key);
-        }
+    public void add(ChannelHandlerContext ctx) {
+        ConnectionData data = new ConnectionData(ctx);
+        mapByCtx.put(ctx, data);
     }
 
-    public ConnectionData get(ConnectionKey key) {
-        return mapById.get(key);
+    public void add(String id, ChannelHandlerContext ctx) {
+        ConnectionKey key = new ConnectionKey(id);
+        ConnectionData data = mapByCtx.get(ctx);
+        if (data.getKey() == null) {
+            data.setKey(key);
+            ConnectionData prev = mapByKey.put(key, data);
+            if (prev != null) {
+                prev.channelHandlerContext.close();
+            }
+        }
+        data.countInput();
+    }
+
+    public ConnectionData get(String id) {
+        return mapByKey.get(new ConnectionKey(id));
     }
 
     public Collection<ConnectionData> list() {
-        return mapById.values();
+        return mapByCtx.values();
     }
 
     public void remove(ChannelHandlerContext ctx) {
         LOG.debug("Removing {}", ctx);
-        ConnectionKey key = mapByCtx.remove(ctx);
-        if (key != null) {
-            mapById.remove(key);
+        ConnectionData data = mapByCtx.remove(ctx);
+        if (data != null && data.getKey() != null) {
+            mapByKey.remove(data.getKey());
         }
         ctx.close();
     }
 
-    public void remove(ConnectionKey key) {
-        ConnectionData connectionData = mapById.get(key);
-        if (connectionData != null) {
-            remove(connectionData.channelHandlerContext);
+    public void remove(String id) {
+        ConnectionData data = mapByKey.get(new ConnectionKey(id));
+        if (data != null) {
+            remove(data.channelHandlerContext);
         }
     }
 
@@ -63,10 +69,10 @@ public class ConnectionManager {
     }
 
     public static class ConnectionData {
-        private final ConnectionKey key;
         private final Instant creationTime;
         private final ChannelHandlerContext channelHandlerContext;
 
+        private ConnectionKey key;
         private Instant lastInputTime;
         private Instant lastOutputTime;
         private long inputCount;
@@ -76,14 +82,17 @@ public class ConnectionManager {
         private long minResponseDuration = Long.MAX_VALUE;
         private long maxResponseDuration;
 
-        public ConnectionData(ConnectionKey key, ChannelHandlerContext channelHandlerContext) {
-            this.key = key;
+        public ConnectionData(ChannelHandlerContext channelHandlerContext) {
             this.creationTime = Instant.now();
             this.channelHandlerContext = channelHandlerContext;
         }
 
         public ConnectionKey getKey() {
             return key;
+        }
+
+        public void setKey(ConnectionKey key) {
+            this.key = key;
         }
 
         public Instant getCreationTime() {
@@ -143,12 +152,12 @@ public class ConnectionManager {
             return maxResponseDuration;
         }
 
-        public ChannelHandlerContext getChannelHandlerContext() {
-            return channelHandlerContext;
-        }
-
         public SocketAddress getRemoteAddress() {
             return channelHandlerContext.channel().remoteAddress();
+        }
+
+        public ChannelHandlerContext getChannelHandlerContext() {
+            return channelHandlerContext;
         }
 
     }
