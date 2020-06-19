@@ -27,11 +27,12 @@ public class ConnectionManager {
     public void add(String id, ChannelHandlerContext ctx) {
         ConnectionKey key = new ConnectionKey(id);
         ConnectionData data = mapByCtx.get(ctx);
-        if (data.getKey() == null) {
-            data.setKey(key);
+        if (data.key == null) {
+            data.key = key;
             ConnectionData prev = mapByKey.put(key, data);
             if (prev != null) {
-                prev.channelHandlerContext.close();
+                mapByCtx.remove(prev.context);
+                prev.context.close();
             }
         }
         data.countInput();
@@ -48,8 +49,8 @@ public class ConnectionManager {
     public void remove(ChannelHandlerContext ctx) {
         LOG.debug("Removing {}", ctx);
         ConnectionData data = mapByCtx.remove(ctx);
-        if (data != null && data.getKey() != null) {
-            mapByKey.remove(data.getKey());
+        if (data != null && data.key != null) {
+            mapByKey.remove(data.key);
         }
         ctx.close();
     }
@@ -57,7 +58,7 @@ public class ConnectionManager {
     public void remove(String id) {
         ConnectionData data = mapByKey.get(new ConnectionKey(id));
         if (data != null) {
-            remove(data.channelHandlerContext);
+            remove(data.context);
         }
     }
 
@@ -70,7 +71,7 @@ public class ConnectionManager {
 
     public static class ConnectionData {
         private final Instant creationTime;
-        private final ChannelHandlerContext channelHandlerContext;
+        private final ChannelHandlerContext context;
 
         private ConnectionKey key;
         private Instant lastInputTime;
@@ -82,34 +83,18 @@ public class ConnectionManager {
         private long minResponseDuration = Long.MAX_VALUE;
         private long maxResponseDuration;
 
-        public ConnectionData(ChannelHandlerContext channelHandlerContext) {
+        public ConnectionData(ChannelHandlerContext context) {
             this.creationTime = Instant.now();
-            this.channelHandlerContext = channelHandlerContext;
+            this.context = context;
         }
 
-        public ConnectionKey getKey() {
-            return key;
-        }
-
-        public void setKey(ConnectionKey key) {
-            this.key = key;
-        }
-
-        public Instant getCreationTime() {
-            return creationTime;
-        }
-
-        public Instant getLastInputTime() {
-            return lastInputTime;
+        public ChannelHandlerContext channelHandlerContext() {
+            return context;
         }
 
         public void countInput() {
             inputCount++;
             lastInputTime = Instant.now();
-        }
-
-        public Instant getLastOutputTime() {
-            return lastOutputTime;
         }
 
         public void countOutput() {
@@ -126,6 +111,26 @@ public class ConnectionManager {
                     maxResponseDuration = t;
                 }
             }
+        }
+
+        public String getId() {
+            return key == null ? null : key.getId();
+        }
+
+        public SocketAddress getRemoteAddress() {
+            return context.channel().remoteAddress();
+        }
+
+        public Instant getCreationTime() {
+            return creationTime;
+        }
+
+        public Instant getLastInputTime() {
+            return lastInputTime;
+        }
+
+        public Instant getLastOutputTime() {
+            return lastOutputTime;
         }
 
         public long getInputCount() {
@@ -150,14 +155,6 @@ public class ConnectionManager {
 
         public long getMaxResponseDuration() {
             return maxResponseDuration;
-        }
-
-        public SocketAddress getRemoteAddress() {
-            return channelHandlerContext.channel().remoteAddress();
-        }
-
-        public ChannelHandlerContext getChannelHandlerContext() {
-            return channelHandlerContext;
         }
 
     }
