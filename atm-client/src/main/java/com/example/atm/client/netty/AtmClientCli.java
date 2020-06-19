@@ -4,14 +4,18 @@ import com.example.atm.netty.codec.atm.AtmMessage;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
-public final class AtmClientMain {
+public final class AtmClientCli {
 
-    static final String ID = String.format("%07d", ProcessHandle.current().pid());
     static final String HOST = System.getProperty("host", "127.0.0.1");
     static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
 
     public static void main(String[] args) throws Exception {
+
+        System.out.println("args = " + Arrays.toString(args));
+        String id = String.format("%07d", (args.length == 1) ? Long.parseLong(args[0]) : ProcessHandle.current().pid());
+
         AtmClient client = new AtmClient(HOST, PORT);
         try {
             client.connect();
@@ -26,7 +30,7 @@ public final class AtmClientMain {
                     break;
                 }
 
-                AtmMessage msg = new AtmMessage(ID, line);
+                AtmMessage msg = new AtmMessage(id, line);
                 client.write(msg);
             }
         } finally {

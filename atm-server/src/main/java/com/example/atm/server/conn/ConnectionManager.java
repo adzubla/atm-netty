@@ -19,15 +19,15 @@ public class ConnectionManager {
     private final ConcurrentHashMap<ConnectionId, ConnectionData> mapById = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<ChannelHandlerContext, ConnectionId> mapByCtx = new ConcurrentHashMap<>();
 
-    public void add(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
+    public void add(ConnectionId id, ChannelHandlerContext ctx) {
         ConnectionData data = mapById.get(id);
         if (data != null) {
             data.countInput();
         } else {
-            data = new ConnectionData(id, channelHandlerContext);
+            data = new ConnectionData(id, ctx);
             data.countInput();
             mapById.put(id, data);
-            mapByCtx.put(channelHandlerContext, id);
+            mapByCtx.put(ctx, id);
         }
     }
 
