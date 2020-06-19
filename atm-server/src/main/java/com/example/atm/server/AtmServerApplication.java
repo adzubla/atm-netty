@@ -8,12 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
 
 @SpringBootApplication
 @EnableJms
+@EnableScheduling
 public class AtmServerApplication {
 
     private static final Logger LOG = LoggerFactory.getLogger(AtmServerApplication.class);

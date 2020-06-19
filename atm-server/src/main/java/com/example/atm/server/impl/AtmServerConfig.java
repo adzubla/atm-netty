@@ -19,6 +19,9 @@ public class AtmServerConfig {
     private boolean soKeepalive = true;
     private int soBacklog = 1024;
 
+    private String eventQueueName;
+    private long eventSendRate = 60000;
+
     public int getMqListenerConcurrency() {
         return mqListenerConcurrency;
     }
@@ -89,6 +92,22 @@ public class AtmServerConfig {
 
     public void setSoBacklog(int soBacklog) {
         this.soBacklog = soBacklog;
+    }
+
+    public String getEventQueueName() {
+        return eventQueueName;
+    }
+
+    public void setEventQueueName(String eventQueueName) {
+        this.eventQueueName = eventQueueName;
+    }
+
+    public long getEventSendRate() {
+        return eventSendRate;
+    }
+
+    public void setEventSendRate(long eventSendRate) {
+        this.eventSendRate = eventSendRate;
     }
 
 }
