@@ -78,10 +78,10 @@ public class ConnectionManager {
         private Instant lastOutputTime;
         private long inputCount;
         private long outputCount;
-        private long lastResponseDuration;
         private long totalResponseDuration;
-        private long minResponseDuration = Long.MAX_VALUE;
-        private long maxResponseDuration;
+        private Long lastResponseDuration;
+        private Long minResponseDuration;
+        private Long maxResponseDuration;
 
         public ConnectionData(ChannelHandlerContext context) {
             this.creationTime = Instant.now();
@@ -100,14 +100,16 @@ public class ConnectionManager {
         public void countOutput() {
             outputCount++;
             lastOutputTime = Instant.now();
+
             if (lastOutputTime.isAfter(lastInputTime)) {
                 long t = Duration.between(lastInputTime, lastOutputTime).toMillis();
                 totalResponseDuration += t;
                 lastResponseDuration = t;
-                if (t < minResponseDuration) {
+
+                if (minResponseDuration == null || t < minResponseDuration) {
                     minResponseDuration = t;
                 }
-                if (t > maxResponseDuration) {
+                if (maxResponseDuration == null || t > maxResponseDuration) {
                     maxResponseDuration = t;
                 }
             }
@@ -141,19 +143,19 @@ public class ConnectionManager {
             return outputCount;
         }
 
-        public long getLastResponseDuration() {
+        public Long getLastResponseDuration() {
             return lastResponseDuration;
         }
 
-        public long getAverageResponseDuration() {
-            return outputCount == 0 ? 0 : totalResponseDuration / outputCount;
+        public Long getAverageResponseDuration() {
+            return outputCount == 0 ? null : totalResponseDuration / outputCount;
         }
 
-        public long getMinResponseDuration() {
+        public Long getMinResponseDuration() {
             return minResponseDuration;
         }
 
-        public long getMaxResponseDuration() {
+        public Long getMaxResponseDuration() {
             return maxResponseDuration;
         }
 
