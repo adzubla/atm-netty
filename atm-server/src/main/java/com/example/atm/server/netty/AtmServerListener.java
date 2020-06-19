@@ -10,4 +10,5 @@ public interface AtmServerListener {
     void onDisconnect(ChannelHandlerContext ctx);
 
     void onMessage(ChannelHandlerContext ctx, AtmMessage msg);
+
 }

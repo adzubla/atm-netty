@@ -16,9 +16,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
@@ -37,15 +35,15 @@ public final class AtmServer {
     private final EventExecutorGroup handlerGroup;
 
     public AtmServer(AtmServerConfig config, AtmServerListener listener) {
-        bossGroup = new NioEventLoopGroup(config.getBossThreads());
-        workerGroup = new NioEventLoopGroup(config.getWorkerThreads());
+        bossGroup = TransportType.newEventLoopGroup(config.getBossThreads());
+        workerGroup = TransportType.newEventLoopGroup(config.getWorkerThreads());
 
         cryptoGroup = new DefaultEventExecutorGroup(config.getCryptoThreads());
         handlerGroup = new DefaultEventExecutorGroup(config.getHandlerThreads());
 
         bootstrap = new ServerBootstrap();
         bootstrap.group(bossGroup, workerGroup)
-                .channel(NioServerSocketChannel.class)
+                .channel(TransportType.getServerChannelClass())
                 .option(ChannelOption.SO_BACKLOG, config.getSoBacklog())
                 .childOption(ChannelOption.SO_KEEPALIVE, config.isSoKeepalive())
                 .childOption(ChannelOption.TCP_NODELAY, config.isTcpNodelay())
