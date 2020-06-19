@@ -1,7 +1,7 @@
 package com.example.atm.server.impl;
 
 import com.example.atm.netty.codec.atm.AtmMessage;
-import com.example.atm.server.conn.ConnectionId;
+import com.example.atm.server.conn.ConnectionKey;
 import com.example.atm.server.conn.ConnectionManager;
 import com.example.atm.server.jms.ReplyToHolder;
 import com.example.atm.server.netty.AtmServerListener;
@@ -52,9 +52,9 @@ public class AtmMessageListener implements AtmServerListener {
     }
 
     private void dispatch(ChannelHandlerContext ctx, AtmMessage msg) {
-        ConnectionId cid = new ConnectionId(msg.getId());
+        ConnectionKey connectionKey = new ConnectionKey(msg.getId());
 
-        connectionManager.add(cid, ctx);
+        connectionManager.add(connectionKey, ctx);
 
         String queueName = resolveQueueName(msg);
 
@@ -64,7 +64,7 @@ public class AtmMessageListener implements AtmServerListener {
             LOG.debug("Sending to {}: {}", queueName, text);
             TextMessage message = session.createTextMessage(text);
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
-            message.setJMSCorrelationID(cid.getId());
+            message.setJMSCorrelationID(connectionKey.getId());
 
             return message;
         });

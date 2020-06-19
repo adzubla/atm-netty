@@ -16,23 +16,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ConnectionManager {
     private static final Logger LOG = LoggerFactory.getLogger(ConnectionManager.class);
 
-    private final ConcurrentHashMap<ConnectionId, ConnectionData> mapById = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<ChannelHandlerContext, ConnectionId> mapByCtx = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ConnectionKey, ConnectionData> mapById = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ChannelHandlerContext, ConnectionKey> mapByCtx = new ConcurrentHashMap<>();
 
-    public void add(ConnectionId id, ChannelHandlerContext ctx) {
-        ConnectionData data = mapById.get(id);
+    public void add(ConnectionKey key, ChannelHandlerContext ctx) {
+        ConnectionData data = mapById.get(key);
         if (data != null) {
             data.countInput();
         } else {
-            data = new ConnectionData(id, ctx);
+            data = new ConnectionData(key, ctx);
             data.countInput();
-            mapById.put(id, data);
-            mapByCtx.put(ctx, id);
+            mapById.put(key, data);
+            mapByCtx.put(ctx, key);
         }
     }
 
-    public ConnectionData get(ConnectionId id) {
-        return mapById.get(id);
+    public ConnectionData get(ConnectionKey key) {
+        return mapById.get(key);
     }
 
     public Collection<ConnectionData> list() {
@@ -41,15 +41,15 @@ public class ConnectionManager {
 
     public void remove(ChannelHandlerContext ctx) {
         LOG.debug("Removing {}", ctx);
-        ConnectionId id = mapByCtx.remove(ctx);
-        if (id != null) {
-            mapById.remove(id);
+        ConnectionKey key = mapByCtx.remove(ctx);
+        if (key != null) {
+            mapById.remove(key);
         }
         ctx.close();
     }
 
-    public void remove(ConnectionId id) {
-        ConnectionData connectionData = mapById.get(id);
+    public void remove(ConnectionKey key) {
+        ConnectionData connectionData = mapById.get(key);
         if (connectionData != null) {
             remove(connectionData.channelHandlerContext);
         }
@@ -63,7 +63,7 @@ public class ConnectionManager {
     }
 
     public static class ConnectionData {
-        private final ConnectionId id;
+        private final ConnectionKey key;
         private final Instant creationTime;
         private final ChannelHandlerContext channelHandlerContext;
 
@@ -76,14 +76,14 @@ public class ConnectionManager {
         private long minResponseDuration = Long.MAX_VALUE;
         private long maxResponseDuration;
 
-        public ConnectionData(ConnectionId id, ChannelHandlerContext channelHandlerContext) {
-            this.id = id;
+        public ConnectionData(ConnectionKey key, ChannelHandlerContext channelHandlerContext) {
+            this.key = key;
             this.creationTime = Instant.now();
             this.channelHandlerContext = channelHandlerContext;
         }
 
-        public ConnectionId getId() {
-            return id;
+        public ConnectionKey getKey() {
+            return key;
         }
 
         public Instant getCreationTime() {
