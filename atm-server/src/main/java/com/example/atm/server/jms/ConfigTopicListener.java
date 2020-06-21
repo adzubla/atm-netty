@@ -30,7 +30,7 @@ public class ConfigTopicListener {
             map.put(line, line);
         }
 
-        LOG.info("Changing configuration");
+        LOG.info("Updating configuration with {} items", map.size());
         registry.setRegistry(map);
     }
 

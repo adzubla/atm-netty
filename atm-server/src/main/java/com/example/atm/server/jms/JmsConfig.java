@@ -30,9 +30,6 @@ public class JmsConfig {
                     LOG.info("Created temporary queue: {}", temporaryQueue);
                     return temporaryQueue;
                 }
-                if (destinationName.endsWith(".TOPIC")) {
-                    pubSubDomain = true;
-                }
                 return super.resolveDestinationName(session, destinationName, pubSubDomain);
             }
         };
