@@ -22,6 +22,8 @@ public class AtmServerConfig {
     private String eventQueueName;
     private long eventSendRate = 60000;
 
+    private String configTopicName;
+
     public int getMqListenerConcurrency() {
         return mqListenerConcurrency;
     }
@@ -108,6 +110,14 @@ public class AtmServerConfig {
 
     public void setEventSendRate(long eventSendRate) {
         this.eventSendRate = eventSendRate;
+    }
+
+    public String getConfigTopicName() {
+        return configTopicName;
+    }
+
+    public void setConfigTopicName(String configTopicName) {
+        this.configTopicName = configTopicName;
     }
 
 }

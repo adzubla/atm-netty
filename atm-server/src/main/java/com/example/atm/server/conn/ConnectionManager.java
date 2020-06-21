@@ -70,6 +70,7 @@ public class ConnectionManager {
     }
 
     public static class ConnectionData {
+        private final String type = "ATMS";
         private final Instant creationTime;
         private final ChannelHandlerContext context;
 
@@ -113,6 +114,10 @@ public class ConnectionManager {
                     maxResponseDuration = t;
                 }
             }
+        }
+
+        public String getType() {
+            return type;
         }
 
         public String getId() {

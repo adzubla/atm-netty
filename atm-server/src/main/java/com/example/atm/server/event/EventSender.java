@@ -36,17 +36,21 @@ public class EventSender {
         Collection<ConnectionManager.ConnectionData> list = connectionManager.list();
         LOG.debug("{} connections", list.size());
 
-        send(serialize(list));
+        send(list);
     }
 
-    private void send(String text) {
+    public void send(Object obj) {
+        sendText(serialize(obj));
+    }
+
+    private void sendText(String text) {
         jmsTemplate.send(eventQueue, session -> session.createTextMessage(text));
     }
 
-    private String serialize(Collection<ConnectionManager.ConnectionData> list) {
+    private String serialize(Object data) {
         try {
             Writer out = new StringWriter();
-            objectMapper.writeValue(out, list);
+            objectMapper.writeValue(out, data);
             return out.toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
