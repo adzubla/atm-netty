@@ -13,6 +13,7 @@
         <module>atm-codec</module>
         <module>atm-client</module>
         <module>atm-server</module>
+        <module>upload-config</module>
         <module>dummy-responder</module>
     </modules>
 
