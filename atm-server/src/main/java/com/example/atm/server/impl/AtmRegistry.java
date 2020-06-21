@@ -15,7 +15,7 @@ public class AtmRegistry {
     }
 
     public boolean isRegistered(String id) {
-        return !registry.containsKey(id);
+        return registry.containsKey(id);
     }
 
 }

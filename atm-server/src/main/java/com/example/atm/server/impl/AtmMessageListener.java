@@ -62,7 +62,7 @@ public class AtmMessageListener implements AtmServerListener {
         if (isMessageValid(msg)) {
             dispatch(ctx, msg);
         } else {
-            LOG.warn("Discarding message {}", msg);
+            LOG.warn("Id not registered. Discarding {}", msg);
         }
     }
 

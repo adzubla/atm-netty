@@ -27,7 +27,7 @@ public class QueueListener {
         ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
         if (connectionData == null) {
-            LOG.debug("Discarding: {}", body);
+            LOG.warn("Corresponding connection not found. Discarding: {}", body);
         } else {
             LOG.debug("Responding to client: {}", body);
 
