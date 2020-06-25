@@ -2,4 +2,6 @@
 
 cd atm-client || exit 1
 
-mvn exec:java -Dexec.mainClass=com.example.atm.client.netty.AtmClientCli -Dexec.args="$1"
+# --server.host=172.17.0.3 --server.port=30992
+
+mvn spring-boot:run -Dspring-boot.run.arguments="$*"
