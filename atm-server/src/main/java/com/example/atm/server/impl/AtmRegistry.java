@@ -8,7 +8,7 @@ import java.util.Map;
 @Service
 public class AtmRegistry {
 
-    private Map<String, String> registry = Collections.<String, String>emptyMap();
+    private Map<String, String> registry = Collections.emptyMap();
 
     public void setRegistry(Map<String, String> registry) {
         this.registry = registry;
