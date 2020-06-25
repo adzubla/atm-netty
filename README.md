@@ -63,6 +63,10 @@ Para terminar o servidor
 
     ./shutdown.sh
 
+# Debug
+
+O script `server.sh` já habilita a porta 5005 para debug remoto a partir de um IDE. 
+
 # Monitoração
 
 Mostrar conexões ativas
