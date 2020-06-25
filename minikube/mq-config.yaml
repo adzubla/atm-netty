@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mq-configmap
+data:
+  mq-host: "mq"
+  mq-port: "1414"
+  mq-channel: "DEV.ADMIN.SVRCONN"
+  mq-qm: "QM1"
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mq-secret
+type: Opaque
+data:
+  mq-user: "YWRtaW4="
+  mq-password: "cGFzc3cwcmQ="
