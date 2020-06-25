@@ -92,10 +92,12 @@ Instalar docker e docker-compose (no Ubuntu)
     sudo apt install docker.io docker-compose
     sudo systemctl enable --now docker
     sudo usermod -aG docker $USER
+    
+    (Efetuar Logout e Login)
 
 Gerar as imagens
 
-    ./images.sh
+    mvn clean install -P docker
 
 Iniciar os serviços no docker (mq, dummy-responder e atm-server)
 
@@ -104,3 +106,7 @@ Iniciar os serviços no docker (mq, dummy-responder e atm-server)
 Executar o client local, acessando os serviços no docker
 
     ./client.sh
+
+Para terminar todos os serviços
+
+    docker-compose down
