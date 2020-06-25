@@ -1,7 +1,8 @@
 package com.example.atm.upload;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jms.annotation.EnableJms;
@@ -10,10 +11,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.List;
 
 @SpringBootApplication
 @EnableJms
-public class UploadConfigApplication implements CommandLineRunner {
+public class UploadConfigApplication implements ApplicationRunner {
 
     @Autowired
     TopicPublisher topic;
@@ -23,11 +25,14 @@ public class UploadConfigApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        if (args.length <= 0) {
+    public void run(ApplicationArguments args) throws Exception {
+        List<String> nonOptionArgs = args.getNonOptionArgs();
+
+        if (nonOptionArgs.size() != 1) {
             System.err.println("Erro");
         } else {
-            String text = readFile(args[args.length - 1]);
+            String fileName = nonOptionArgs.get(0);
+            String text = readFile(fileName);
             topic.send(text);
         }
     }

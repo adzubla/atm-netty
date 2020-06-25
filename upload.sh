@@ -4,4 +4,6 @@ cd upload-config || exit 1
 
 FILE=$(pwd)/config.txt
 
-mvn spring-boot:run -Dspring-boot.run.arguments=$FILE
+# --ibm.mq.connName="localhost(1414)"
+
+mvn spring-boot:run -Dspring-boot.run.arguments="$FILE $*"
