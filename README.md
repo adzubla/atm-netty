@@ -59,6 +59,10 @@ Abrir um cliente
 
     ./client.sh
 
+Para fazer upload de uma nova configuração (arquivo config.txt)
+
+    ./upload.sh
+
 Para terminar o servidor
 
     ./shutdown.sh
@@ -80,3 +84,23 @@ Mostrar informações de uma conexão
 Remover uma conexão
 
     curl -s -X DELETE http://localhost:8081/connection/{ID}
+
+# Executar com Docker
+
+Instalar docker e docker-compose (no Ubuntu)
+
+    sudo apt install docker.io docker-compose
+    sudo systemctl enable --now docker
+    sudo usermod -aG docker $USER
+
+Gerar as imagens
+
+    ./images.sh
+
+Iniciar os serviços no docker (mq, dummy-responder e atm-server)
+
+    docker-compose up
+
+Executar o client local, acessando os serviços no docker
+
+    ./client.sh

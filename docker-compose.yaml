@@ -1,0 +1,30 @@
+version: '3'
+services:
+
+  mq:
+    image: "ibmcom/mq"
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+    ports:
+      - "1414:1414"
+      - "9443:9443"
+
+  dummy-responder:
+    image: "dummy-responder:1.0-SNAPSHOT"
+    ports:
+      - 8082:8082
+    environment:
+      WAITING_TIME: 10
+      spring_profiles_active: local
+      ibm.mq.connName: "mq(1414)"
+
+  atm-server:
+    image: "atm-server:1.0-SNAPSHOT"
+    ports:
+      - 8081:8081
+      - 8992:8992
+    environment:
+      WAITING_TIME: 20
+      spring_profiles_active: local
+      ibm.mq.connName: "mq(1414)"

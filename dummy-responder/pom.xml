@@ -10,7 +10,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <docker.repository.prefix>localhost.localdomain:5000</docker.repository.prefix>
     </properties>
 
     <parent>
@@ -84,6 +83,20 @@
             <groupId>com.ibm.mq</groupId>
             <artifactId>mq-jms-spring-boot-starter</artifactId>
             <version>2.3.1</version>
+        </dependency>
+
+        <!-- Tests -->
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>
@@ -201,6 +214,9 @@
                     <profiles>
                         <profile>local</profile>
                     </profiles>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
                 </configuration>
                 <executions>
                     <execution>
@@ -212,62 +228,7 @@
                 </executions>
             </plugin>
 
-            <!-- maven-dependency-plugin tem que estar *depois* do spring-boot-maven-plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.2</version>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>${project.artifactId}</artifactId>
-                                    <version>${project.version}</version>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.13</version>
-                <!--
-                <executions>
-                    <execution>
-                        <id>default</id>
-                        <goals>
-                            <goal>build</goal>
-                            <goal>push</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                -->
-                <configuration>
-                    <tag>${project.version}</tag>
-                    <repository>${docker.repository.prefix}/${project.artifactId}</repository>
-                </configuration>
-            </plugin>
-
         </plugins>
-
-        <extensions>
-            <extension>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-extension</artifactId>
-                <version>1.4.13</version>
-            </extension>
-        </extensions>
-
     </build>
 
 </project>
