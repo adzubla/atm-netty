@@ -85,6 +85,10 @@ Remover uma conexão
 
     curl -s -X DELETE http://localhost:8081/connection/{ID}
 
+Ver os ids registrados
+
+    curl -s -X GET http://localhost:8081/registry/
+
 # Executar com Docker
 
 Instalar docker e docker-compose (no Ubuntu)

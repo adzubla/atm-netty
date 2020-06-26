@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class AtmRegistry {
@@ -16,6 +17,10 @@ public class AtmRegistry {
 
     public boolean isRegistered(String id) {
         return registry.containsKey(id);
+    }
+
+    public Set<String> getIds() {
+        return Collections.unmodifiableSet(registry.keySet());
     }
 
 }

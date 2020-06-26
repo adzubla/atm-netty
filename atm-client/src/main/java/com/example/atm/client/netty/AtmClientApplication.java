@@ -33,6 +33,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
         List<String> nonOptionArgs = args.getNonOptionArgs();
 
         long id = nonOptionArgs.size() <= 0 ? ProcessHandle.current().pid() : Long.parseLong(nonOptionArgs.get(0));
+        System.err.printf("\nClient id: %d%n", id);
 
         execute(id);
     }
@@ -43,14 +44,14 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
     }
 
     @PreDestroy
-    public void terminate() {
+    public void destroy() {
         if (client != null) {
             client.close();
         }
     }
 
     public void execute(long id) throws Exception {
-        String atmId = String.format("%07d", id);
+        String atmId = String.format("%012d", id);
 
         client = new AtmClient(host, port);
         client.connect();

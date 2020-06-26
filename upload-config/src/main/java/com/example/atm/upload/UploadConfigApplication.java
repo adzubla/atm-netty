@@ -7,10 +7,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jms.annotation.EnableJms;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.LineNumberReader;
 import java.util.List;
 
 @SpringBootApplication
@@ -34,20 +34,27 @@ public class UploadConfigApplication implements ApplicationRunner {
             String fileName = nonOptionArgs.get(0);
             String text = readFile(fileName);
             topic.send(text);
+            System.out.println("Done");
         }
     }
 
     private String readFile(String name) throws IOException {
         File file = new File(name);
-        LineNumberReader in = new LineNumberReader(new FileReader(file));
+        BufferedReader in = new BufferedReader(new FileReader(file));
         StringBuilder builder = new StringBuilder();
 
+        int c = 0;
         String line;
         while ((line = in.readLine()) != null) {
-            builder.append(line).append('\n');
+            if (!line.isBlank() && line.length() == 12) {
+                builder.append(line).append('\n');
+                c++;
+            } else {
+                System.out.printf("Ignoring '%s'%n", line);
+            }
         }
 
-        System.out.println(in.getLineNumber() + " lines");
+        System.out.println(c + " items");
 
         return builder.toString();
     }
