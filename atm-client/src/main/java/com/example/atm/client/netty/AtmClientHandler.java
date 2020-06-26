@@ -14,6 +14,7 @@ public class AtmClientHandler extends SimpleChannelInboundHandler<AtmMessage> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         System.err.println("Disconnected: " + ctx.channel());
+        System.exit(1);
     }
 
     @Override
