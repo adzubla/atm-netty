@@ -5,6 +5,7 @@ import com.example.atm.server.conn.ConnectionManager;
 import com.example.atm.server.event.EventSender;
 import com.example.atm.server.jms.ReplyToHolder;
 import com.example.atm.server.netty.AtmServerListener;
+import com.example.atm.server.registry.AtmRegistry;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

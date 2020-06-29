@@ -10,7 +10,7 @@ import com.example.atm.netty.codec.length.LengthFrameDecoder;
 import com.example.atm.netty.codec.length.LengthPrepender;
 import com.example.atm.netty.codec.mac.MacDecoder;
 import com.example.atm.netty.codec.mac.MacEncoder;
-import com.example.atm.server.impl.AtmServerConfig;
+import com.example.atm.server.AtmServerConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;

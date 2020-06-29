@@ -1,4 +1,4 @@
-package com.example.atm.server.impl;
+package com.example.atm.server.registry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

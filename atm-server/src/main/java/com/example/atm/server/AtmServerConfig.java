@@ -1,4 +1,4 @@
-package com.example.atm.server.impl;
+package com.example.atm.server;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +23,9 @@ public class AtmServerConfig {
     private long eventSendRate = 60000;
 
     private String configTopicName;
+
+    private String registryLocation;
+    private boolean registryDisable = false;
 
     public int getMqListenerConcurrency() {
         return mqListenerConcurrency;
@@ -118,6 +121,22 @@ public class AtmServerConfig {
 
     public void setConfigTopicName(String configTopicName) {
         this.configTopicName = configTopicName;
+    }
+
+    public String getRegistryLocation() {
+        return registryLocation;
+    }
+
+    public void setRegistryLocation(String registryLocation) {
+        this.registryLocation = registryLocation;
+    }
+
+    public boolean isRegistryDisable() {
+        return registryDisable;
+    }
+
+    public void setRegistryDisable(boolean registryDisable) {
+        this.registryDisable = registryDisable;
     }
 
 }
