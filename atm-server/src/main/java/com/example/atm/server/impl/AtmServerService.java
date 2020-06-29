@@ -14,7 +14,7 @@ public class AtmServerService {
     private static final Logger LOG = LoggerFactory.getLogger(AtmServerService.class);
 
     @Autowired
-    AtmServerConfig config;
+    private AtmServerConfig config;
 
     @Autowired
     private AtmMessageListener listener;
@@ -23,14 +23,22 @@ public class AtmServerService {
 
     @PostConstruct
     public void init() throws InterruptedException {
-        server = new AtmServer(config, listener);
-        server.start();
-        LOG.info("Started");
+        try {
+            server = new AtmServer(config, listener);
+            server.start();
+            LOG.info("Started");
+        } catch (Exception e) {
+            LOG.error("Error starting AtmServer", e);
+            shutdown();
+            throw e;
+        }
     }
 
     @PreDestroy
     public void shutdown() throws InterruptedException {
-        server.shutdown();
+        if (server != null) {
+            server.shutdown();
+        }
         LOG.info("Shutdown terminated");
     }
 
