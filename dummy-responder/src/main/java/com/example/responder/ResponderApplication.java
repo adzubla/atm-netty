@@ -19,7 +19,7 @@ public class ResponderApplication {
     private static final Logger LOG = LoggerFactory.getLogger(ResponderApplication.class);
 
     @Autowired
-    BuildProperties buildProperties;
+    private BuildProperties buildProperties;
 
     @Autowired
     private Environment environment;

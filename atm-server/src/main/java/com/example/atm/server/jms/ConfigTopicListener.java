@@ -18,7 +18,7 @@ public class ConfigTopicListener {
     private static final Logger LOG = LoggerFactory.getLogger(ConfigTopicListener.class);
 
     @Autowired
-    AtmRegistry registry;
+    private AtmRegistry registry;
 
     @JmsListener(destination = "#{atmServerConfig.configTopicName}", containerFactory = "topicConnectionFactory")
     public void receive(String message) throws IOException {

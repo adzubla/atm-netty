@@ -18,7 +18,7 @@ import java.util.List;
 public class UploadConfigApplication implements ApplicationRunner {
 
     @Autowired
-    TopicPublisher topic;
+    private TopicPublisher topic;
 
     public static void main(String[] args) {
         SpringApplication.run(UploadConfigApplication.class, args);

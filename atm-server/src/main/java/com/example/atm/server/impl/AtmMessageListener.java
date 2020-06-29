@@ -31,7 +31,7 @@ public class AtmMessageListener implements AtmServerListener {
     private AtmRegistry registry;
 
     @Autowired
-    EventSender eventSender;
+    private EventSender eventSender;
 
     @Override
     public void onConnect(ChannelHandlerContext ctx) {
