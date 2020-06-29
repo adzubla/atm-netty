@@ -61,6 +61,7 @@ public class AtmRegistry {
         int c = 0;
         String line;
         while ((line = in.readLine()) != null) {
+            LOG.debug("line = {}", line);
             if (line.length() == ID_LENGTH && ONLY_DIGITS_PATTERN.matcher(line).matches()) {
                 c++;
                 newRegistry.put(line, line);

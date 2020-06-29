@@ -15,13 +15,13 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableJms
-public class UploadConfigApplication implements ApplicationRunner {
+public class UploadRegistryApplication implements ApplicationRunner {
 
     @Autowired
     private TopicPublisher topic;
 
     public static void main(String[] args) {
-        SpringApplication.run(UploadConfigApplication.class, args);
+        SpringApplication.run(UploadRegistryApplication.class, args);
     }
 
     @Override

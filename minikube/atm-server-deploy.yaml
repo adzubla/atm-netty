@@ -10,7 +10,7 @@ data:
     ibm.mq.user=admin
     ibm.mq.password=passw0rd
     atm.server.socket-port=8992
-    atm.server.registry-location=/etc/registry/config.txt
+    atm.server.registry-location=/etc/registry/registry.txt
   registry: |-
     000000001111
     000000002222
@@ -90,7 +90,7 @@ spec:
             name: atm-server-configmap
             items:
               - key: registry
-                path: config.txt
+                path: registry.txt
 
 ---
 

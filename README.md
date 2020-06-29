@@ -59,7 +59,7 @@ Abrir um cliente
 
     ./client.sh
 
-Para fazer upload de uma nova configuração (arquivo config.txt)
+Para fazer upload de uma nova configuração (arquivo registry.txt)
 
     ./upload.sh
 

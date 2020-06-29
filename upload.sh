@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-cd upload-config || exit 1
+cd upload-registry || exit 1
 
-FILE=$(pwd)/config.txt
+FILE=$(pwd)/registry.txt
 
 # --ibm.mq.connName="172.17.0.3(32014)"
 
