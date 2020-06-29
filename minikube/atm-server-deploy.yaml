@@ -34,7 +34,7 @@ spec:
         app: atm-server
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "8082"
+        prometheus.io/port: "8081"
         prometheus.io/scheme: "http"
         prometheus.io/path: "/actuator/prometheus"
         kiali.io/runtimes: springboot-jvm,springboot-jvm-pool,springboot-tomcat
@@ -44,7 +44,7 @@ spec:
           image: "atm-server:1.0-SNAPSHOT"
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8082
+            - containerPort: 8081
               name: http
             - containerPort: 8992
               name: netty
@@ -105,9 +105,9 @@ spec:
   ports:
     - protocol: TCP
       name: http
-      port: 8082
-      targetPort: 8082
-      nodePort: 30082
+      port: 8081
+      targetPort: 8081
+      nodePort: 30081
     - protocol: TCP
       name: netty
       port: 8992
