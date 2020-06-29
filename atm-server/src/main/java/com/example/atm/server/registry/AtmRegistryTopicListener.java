@@ -16,7 +16,7 @@ public class AtmRegistryTopicListener {
     @Autowired
     private AtmRegistry registry;
 
-    @JmsListener(destination = "#{atmServerConfig.configTopicName}", containerFactory = "topicConnectionFactory")
+    @JmsListener(destination = "#{atmServerProperties.configTopicName}", containerFactory = "topicConnectionFactory")
     public void receive(String message) throws IOException {
         LOG.info("Updating configuration from topic");
         registry.load(new StringReader(message));

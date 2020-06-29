@@ -10,7 +10,7 @@ import com.example.atm.netty.codec.length.LengthFrameDecoder;
 import com.example.atm.netty.codec.length.LengthPrepender;
 import com.example.atm.netty.codec.mac.MacDecoder;
 import com.example.atm.netty.codec.mac.MacEncoder;
-import com.example.atm.server.AtmServerConfig;
+import com.example.atm.server.AtmServerProperties;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -34,7 +34,7 @@ public final class AtmServer {
     private final EventExecutorGroup cryptoGroup;
     private final EventExecutorGroup handlerGroup;
 
-    public AtmServer(AtmServerConfig config, AtmServerListener listener) {
+    public AtmServer(AtmServerProperties config, AtmServerListener listener) {
         bossGroup = TransportType.newEventLoopGroup(config.getBossThreads());
         workerGroup = TransportType.newEventLoopGroup(config.getWorkerThreads());
 

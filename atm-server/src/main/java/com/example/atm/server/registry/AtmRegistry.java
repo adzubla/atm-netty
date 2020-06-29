@@ -24,16 +24,21 @@ public class AtmRegistry {
 
     private static final Pattern ONLY_DIGITS_PATTERN = Pattern.compile("^[0-9]+$");
 
-    @Value("#{atmServerConfig.registryDisable}")
+    @Value("#{atmServerProperties.registryDisable}")
     private boolean disable;
 
-    @Value("#{atmServerConfig.registryLocation}")
+    @Value("#{atmServerProperties.registryLocation}")
     private String location;
 
     private Map<String, String> registry = Collections.emptyMap();
 
     @PostConstruct
     public void init() throws IOException {
+        if (disable) {
+            LOG.debug("Ignoring registry");
+            return;
+        }
+
         LOG.debug("Reading registry from {}", location);
         try (FileReader reader = new FileReader(location)) {
             load(reader);

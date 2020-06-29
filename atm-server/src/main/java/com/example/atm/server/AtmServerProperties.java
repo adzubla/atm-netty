@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "atm.server")
-public class AtmServerConfig {
+public class AtmServerProperties {
 
     private int mqListenerConcurrency;
 

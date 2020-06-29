@@ -28,10 +28,10 @@ public class EventSender {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @Value("#{atmServerConfig.eventQueueName}")
+    @Value("#{atmServerProperties.eventQueueName}")
     private String eventQueue;
 
-    @Scheduled(fixedRateString = "#{atmServerConfig.eventSendRate}")
+    @Scheduled(fixedRateString = "#{atmServerProperties.eventSendRate}")
     public void connectionStats() {
         Collection<ConnectionManager.ConnectionData> list = connectionManager.list();
         LOG.debug("{} connections", list.size());
