@@ -4,6 +4,9 @@ cd upload-registry || exit 1
 
 FILE=$(pwd)/registry.txt
 
-# --ibm.mq.connName="172.17.0.3(32014)"
+if [ "$1" == "-k" ]; then
+  OPTS="--ibm.mq.connName='$(minikube ip)(32014)'"
+  shift
+fi
 
-mvn spring-boot:run -Dspring-boot.run.arguments="$FILE $*"
+mvn spring-boot:run -Dspring-boot.run.arguments="$OPTS $FILE $*"

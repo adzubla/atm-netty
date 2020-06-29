@@ -2,6 +2,9 @@
 
 cd atm-client || exit 1
 
-# --server.host=172.17.0.3 --server.port=30992
+if [ "$1" == "-k" ]; then
+  OPTS="--server.host=$(minikube ip) --server.port=30992"
+  shift
+fi
 
-mvn spring-boot:run -Dspring-boot.run.arguments="$*"
+mvn spring-boot:run -Dspring-boot.run.arguments="$OPTS $*"
