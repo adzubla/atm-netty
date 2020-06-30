@@ -26,6 +26,8 @@
 
 # Execução dos clientes
 
-    ./client.sh --server.host=172.17.0.3 --server.port=30992
+Usar a opção `-k` para os clientes se conectarem aos pods em execução no Kubernetes
+
+    ./client.sh -k
     
-    ./upload.sh --ibm.mq.connName="172.17.0.3(32014)"
+    ./upload.sh -k
