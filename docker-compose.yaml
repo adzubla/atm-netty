@@ -10,12 +10,20 @@ services:
       - "1414:1414"
       - "9443:9443"
 
+  admin:
+    image: "admin:1.0-SNAPSHOT"
+    ports:
+      - 8080:8080
+    environment:
+      spring_profiles_active: local
+
   dummy-responder:
     image: "dummy-responder:1.0-SNAPSHOT"
     ports:
       - 8082:8082
     environment:
       spring_profiles_active: local
+      spring.boot.admin.client.url: "http://admin:8080"
       ibm.mq.connName: "mq(1414)"
 
   atm-server:
@@ -25,6 +33,7 @@ services:
       - 8992:8992
     environment:
       spring_profiles_active: local
+      spring.boot.admin.client.url: "http://admin:8080"
       ibm.mq.connName: "mq(1414)"
       atm.server.registry-location: "/etc/registry.txt"
     volumes:
