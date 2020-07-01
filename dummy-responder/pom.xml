@@ -65,20 +65,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Spring Cloud -->
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
-        </dependency>
-
-        <!--
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zipkin</artifactId>
-        </dependency>
-        -->
-
         <!-- Spring Boot Starter for IBM MQ-->
 
         <dependency>
@@ -232,9 +218,26 @@
 
     <profiles>
         <profile>
-            <id>docker</id>
+            <id>kubernetes</id>
+            <dependencies>
+
+                <!-- Spring Cloud -->
+
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
+                </dependency>
+                <!--
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-zipkin</artifactId>
+                </dependency>
+                -->
+
+            </dependencies>
             <build>
                 <plugins>
+
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -251,6 +254,7 @@
                             </execution>
                         </executions>
                     </plugin>
+
                 </plugins>
             </build>
         </profile>

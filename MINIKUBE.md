@@ -16,7 +16,7 @@
 
 # Criação das imagens
 
-    mvn clean install -P docker
+    mvn clean install -P kubernetes
     
 # Deploy
 

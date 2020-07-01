@@ -101,7 +101,7 @@ Instalar docker e docker-compose (no Ubuntu)
 
 Gerar as imagens
 
-    mvn clean install -P docker
+    mvn clean install -P kubernetes
 
 Iniciar os serviços no docker (mq, dummy-responder e atm-server)
 
