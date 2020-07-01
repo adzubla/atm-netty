@@ -7,7 +7,13 @@
 
     minikube dashboard &
 
+Configuração Para Spring Boot
+
     kubectl apply -f minikube/config-reader.yaml
+
+Configuração para o Spring Boot Admin Server
+
+    kubectl create clusterrolebinding admin-default --clusterrole=cluster-admin --serviceaccount=default:default
 
 # Deploy do MQ
 

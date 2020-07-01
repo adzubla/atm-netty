@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: responder-configmap
+  name: dummy-responder-configmap
 data:
   application.properties: |-
+    spring.boot.admin.client.url=http://admin:8080
     spring.zipkin.baseUrl=http://zipkin.istio-system:9411
     spring.zipkin.enabled=true
     ibm.mq.connName=mq(1414)
@@ -15,16 +16,16 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: responder-deployment
+  name: dummy-responder-deployment
 spec:
   selector:
     matchLabels:
-      app: responder
+      app: dummy-responder
   replicas: 1
   template:
     metadata:
       labels:
-        app: responder
+        app: dummy-responder
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8082"
@@ -33,7 +34,7 @@ spec:
         kiali.io/runtimes: springboot-jvm,springboot-jvm-pool,springboot-tomcat
     spec:
       containers:
-        - name: responder
+        - name: dummy-responder
           image: "dummy-responder:1.0-SNAPSHOT"
           imagePullPolicy: IfNotPresent
           ports:
@@ -78,10 +79,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: responder
+  name: dummy-responder
+  labels:
+    app: dummy-responder
+    spring-boot: "true"
 spec:
   selector:
-    app: responder
+    app: dummy-responder
   type: NodePort
   ports:
     - protocol: TCP

@@ -4,6 +4,7 @@ metadata:
   name: atm-server-configmap
 data:
   application.properties: |-
+    spring.boot.admin.client.url=http://admin:8080
     spring.zipkin.baseUrl=http://zipkin.istio-system:9411
     spring.zipkin.enabled=true
     ibm.mq.connName=mq(1414)
@@ -98,6 +99,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: atm-server
+  labels:
+    app: atm-server
+    spring-boot: "true"
 spec:
   selector:
     app: atm-server
