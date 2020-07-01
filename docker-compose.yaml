@@ -15,7 +15,6 @@ services:
     ports:
       - 8082:8082
     environment:
-      WAITING_TIME: 10
       spring_profiles_active: local
       ibm.mq.connName: "mq(1414)"
 
@@ -25,6 +24,8 @@ services:
       - 8081:8081
       - 8992:8992
     environment:
-      WAITING_TIME: 20
       spring_profiles_active: local
       ibm.mq.connName: "mq(1414)"
+      atm.server.registry-location: "/etc/registry.txt"
+    volumes:
+      - ./upload-registry/registry.txt:/etc/registry.txt:ro
