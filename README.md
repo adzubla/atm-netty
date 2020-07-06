@@ -101,7 +101,7 @@ Instalar docker e docker-compose (no Ubuntu)
 
 Gerar as imagens
 
-    mvn clean install -P kubernetes
+    mvn clean install -P openshift,build-image
 
 Iniciar os serviços no docker (mq, dummy-responder e atm-server)
 
