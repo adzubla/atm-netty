@@ -19,7 +19,7 @@ public class QueueListener {
 
     @JmsListener(destination = "REPLY_TO_DYNAMIC_QUEUE", concurrency = "#{atmServerProperties.mqListenerConcurrency}", containerFactory = "queueConnectionFactory")
     public void receive(String message) {
-        LOG.debug("Received from queue: {}", message);
+        LOG.debug("Received from queue:\n<{}>", message.substring(0, 16) + "...");
 
         String id = message.substring(0, ID_LENGTH);
         String body = message.substring(ID_LENGTH);
@@ -27,9 +27,9 @@ public class QueueListener {
         ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
         if (connectionData == null) {
-            LOG.warn("Corresponding connection not found. Discarding: {}", body);
+            LOG.warn("Corresponding connection not found. Discarding:\n<{}>", body.substring(0, 16) + "...");
         } else {
-            LOG.debug("Responding to client: {}", body);
+            LOG.debug("Responding to client:\n<{}>", body.substring(0, 16) + "...");
 
             AtmMessage msg = new AtmMessage(id, body);
 

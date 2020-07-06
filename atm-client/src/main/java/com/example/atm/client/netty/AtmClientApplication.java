@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PreDestroy;
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -35,7 +36,12 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
         long id = nonOptionArgs.size() <= 0 ? ProcessHandle.current().pid() : Long.parseLong(nonOptionArgs.get(0));
         System.err.printf("\nClient id: %d%n", id);
 
-        execute(id);
+        if (nonOptionArgs.size() > 1) {
+            String msgFile = nonOptionArgs.get(1);
+            processFile(id, msgFile);
+        } else {
+            processConsole(id);
+        }
     }
 
     @Override
@@ -50,26 +56,49 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
         }
     }
 
-    public void execute(long id) throws Exception {
+    public void processConsole(long id) throws Exception {
         String atmId = String.format("%012d", id);
 
         client = new AtmClient(host, port);
         client.connect();
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        while (true) {
-            String line = in.readLine();
-            if (line == null) {
-                continue;
-            }
-            if ("bye".equals(line.toLowerCase())) {
-                break;
-            }
+        try (InputStreamReader streamReader = new InputStreamReader(System.in)) {
+            BufferedReader in = new BufferedReader(streamReader);
+            while (true) {
+                String line = in.readLine();
+                if (line == null) {
+                    continue;
+                }
+                if ("bye".equals(line.toLowerCase())) {
+                    break;
+                }
 
-            AtmMessage msg = new AtmMessage(atmId, line);
-            client.write(msg);
+                AtmMessage msg = new AtmMessage(atmId, line);
+                client.write(msg);
+            }
+            client.close();
         }
-        client.close();
+    }
+
+    public void processFile(long id, String fileName) throws Exception {
+        String atmId = String.format("%012d", id);
+
+        client = new AtmClient(host, port);
+        client.connect();
+
+        try (FileReader fileReader = new FileReader(fileName)) {
+            BufferedReader in = new BufferedReader(fileReader);
+            String msg = in.readLine();
+            StringBuilder m = new StringBuilder();
+            for (int i = 0; i < msg.length(); i += 2) {
+                String s = msg.substring(i, i + 2);
+                m.append((char) Integer.parseInt(s, 16));
+            }
+            System.err.printf("%nMsgAtm: %s%n", m);
+
+            AtmMessage msgAtm = new AtmMessage(atmId, m.toString());
+            client.write(msgAtm);
+        }
     }
 
 }

@@ -19,6 +19,8 @@ import javax.jms.TextMessage;
 public class AtmMessageListener implements AtmServerListener {
     private static final Logger LOG = LoggerFactory.getLogger(AtmMessageListener.class);
 
+    private static final int MIN_MESSAGE_LENGTH = 20;
+
     @Autowired
     private ConnectionManager connectionManager;
 
@@ -58,12 +60,23 @@ public class AtmMessageListener implements AtmServerListener {
 
     @Override
     public void onMessage(ChannelHandlerContext ctx, AtmMessage msg) {
-        LOG.debug("{} received {}", ctx, msg);
+
+        //Verifica se tem no minimo o codigo da mensagem + mapa de bits
+        if (msg.getBody().length() < MIN_MESSAGE_LENGTH) {
+            LOG.warn("Invalid Msg Received <{}>", msg);
+            ctx.disconnect();
+            return;
+        }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Received from ATM {}\n<{}>", msg.getId(), msg.getBody().substring(0, 16) + "...");
+        }
 
         if (isMessageValid(msg)) {
             dispatch(ctx, msg);
         } else {
             LOG.warn("Id not registered. Discarding {}", msg);
+            ctx.disconnect();
         }
     }
 
@@ -82,7 +95,10 @@ public class AtmMessageListener implements AtmServerListener {
             // coloca o id na mensagem a ser transmitida
             String text = id + msg.getBody();
 
-            LOG.debug("Sending to {}: {}", queueName, text);
+            //Restrito a quantidade de bytes exibidos da mensagem
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Sending to {}:\n<{}>", queueName, text.substring(0, 16) + "...");
+            }
             TextMessage message = session.createTextMessage(text);
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
             message.setJMSCorrelationID(id);
@@ -92,7 +108,8 @@ public class AtmMessageListener implements AtmServerListener {
     }
 
     private String resolveQueueName(AtmMessage msg) {
-        return "DEV.QUEUE.1";
+        //Verifica se destino eh autorizador OFFERING ou autorizador SWITCH
+        return msg.getBody().startsWith("9380") ? "DEV.QUEUE.3" : "DEV.QUEUE.1";
     }
 
     public static class ConnectionEvent {
