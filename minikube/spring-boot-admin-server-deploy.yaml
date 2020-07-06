@@ -1,7 +1,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: admin-configmap
+  name: spring-boot-admin-server-configmap
 data:
   application.yml: |-
     spring:
@@ -17,16 +17,16 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: admin-deployment
+  name: spring-boot-admin-server-deployment
 spec:
   selector:
     matchLabels:
-      app: admin
+      app: spring-boot-admin-server
   replicas: 1
   template:
     metadata:
       labels:
-        app: admin
+        app: spring-boot-admin-server
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
@@ -35,8 +35,8 @@ spec:
         kiali.io/runtimes: springboot-jvm,springboot-jvm-pool,springboot-tomcat
     spec:
       containers:
-        - name: admin
-          image: "admin:1.0-SNAPSHOT"
+        - name: spring-boot-admin-server
+          image: "spring-boot-admin-server:1.0-SNAPSHOT"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -47,10 +47,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: admin
+  name: spring-boot-admin-server
 spec:
   selector:
-    app: admin
+    app: spring-boot-admin-server
   type: NodePort
   ports:
     - protocol: TCP
