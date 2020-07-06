@@ -63,6 +63,9 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
                 if ("bye".equals(line.toLowerCase())) {
                     break;
                 }
+                if (line.length() < 20) {
+                    line = line.concat("                    ").substring(0, 20);
+                }
 
                 AtmMessage msg = new AtmMessage(atmId, line);
                 client.write(msg);
@@ -89,6 +92,9 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
 
             AtmMessage msgAtm = new AtmMessage(atmId, m.toString());
             client.write(msgAtm);
+
+            // Espera pela resposta
+            Thread.sleep(1000);
         }
     }
 

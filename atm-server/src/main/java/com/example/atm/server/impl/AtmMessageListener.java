@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,7 @@ public class AtmMessageListener implements AtmServerListener {
     private static final Logger LOG = LoggerFactory.getLogger(AtmMessageListener.class);
 
     private static final int MIN_MESSAGE_LENGTH = 20;
+    private static final String OFFERING_MSG_TYPE = "9380";
 
     @Autowired
     private ConnectionManager connectionManager;
@@ -35,6 +37,12 @@ public class AtmMessageListener implements AtmServerListener {
 
     @Autowired
     private EventSender eventSender;
+
+    @Value("#{atmServerProperties.switchQueueName}")
+    private String switchQueue;
+
+    @Value("#{atmServerProperties.offeringQueueName}")
+    private String offeringQueue;
 
     @Override
     public void onConnect(ChannelHandlerContext ctx) {
@@ -69,7 +77,7 @@ public class AtmMessageListener implements AtmServerListener {
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Received from ATM {}\n<{}>", msg.getId(), msg.getBody().substring(0, 16) + "...");
+            LOG.debug("Received from ATM {}: <{}>", msg.getId(), msg.getBody().substring(0, 16) + "...");
         }
 
         if (isMessageValid(msg)) {
@@ -95,9 +103,8 @@ public class AtmMessageListener implements AtmServerListener {
             // coloca o id na mensagem a ser transmitida
             String text = id + msg.getBody();
 
-            //Restrito a quantidade de bytes exibidos da mensagem
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending to {}:\n<{}>", queueName, text.substring(0, 16) + "...");
+                LOG.debug("Sending to {}: <{}>", queueName, text.substring(0, 16) + "...");
             }
             TextMessage message = session.createTextMessage(text);
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
@@ -109,7 +116,7 @@ public class AtmMessageListener implements AtmServerListener {
 
     private String resolveQueueName(AtmMessage msg) {
         //Verifica se destino eh autorizador OFFERING ou autorizador SWITCH
-        return msg.getBody().startsWith("9380") ? "DEV.QUEUE.3" : "DEV.QUEUE.1";
+        return msg.getBody().startsWith(OFFERING_MSG_TYPE) ? offeringQueue : switchQueue;
     }
 
     public static class ConnectionEvent {
