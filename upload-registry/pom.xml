@@ -90,7 +90,7 @@
                         <banDuplicatePomDependencyVersions/>
 
                         <requireJavaVersion>
-                            <version>[11.0.7,)</version>
+                            <version>[11.0.3,)</version>
                         </requireJavaVersion>
 
                         <requireMavenVersion>
