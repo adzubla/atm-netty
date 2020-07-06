@@ -15,7 +15,7 @@
         <module>atm-server</module>
         <module>upload-registry</module>
         <module>dummy-responder</module>
-        <module>admin</module>
+        <module>spring-boot-admin-server</module>
     </modules>
 
 </project>

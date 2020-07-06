@@ -103,7 +103,7 @@ Gerar as imagens
 
     mvn clean install -P openshift,build-image
 
-Iniciar os serviços no docker (mq, dummy-responder e atm-server)
+Iniciar os serviços no docker (mq, spring-boot-admin-server, dummy-responder e atm-server)
 
     docker-compose up
 
