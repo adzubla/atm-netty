@@ -8,7 +8,6 @@ import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import javax.annotation.PreDestroy;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
@@ -22,8 +21,6 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
 
     @Value("${server.port}")
     private int port;
-
-    private AtmClient client;
 
     public static void main(String[] args) {
         System.exit(SpringApplication.exit(SpringApplication.run(AtmClientApplication.class, args)));
@@ -49,20 +46,14 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
         return 0;
     }
 
-    @PreDestroy
-    public void destroy() {
-        if (client != null) {
-            client.close();
-        }
-    }
-
     public void processConsole(long id) throws Exception {
         String atmId = String.format("%012d", id);
 
-        client = new AtmClient(host, port);
-        client.connect();
+        try (AtmClient client = new AtmClient(host, port);
+             InputStreamReader streamReader = new InputStreamReader(System.in);) {
 
-        try (InputStreamReader streamReader = new InputStreamReader(System.in)) {
+            client.connect();
+
             BufferedReader in = new BufferedReader(streamReader);
             while (true) {
                 String line = in.readLine();
@@ -76,17 +67,17 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
                 AtmMessage msg = new AtmMessage(atmId, line);
                 client.write(msg);
             }
-            client.close();
         }
     }
 
     public void processFile(long id, String fileName) throws Exception {
         String atmId = String.format("%012d", id);
 
-        client = new AtmClient(host, port);
-        client.connect();
+        try (AtmClient client = new AtmClient(host, port);
+             FileReader fileReader = new FileReader(fileName)) {
 
-        try (FileReader fileReader = new FileReader(fileName)) {
+            client.connect();
+
             BufferedReader in = new BufferedReader(fileReader);
             String msg = in.readLine();
             StringBuilder m = new StringBuilder();

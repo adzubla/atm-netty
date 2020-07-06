@@ -17,7 +17,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
-public final class AtmClient {
+import java.io.Closeable;
+
+public final class AtmClient implements Closeable {
 
     private final String host;
     private final int port;
@@ -66,8 +68,11 @@ public final class AtmClient {
         }
     }
 
+    @Override
     public void close() {
-        group.shutdownGracefully();
+        if (group != null) {
+            group.shutdownGracefully();
+        }
     }
 
 }
