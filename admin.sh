@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-cd admin || exit 1
+cd spring-boot-admin-server || exit 1
 
 mvn spring-boot:run
