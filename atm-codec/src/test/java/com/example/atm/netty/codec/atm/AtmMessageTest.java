@@ -1,6 +1,5 @@
 package com.example.atm.netty.codec.atm;
 
-import com.example.atm.netty.codec.header.HeaderData;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,13 +9,8 @@ class AtmMessageTest {
     private static final String BODY = "abc";
 
     @Test
-    void testLength() {
-        assertEquals(AtmMessage.ID_LENGTH, HeaderData.ID_LENGTH);
-    }
-
-    @Test
     void testId() {
-        String id = "123456789012";
+        String id = "1234567";
         assertEquals(AtmMessage.ID_LENGTH, id.length());
 
         AtmMessage m = new AtmMessage(id, BODY);
@@ -26,10 +20,10 @@ class AtmMessageTest {
 
     @Test
     void testIdPequeno() {
-        String id = "1234567";
+        String id = "1";
         AtmMessage m = new AtmMessage(id, BODY);
 
-        String expected = "000001234567";
+        String expected = "0000001";
         assertEquals(AtmMessage.ID_LENGTH, expected.length());
 
         assertEquals(expected, m.getId());
@@ -37,7 +31,7 @@ class AtmMessageTest {
 
     @Test
     void testIdGrande() {
-        String idGrande = "1234567890123";
+        String idGrande = "12345678";
         assertTrue(idGrande.length() > AtmMessage.ID_LENGTH);
 
         assertThrows(IllegalArgumentException.class, () -> new AtmMessage(idGrande, BODY));
@@ -50,7 +44,7 @@ class AtmMessageTest {
 
     @Test
     void testBodyNull() {
-        assertThrows(IllegalArgumentException.class, () -> new AtmMessage("123456789012", null));
+        assertThrows(IllegalArgumentException.class, () -> new AtmMessage("1234567", null));
     }
 
 }

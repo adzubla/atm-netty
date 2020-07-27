@@ -2,10 +2,11 @@ package com.example.atm.netty.codec.header;
 
 import io.netty.buffer.ByteBuf;
 
-import static com.example.atm.netty.codec.atm.AtmMessage.ID_LENGTH;
-import static com.example.atm.netty.codec.header.HeaderData.RESERVED_LENGTH;
+import static com.example.atm.netty.codec.header.HeaderData.HEADER_ID_LENGTH;
 
 public class HeaderUtil {
+
+    private static final byte[] RESERVADO = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     static void serialize(HeaderData h, ByteBuf out) {
         out.writeByte(h.getVersao());
@@ -14,7 +15,7 @@ public class HeaderUtil {
         out.writeByte(h.getTipo());
         out.writeByte(h.getFormatoId());
         out.writeBytes(h.getId().getBytes());
-        out.writeBytes(h.getReservado());
+        out.writeBytes(RESERVADO);
     }
 
     public static HeaderData deserialize(ByteBuf header) {
@@ -24,19 +25,18 @@ public class HeaderUtil {
         byte tipo = header.readByte();
         byte formatoId = header.readByte();
 
-        byte[] id = new byte[ID_LENGTH];
-        header.readBytes(id, 0, ID_LENGTH);
+        byte[] id = new byte[HEADER_ID_LENGTH];
+        header.readBytes(id, 0, HEADER_ID_LENGTH);
 
-        byte[] reservado = new byte[RESERVED_LENGTH];
-        header.readBytes(reservado, 0, RESERVED_LENGTH);
+        header.skipBytes(RESERVADO.length);
 
-        HeaderData headerData = new HeaderData(new String(id));
+        HeaderData headerData = new HeaderData();
         headerData.setVersao(versao);
         headerData.setFormato(formato);
         headerData.setServico(servico);
         headerData.setTipo(tipo);
         headerData.setFormatoId(formatoId);
-        headerData.setReservado(reservado);
+        headerData.setId(new String(id));
 
         return headerData;
     }

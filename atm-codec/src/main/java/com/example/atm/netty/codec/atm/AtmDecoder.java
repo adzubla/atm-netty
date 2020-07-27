@@ -14,11 +14,15 @@ public class AtmDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
 
-        String id = headerData.getId();
+        String headerDataId = headerData.getId();
         String body = in.readCharSequence(in.readableBytes(), Charset.defaultCharset()).toString();
 
-        AtmMessage msg = new AtmMessage(id, body);
+        AtmMessage msg = new AtmMessage(headerIdToAtmId(headerDataId), body);
         out.add(msg);
+    }
+
+    private String headerIdToAtmId(String headerDataId) {
+        return headerDataId.substring(headerDataId.length() - AtmMessage.ID_LENGTH);
     }
 
 }

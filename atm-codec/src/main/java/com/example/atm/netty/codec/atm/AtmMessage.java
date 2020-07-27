@@ -2,7 +2,7 @@ package com.example.atm.netty.codec.atm;
 
 public class AtmMessage {
 
-    public static final int ID_LENGTH = 12;
+    public static final int ID_LENGTH = 7;
 
     private String id;
     private final String body;
@@ -36,7 +36,7 @@ public class AtmMessage {
         }
 
         if (id.length() < ID_LENGTH) {
-            StringBuilder sb = new StringBuilder("000000000000");
+            StringBuilder sb = new StringBuilder("0000000");
             id = sb.substring(id.length()) + id;
         }
 

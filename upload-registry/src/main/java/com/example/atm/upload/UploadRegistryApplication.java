@@ -46,7 +46,7 @@ public class UploadRegistryApplication implements ApplicationRunner {
         int c = 0;
         String line;
         while ((line = in.readLine()) != null) {
-            if (!line.isBlank() && line.length() == 12) {
+            if (!line.isBlank() && line.length() == 7) {
                 builder.append(line).append('\n');
                 c++;
             } else {

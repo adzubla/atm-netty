@@ -6,13 +6,11 @@ import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class HeaderUtilTest {
 
     public static final byte[] MESSAGE_ARRAY = new byte[]{1, 1, 5, 3, 1, 48, 48, 48, 48, 48, 48, 49, 50, 48, 57, 56, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    public static final byte[] THIRTEEN_ZEROES = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     public ByteBuf messageBuf;
 
@@ -25,7 +23,8 @@ class HeaderUtilTest {
 
     @Test
     void testSerialize() {
-        HeaderData headerData = new HeaderData("000000120987");
+        HeaderData headerData = new HeaderData();
+        headerData.setId("000000120987");
         ByteBuf out = Unpooled.buffer(HeaderData.HEADER_LENGTH);
 
         HeaderUtil.serialize(headerData, out);
@@ -43,7 +42,6 @@ class HeaderUtilTest {
         assertEquals(3, h.getTipo());
         assertEquals(1, h.getFormatoId());
         assertEquals("000000120987", h.getId());
-        assertArrayEquals(THIRTEEN_ZEROES, h.getReservado());
     }
 
 }
