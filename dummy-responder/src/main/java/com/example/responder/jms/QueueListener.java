@@ -20,16 +20,30 @@ public class QueueListener {
     private JmsTemplate jmsTemplate;
 
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "2")
-    public void receiveMessage(String data, Message message) throws JMSException {
-        LOG.info("Received from queue: {}", data);
+    public void receiveMessage(String body, Message message) throws JMSException {
+        LOG.info("Received from queue: {}", body);
+
+        String sourceContext = message.getStringProperty("SOURCE_CONTEXT");
+        LOG.info("sourceContext = {}", sourceContext);
+
+        String targetContext = message.getStringProperty("TARGET_CONTEXT");
+        LOG.info("targetContext = {}", targetContext);
 
         Destination replyTo = message.getJMSReplyTo();
 
         jmsTemplate.send(replyTo, session -> {
-            TextMessage textMessage = session.createTextMessage(data.toUpperCase());
+            TextMessage textMessage = session.createTextMessage(createResponse(body));
             textMessage.setJMSCorrelationID(message.getJMSCorrelationID());
+
+            textMessage.setStringProperty("SOURCE_CONTEXT", targetContext);
+            textMessage.setStringProperty("TARGET_CONTEXT", sourceContext);
+
             return textMessage;
         });
+    }
+
+    private String createResponse(String data) {
+        return data.toUpperCase();
     }
 
 }

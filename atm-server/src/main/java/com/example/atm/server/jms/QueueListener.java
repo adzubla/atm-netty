@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Service;
 
-import static com.example.atm.netty.codec.atm.AtmMessage.ID_LENGTH;
+import javax.jms.JMSException;
+import javax.jms.Message;
 
 @Service
 public class QueueListener {
@@ -18,11 +19,15 @@ public class QueueListener {
     private ConnectionManager connectionManager;
 
     @JmsListener(destination = "REPLY_TO_DYNAMIC_QUEUE", concurrency = "#{atmServerProperties.mqListenerConcurrency}", containerFactory = "queueConnectionFactory")
-    public void receive(String message) {
-        LOG.debug("Received from queue: <{}>", message.substring(0, ID_LENGTH + 16) + "...");
+    public void receive(String body, Message message) throws JMSException {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Received from queue: <{}>", body.substring(0, 16) + "...");
+        }
 
-        String id = message.substring(0, ID_LENGTH);
-        String body = message.substring(ID_LENGTH);
+        String targetContext = message.getStringProperty("TARGET_CONTEXT");
+        LOG.debug("targetContext = {}", targetContext);
+
+        String id = getId(targetContext);
 
         ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
@@ -36,6 +41,11 @@ public class QueueListener {
             connectionData.countOutput();
             connectionData.channelHandlerContext().writeAndFlush(msg);
         }
+    }
+
+    private String getId(String targetContext) {
+        int i = targetContext.indexOf('/');
+        return targetContext.substring(i + 2);
     }
 
 }

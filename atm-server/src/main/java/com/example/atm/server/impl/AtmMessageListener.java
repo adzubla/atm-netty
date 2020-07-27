@@ -100,15 +100,22 @@ public class AtmMessageListener implements AtmServerListener {
         String queueName = resolveQueueName(msg);
 
         jmsTemplate.send(queueName, session -> {
-            // coloca o id na mensagem a ser transmitida
-            String text = id + msg.getBody();
+            String body = msg.getBody();
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending to {}: <{}>", queueName, text.substring(0, 16) + "...");
+                LOG.debug("Sending to {}: <{}>", queueName, body.substring(0, 16) + "...");
             }
-            TextMessage message = session.createTextMessage(text);
+            TextMessage message = session.createTextMessage(body);
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
             message.setJMSCorrelationID(id);
+
+            message.setStringProperty("VERSION", "900");
+            message.setStringProperty("MSG_FORMAT", "ISO8583/1987");
+            message.setStringProperty("TERMID_FORMAT", "2");
+            message.setStringProperty("TERM_ID", id);
+            message.setStringProperty("TYPE_ID", body.substring(0, 4));
+            message.setStringProperty("SOURCE_CONTEXT", ctx.channel().id() + " / " + id);
+            message.setStringProperty("TARGET_CONTEXT", "9201 / 0");
 
             return message;
         });
