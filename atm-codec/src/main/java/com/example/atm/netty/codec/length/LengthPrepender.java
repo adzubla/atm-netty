@@ -5,7 +5,7 @@ import io.netty.handler.codec.LengthFieldPrepender;
 public class LengthPrepender extends LengthFieldPrepender {
 
     public LengthPrepender() {
-        super(2);
+        super(2, true);
     }
 
 }
