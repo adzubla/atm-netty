@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
+import static com.example.atm.server.impl.IsoUtil.dump;
+
 @Service
 public class QueueListener {
     private static final Logger LOG = LoggerFactory.getLogger(QueueListener.class);
@@ -21,7 +23,7 @@ public class QueueListener {
     @JmsListener(destination = "REPLY_TO_DYNAMIC_QUEUE", concurrency = "#{atmServerProperties.mqListenerConcurrency}", containerFactory = "queueConnectionFactory")
     public void receive(String body, Message message) throws JMSException {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Received from queue: <{}>", body.substring(0, 16) + "...");
+            LOG.debug("Received from queue: {}", dump(body));
             logJmsProperties(message);
         }
 
@@ -33,9 +35,11 @@ public class QueueListener {
         ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
         if (connectionData == null) {
-            LOG.warn("Corresponding connection not found. Discarding: <{}>", body.substring(0, 16) + "...");
+            LOG.warn("Corresponding connection not found. Discarding: {}", dump(body));
         } else {
-            LOG.debug("Responding to client: <{}>", body.substring(0, 16) + "...");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Responding to client: {}", dump(body));
+            }
 
             AtmMessage msg = new AtmMessage(id, body);
 

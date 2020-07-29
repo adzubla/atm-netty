@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import javax.jms.TextMessage;
 
+import static com.example.atm.server.impl.IsoUtil.dump;
+
 @Component
 public class AtmMessageListener implements AtmServerListener {
     private static final Logger LOG = LoggerFactory.getLogger(AtmMessageListener.class);
@@ -77,7 +79,7 @@ public class AtmMessageListener implements AtmServerListener {
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Received from ATM {}: <{}>", msg.getId(), msg.getBody().substring(0, 16) + "...");
+            LOG.debug("Received from ATM {}: {}", msg.getId(), dump(msg.getBody()));
         }
 
         if (isMessageValid(msg)) {
@@ -103,7 +105,7 @@ public class AtmMessageListener implements AtmServerListener {
             String body = msg.getBody();
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending to {}: <{}>", queueName, body.substring(0, 16) + "...");
+                LOG.debug("Sending to {}: {}", queueName, dump(body));
             }
             TextMessage message = session.createTextMessage(body);
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());

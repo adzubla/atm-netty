@@ -54,4 +54,14 @@ public class IsoUtil {
         return result.toString();
     }
 
+    public static String dump(String data) {
+        if (data == null) {
+            return "<null>";
+        } else if (data.length() <= 16) {
+            return "<" + data + ">";
+        } else {
+            return "<" + data.substring(0, 16) + "...>";
+        }
+    }
+
 }
