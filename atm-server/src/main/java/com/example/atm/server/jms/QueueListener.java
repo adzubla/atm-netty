@@ -22,6 +22,7 @@ public class QueueListener {
     public void receive(String body, Message message) throws JMSException {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Received from queue: <{}>", body.substring(0, 16) + "...");
+            logJmsProperties(message);
         }
 
         String targetContext = message.getStringProperty("TARGET_CONTEXT");
@@ -40,6 +41,15 @@ public class QueueListener {
 
             connectionData.countOutput();
             connectionData.channelHandlerContext().writeAndFlush(msg);
+        }
+    }
+
+    private void logJmsProperties(Message message) throws JMSException {
+        var names = message.getPropertyNames();
+        while (names.hasMoreElements()) {
+            String key = (String) names.nextElement();
+            String value = message.getStringProperty(key);
+            LOG.debug("{} = {}", key, value);
         }
     }
 

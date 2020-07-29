@@ -22,12 +22,10 @@ public class QueueListener {
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "2")
     public void receiveMessage(String body, Message message) throws JMSException {
         LOG.info("Received from queue: {}", body);
+        logJmsProperties(message);
 
         String sourceContext = message.getStringProperty("SOURCE_CONTEXT");
-        LOG.info("sourceContext = {}", sourceContext);
-
         String targetContext = message.getStringProperty("TARGET_CONTEXT");
-        LOG.info("targetContext = {}", targetContext);
 
         Destination replyTo = message.getJMSReplyTo();
 
@@ -44,6 +42,16 @@ public class QueueListener {
 
     private String createResponse(String data) {
         return data.toUpperCase();
+    }
+
+
+    private void logJmsProperties(Message message) throws JMSException {
+        var names = message.getPropertyNames();
+        while (names.hasMoreElements()) {
+            String key = (String) names.nextElement();
+            String value = message.getStringProperty(key);
+            LOG.debug("{} = {}", key, value);
+        }
     }
 
 }
