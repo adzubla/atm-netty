@@ -8,6 +8,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,7 +57,7 @@ class MacUtilTest {
     @Test
     void testCalculate() throws DecoderException {
         ByteBuf expectedMac = Unpooled.buffer(expectedMacString.length());
-        expectedMac.writeCharSequence(expectedMacString, Charset.defaultCharset());
+        expectedMac.writeCharSequence(expectedMacString, StandardCharsets.ISO_8859_1);
 
         ByteBuf data = Unpooled.buffer(dataString.length());
         data.writeBytes(Hex.decodeHex(dataString));
@@ -70,7 +71,7 @@ class MacUtilTest {
     @Test
     void testVerifyOk() throws DecoderException {
         ByteBuf expectedMac = Unpooled.buffer(expectedMacString.length());
-        expectedMac.writeCharSequence(expectedMacString, Charset.defaultCharset());
+        expectedMac.writeCharSequence(expectedMacString, StandardCharsets.ISO_8859_1);
 
         ByteBuf data = Unpooled.buffer(dataString.length());
         data.writeBytes(Hex.decodeHex(dataString));
@@ -81,7 +82,7 @@ class MacUtilTest {
     @Test
     void testVerifyFail() throws DecoderException {
         ByteBuf expectedMac = Unpooled.buffer(expectedMacString.length());
-        expectedMac.writeCharSequence(expectedMacString, Charset.defaultCharset());
+        expectedMac.writeCharSequence(expectedMacString, StandardCharsets.ISO_8859_1);
 
         String tamperedContent = dataString.substring(2);
         ByteBuf data = Unpooled.buffer(tamperedContent.length());

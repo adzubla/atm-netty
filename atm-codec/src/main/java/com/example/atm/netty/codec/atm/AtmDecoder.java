@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class AtmDecoder extends ByteToMessageDecoder {
@@ -15,7 +16,7 @@ public class AtmDecoder extends ByteToMessageDecoder {
         HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
 
         String headerDataId = headerData.getId();
-        String body = in.readCharSequence(in.readableBytes(), Charset.defaultCharset()).toString();
+        String body = in.readCharSequence(in.readableBytes(), StandardCharsets.ISO_8859_1).toString();
 
         AtmMessage msg = new AtmMessage(headerIdToAtmId(headerDataId), body);
         out.add(msg);

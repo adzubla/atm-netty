@@ -12,6 +12,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -28,7 +29,7 @@ public class MacUtil {
         String macHex = Hex.encodeHexString(macBytes, false);
 
         ByteBuf mac = Unpooled.buffer(MAC_LENGTH);
-        mac.writeCharSequence(macHex, Charset.defaultCharset());
+        mac.writeCharSequence(macHex, StandardCharsets.ISO_8859_1);
 
         return mac;
     }
@@ -37,7 +38,7 @@ public class MacUtil {
         byte[] dataBytes = ByteBufUtil.getBytes(data);
         byte[] macBytes;
         try {
-            macBytes = Hex.decodeHex(mac.readCharSequence(mac.readableBytes(), Charset.defaultCharset()).toString());
+            macBytes = Hex.decodeHex(mac.readCharSequence(mac.readableBytes(), StandardCharsets.ISO_8859_1).toString());
         } catch (DecoderException e) {
             throw new RuntimeException(e);
         }
