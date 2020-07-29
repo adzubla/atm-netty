@@ -24,7 +24,7 @@ public class QueueListener {
     public void receive(String body, Message message) throws JMSException {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Received from queue: {}", dump(body));
-            logJmsProperties(message);
+            //logJmsProperties(message);
         }
 
         String targetContext = message.getStringProperty("TARGET_CONTEXT");
