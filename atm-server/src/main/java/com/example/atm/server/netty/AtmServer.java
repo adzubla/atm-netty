@@ -62,7 +62,6 @@ public final class AtmServer {
 
                         pipeline.addLast(new LengthPrepender());
                         pipeline.addLast(cryptoGroup, new CryptoEncoder());
-                        pipeline.addLast(new MacEncoder());
                         pipeline.addLast(new HeaderEncoder());
                         pipeline.addLast(new AtmEncoder());
 

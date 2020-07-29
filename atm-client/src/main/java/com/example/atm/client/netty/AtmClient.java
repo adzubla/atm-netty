@@ -44,7 +44,6 @@ public final class AtmClient implements Closeable {
 
                         pipeline.addLast(new LengthFrameDecoder());
                         pipeline.addLast(new CryptoDecoder());
-                        pipeline.addLast(new MacDecoder());
                         pipeline.addLast(new HeaderDecoder());
                         pipeline.addLast(new AtmDecoder());
 
