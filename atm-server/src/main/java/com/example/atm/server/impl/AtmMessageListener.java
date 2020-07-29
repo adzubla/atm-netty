@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.jms.TextMessage;
+import javax.jms.BytesMessage;
 
 import static com.example.atm.server.impl.IsoUtil.dump;
 
@@ -99,15 +99,17 @@ public class AtmMessageListener implements AtmServerListener {
 
         connectionManager.add(id, ctx);
 
-        String queueName = resolveQueueName(msg);
+        String body = msg.getBody();
+        String type = body.substring(0, 4);
+
+        String queueName = resolveQueueName(type);
 
         jmsTemplate.send(queueName, session -> {
-            String body = msg.getBody();
-
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Sending to {}: {}", queueName, dump(body));
             }
-            TextMessage message = session.createTextMessage(body);
+
+            BytesMessage message = session.createBytesMessage();
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
             message.setJMSCorrelationID(id);
 
@@ -115,17 +117,19 @@ public class AtmMessageListener implements AtmServerListener {
             message.setStringProperty("MSG_FORMAT", "ISO8583/1987");
             message.setStringProperty("TERMID_FORMAT", "2");
             message.setStringProperty("TERM_ID", id);
-            message.setStringProperty("TYPE_ID", body.substring(0, 4));
+            message.setStringProperty("TYPE_ID", type);
             message.setStringProperty("SOURCE_CONTEXT", ctx.channel().id() + " / " + id);
             message.setStringProperty("TARGET_CONTEXT", "9201 / 0");
+
+            message.writeBytes(IsoUtil.compactBitmap(body));
 
             return message;
         });
     }
 
-    private String resolveQueueName(AtmMessage msg) {
-        //Verifica se destino eh autorizador OFFERING ou autorizador SWITCH
-        return msg.getBody().startsWith(OFFERING_MSG_TYPE) ? offeringQueue : switchQueue;
+    private String resolveQueueName(String type) {
+        // Verifica se destino eh autorizador OFFERING ou autorizador SWITCH
+        return type.startsWith(OFFERING_MSG_TYPE) ? offeringQueue : switchQueue;
     }
 
     public static class ConnectionEvent {

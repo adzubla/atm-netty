@@ -7,10 +7,11 @@ import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.jms.BytesMessage;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.TextMessage;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class QueueListener {
@@ -20,7 +21,7 @@ public class QueueListener {
     private JmsTemplate jmsTemplate;
 
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "2")
-    public void receiveMessage(String body, Message message) throws JMSException {
+    public void receiveMessage(byte[] body, Message message) throws JMSException {
         LOG.info("Received from queue: {}", body);
         logJmsProperties(message);
 
@@ -30,18 +31,28 @@ public class QueueListener {
         Destination replyTo = message.getJMSReplyTo();
 
         jmsTemplate.send(replyTo, session -> {
-            TextMessage textMessage = session.createTextMessage(createResponse(body));
-            textMessage.setJMSCorrelationID(message.getJMSCorrelationID());
+            BytesMessage response = session.createBytesMessage();
+            response.setJMSCorrelationID(message.getJMSCorrelationID());
 
-            textMessage.setStringProperty("SOURCE_CONTEXT", targetContext);
-            textMessage.setStringProperty("TARGET_CONTEXT", sourceContext);
+            response.setStringProperty("SOURCE_CONTEXT", targetContext);
+            response.setStringProperty("TARGET_CONTEXT", sourceContext);
 
-            return textMessage;
+            response.writeBytes(createResponse(body));
+
+            return response;
         });
     }
 
-    private String createResponse(String data) {
-        return data.toUpperCase();
+    private byte[] createResponse(byte[] data) {
+        byte[] body = new byte[data.length - 12];
+        System.arraycopy(data, 12, body, 0, body.length);
+        byte[] upper = new String(body, StandardCharsets.ISO_8859_1).toUpperCase().getBytes(StandardCharsets.ISO_8859_1);
+
+        byte[] response = new byte[data.length];
+        System.arraycopy(data, 0, response, 0, 12);
+        System.arraycopy(upper, 0, response, 12, upper.length);
+
+        return response;
     }
 
 

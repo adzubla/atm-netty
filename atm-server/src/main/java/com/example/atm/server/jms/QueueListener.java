@@ -2,6 +2,7 @@ package com.example.atm.server.jms;
 
 import com.example.atm.netty.codec.atm.AtmMessage;
 import com.example.atm.server.conn.ConnectionManager;
+import com.example.atm.server.impl.IsoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,11 @@ public class QueueListener {
     private ConnectionManager connectionManager;
 
     @JmsListener(destination = "REPLY_TO_DYNAMIC_QUEUE", concurrency = "#{atmServerProperties.mqListenerConcurrency}", containerFactory = "queueConnectionFactory")
-    public void receive(String body, Message message) throws JMSException {
+    public void receive(byte[] data, Message message) throws JMSException {
+        String body = IsoUtil.expandBitmap(data);
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Received from queue: {}", dump(body));
-            //logJmsProperties(message);
         }
 
         String targetContext = message.getStringProperty("TARGET_CONTEXT");
@@ -45,15 +47,6 @@ public class QueueListener {
 
             connectionData.countOutput();
             connectionData.channelHandlerContext().writeAndFlush(msg);
-        }
-    }
-
-    private void logJmsProperties(Message message) throws JMSException {
-        var names = message.getPropertyNames();
-        while (names.hasMoreElements()) {
-            String key = (String) names.nextElement();
-            String value = message.getStringProperty(key);
-            LOG.debug("{} = {}", key, value);
         }
     }
 

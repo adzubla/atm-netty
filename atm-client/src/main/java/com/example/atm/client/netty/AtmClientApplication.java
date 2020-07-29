@@ -63,11 +63,11 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
                 if ("bye".equals(line.toLowerCase())) {
                     break;
                 }
-                if (line.length() < 20) {
-                    line = line.concat("                    ").substring(0, 20);
-                }
 
-                AtmMessage msg = new AtmMessage(atmId, line);
+                String mti = "0110";
+                String bitmap = "FF010203040506FF";
+
+                AtmMessage msg = new AtmMessage(atmId, mti + bitmap + line);
                 client.write(msg);
             }
         }

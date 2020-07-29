@@ -4,24 +4,27 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class IsoUtilTest {
 
     @Test
     void testBitmap() {
-        String m = "01020304050607FFxyz";
+        String m = "0110FF010203040506FFxyz";
 
         byte[] byteArray = IsoUtil.compactBitmap(m);
-        assert byteArray.length == 11;
 
         System.out.println("byteArray = " + Arrays.toString(byteArray));
         System.out.println("  as ints = " + Arrays.toString(toIntArray(byteArray)));
+
+        assertEquals(15, byteArray.length);
 
         String s = IsoUtil.expandBitmap(byteArray);
 
         System.out.println("m = " + m);
         System.out.println("s = " + s);
 
-        assert m.equals(s);
+        assertEquals(m, s);
     }
 
     private int[] toIntArray(byte[] b) {

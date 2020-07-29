@@ -18,7 +18,13 @@ public class AtmClientHandler extends SimpleChannelInboundHandler<AtmMessage> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, AtmMessage msg) {
-        System.err.println(msg.getBody());
+        String body = msg.getBody();
+
+        String mti = body.substring(0, 4);
+        String bitmap = body.substring(4, 20);
+        String text = body.substring(20);
+
+        System.err.printf("[%s,%s] %s%n", mti, bitmap, text);
     }
 
     @Override
