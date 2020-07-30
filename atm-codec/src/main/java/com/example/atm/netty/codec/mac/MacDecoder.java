@@ -15,7 +15,16 @@ public class MacDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        out.add(processMac(in));
+        if (mustProcess(in)) {
+            out.add(processMac(in));
+        } else {
+            LOG.debug("No MAC processing");
+            out.add(in.readBytes(in.readableBytes()));
+        }
+    }
+
+    private boolean mustProcess(ByteBuf data) {
+        return data.getByte(50) != 120;
     }
 
     private ByteBuf processMac(ByteBuf data) {
