@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>Servidor de comunicação com ATM</p>
+ * <p>Servidor de comunicação com ATM.</p>
  * <p>Formato das mensagens recebidas:</p>
  * <p/>
  * <h1>Frame:</h1>
@@ -79,9 +79,9 @@ import org.slf4j.LoggerFactory;
  *     +-------------+--------------+--------------------------+
  * </pre>
  * <ul>
- *    <li>mti: Message type indicator, é um campo numérico de quatro digitos decimais</li>
- *    <li>bitmap: 16 caracteres hexadecimais no formato ASCII</li>
- *    <li>fields: campos especificados no bitmap</li>
+ *     <li>mti: Message type indicator, é um campo numérico de quatro digitos decimais</li>
+ *     <li>bitmap: 16 caracteres hexadecimais no formato ASCII</li>
+ *     <li>fields: campos especificados no bitmap</li>
  * </ul>
  * <p/>
  * <p><a href="https://en.wikipedia.org/wiki/ISO_8583">ISO-8583</a></p>
