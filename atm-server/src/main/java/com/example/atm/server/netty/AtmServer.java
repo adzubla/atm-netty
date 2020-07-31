@@ -49,12 +49,12 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * <ul>
  *     <li>versao: 0x01</li>
- *     <li>formato: 0x01 - ISO8583, 0x02 - Texto(GFT)</li>
- *     <li>servico: 0x03 - GFT, 0x05 - Transacional(ATM)</li>
+ *     <li>formato: 0x01 - ISO8583, 0x02 - Texto (GFT)</li>
+ *     <li>servico: 0x03 - GFT, 0x05 - Transacional (ATM)</li>
  *     <li>tipo: 0x01 - ping, 0x02 - pong, 0x03 - dados</li>
  *     <li>formatoId: 0x01</li>
  *     <li>id: string no formato ASCII:<br>
- *         <pre>['00000'][ localidade (3 bytes) ][ IdTerminal (4 bytes)]</pre></li>
+ *         <pre>['00000'][IdTerminal (7 bytes)]</pre></li>
  *     <li>reservado: preenchido com 0x00</li>
  * </ul>
  * <p/>
@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  *     +-------------+--------------+--------------------------+
  * </pre>
  * <ul>
- *     <li>mti: Message type indicator, é um campo numérico de quatro digitos decimais</li>
+ *     <li>mti: Message Type Indicator, é um campo numérico de quatro digitos decimais</li>
  *     <li>bitmap: 16 caracteres hexadecimais no formato ASCII</li>
  *     <li>fields: campos especificados no bitmap</li>
  * </ul>
