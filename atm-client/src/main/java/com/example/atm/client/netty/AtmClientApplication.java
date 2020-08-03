@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.util.List;
 
 @SpringBootApplication
@@ -64,10 +65,16 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
                     break;
                 }
 
-                String mti = "0110";
-                String bitmap = "FF010203040506FF";
+                String mti = "0100";
+                StringBuilder bitmap = new StringBuilder("0010001000010000000000000001000100000010110000000100100000000101");
+                if (line.startsWith("x")) {
+                    // sem o MAC
+                    bitmap.setCharAt(63, '0');
+                }
+                String bitmapHex = (new BigInteger(bitmap.toString(), 2)).toString(16).toUpperCase();
+                assert bitmapHex.length() == 16;
 
-                AtmMessage msg = new AtmMessage(atmId, mti + bitmap + line);
+                AtmMessage msg = new AtmMessage(atmId, mti + bitmapHex + line);
                 client.write(msg);
             }
         }
