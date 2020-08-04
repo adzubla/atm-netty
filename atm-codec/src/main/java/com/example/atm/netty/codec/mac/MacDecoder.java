@@ -16,7 +16,11 @@ public class MacDecoder extends ByteToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         if (hasMac(in)) {
-            out.add(processMac(in));
+            try {
+                out.add(processMac(in));
+            } catch (Exception e) {
+                LOG.warn("Discarding message, MAC error: " + e);
+            }
         } else {
             LOG.debug("No MAC processing");
             out.add(in.readBytes(in.readableBytes()));
@@ -43,11 +47,7 @@ public class MacDecoder extends ByteToMessageDecoder {
         ByteBuf body = data.readSlice(length - MAC_LENGTH);
         ByteBuf mac = data.readSlice(MAC_LENGTH);
 
-        try {
-            MacUtil.verifyMac(body, mac);
-        } catch (Exception e) {
-            LOG.warn("MAC error: " + e);
-        }
+        MacUtil.verifyMac(body, mac);
 
         return body.retain();
     }
