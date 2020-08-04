@@ -9,7 +9,6 @@ import com.example.atm.netty.codec.header.HeaderDecoder;
 import com.example.atm.netty.codec.header.HeaderEncoder;
 import com.example.atm.netty.codec.length.LengthFrameDecoder;
 import com.example.atm.netty.codec.length.LengthPrepender;
-import com.example.atm.netty.codec.mac.MacDecoder;
 import com.example.atm.netty.codec.mac.MacEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -60,7 +59,9 @@ public final class AtmClient implements Closeable {
         channel = b.connect(host, port).sync().channel();
     }
 
-    public void write(AtmMessage msg) throws InterruptedException {
+    public void write(AtmMessage msg, boolean useMac) throws InterruptedException {
+        channel.attr(MacEncoder.MAC_ENCODER_USE_ATTRIBUTE_KEY).set(useMac);
+
         ChannelFuture lastWriteFuture = channel.writeAndFlush(msg);
         if (lastWriteFuture != null) {
             lastWriteFuture.sync();
