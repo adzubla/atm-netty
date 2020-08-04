@@ -1,4 +1,4 @@
-package com.example.atm.server.impl;
+package com.example.atm.netty.codec.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.example.atm.server.impl;
+package com.example.atm.netty.codec.util;
 
 import org.junit.jupiter.api.Test;
 
