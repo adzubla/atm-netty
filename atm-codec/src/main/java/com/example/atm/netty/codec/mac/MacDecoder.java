@@ -15,7 +15,7 @@ public class MacDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        if (mustProcess(in)) {
+        if (hasMac(in)) {
             out.add(processMac(in));
         } else {
             LOG.debug("No MAC processing");
@@ -23,11 +23,21 @@ public class MacDecoder extends ByteToMessageDecoder {
         }
     }
 
-    private boolean mustProcess(ByteBuf data) {
-        return data.getByte(50) != 120;
+    protected boolean hasMac(ByteBuf data) {
+        int firstBytePos = 34; // posicao no buffer do primeiro "byte" do bitmap
+        int firstByte = data.getByte(firstBytePos) & 0xFF;
+        int firstBit = firstByte & 0b1000;
+
+        int len = (firstBit == 0) ? 16 : 32;
+
+        int lastBytePos = firstBytePos + len - 1; // posicao no buffer do ultimo "byte" do bitmap
+        int lastByte = data.getByte(lastBytePos) & 0xFF;
+        int lastBit = lastByte & 1;
+
+        return lastBit != 0; // utimo bit indica se o MAC esta presente
     }
 
-    private ByteBuf processMac(ByteBuf data) {
+    protected ByteBuf processMac(ByteBuf data) {
         int length = data.readableBytes();
 
         ByteBuf body = data.readSlice(length - MAC_LENGTH);
