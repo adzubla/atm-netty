@@ -3,6 +3,7 @@ package com.example.responder.jms;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class QueueListener {
 
     @Autowired
     private JmsTemplate jmsTemplate;
+
+    @Value("${responder.upper-case}")
+    private boolean upperCase;
 
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "2")
     public void receiveMessage(byte[] body, Message message) throws JMSException {
@@ -46,11 +50,16 @@ public class QueueListener {
     private byte[] createResponse(byte[] data) {
         byte[] body = new byte[data.length - 12];
         System.arraycopy(data, 12, body, 0, body.length);
-        byte[] upper = new String(body, StandardCharsets.ISO_8859_1).toUpperCase().getBytes(StandardCharsets.ISO_8859_1);
+
+        if (upperCase) {
+            body = new String(body, StandardCharsets.ISO_8859_1).toUpperCase().getBytes(StandardCharsets.ISO_8859_1);
+        }
 
         byte[] response = new byte[data.length];
         System.arraycopy(data, 0, response, 0, 12);
-        System.arraycopy(upper, 0, response, 12, upper.length);
+        System.arraycopy(body, 0, response, 12, body.length);
+
+        response[2]++;
 
         return response;
     }
