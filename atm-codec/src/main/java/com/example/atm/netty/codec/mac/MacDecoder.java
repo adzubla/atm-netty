@@ -45,8 +45,8 @@ public class MacDecoder extends ByteToMessageDecoder {
 
         try {
             MacUtil.verifyMac(body, mac);
-        } catch (IllegalStateException e) {
-            LOG.warn(e.toString());
+        } catch (Exception e) {
+            LOG.warn("MAC error: " + e);
         }
 
         return body.retain();
