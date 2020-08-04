@@ -7,7 +7,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 import java.nio.CharBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class AtmEncoder extends MessageToByteEncoder<AtmMessage> {
