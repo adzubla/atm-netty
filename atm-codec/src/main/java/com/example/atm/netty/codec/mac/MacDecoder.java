@@ -28,7 +28,7 @@ public class MacDecoder extends ByteToMessageDecoder {
         int firstByte = data.getByte(firstBytePos) & 0xFF;
         int firstBit = firstByte & 0b1000;
 
-        int len = (firstBit == 0) ? 16 : 32;
+        int len = (firstBit == 0) ? 16 : 32; // o bitmap pode ter 64 ou 128 bits, entao ajustamos o tamanho
 
         int lastBytePos = firstBytePos + len - 1; // posicao no buffer do ultimo "byte" do bitmap
         int lastByte = data.getByte(lastBytePos) & 0xFF;
