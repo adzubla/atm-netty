@@ -9,6 +9,10 @@ public class HeaderData {
     public static final int HEADER_LENGTH = 30;
     public static final int HEADER_ID_LENGTH = 12;
 
+    public static final byte PING = 1;
+    public static final byte PONG = 2;
+    public static final byte DATA = 3;
+
     private byte versao = 1;
     private byte formato = 1;
     private byte servico = 5;
