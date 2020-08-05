@@ -5,6 +5,7 @@ import com.example.atm.netty.codec.atm.AtmEncoder;
 import com.example.atm.netty.codec.atm.AtmMessage;
 import com.example.atm.netty.codec.crypto.CryptoDecoder;
 import com.example.atm.netty.codec.crypto.CryptoEncoder;
+import com.example.atm.netty.codec.header.HeaderData;
 import com.example.atm.netty.codec.header.HeaderDecoder;
 import com.example.atm.netty.codec.header.HeaderEncoder;
 import com.example.atm.netty.codec.length.LengthFrameDecoder;
@@ -60,7 +61,19 @@ public final class AtmClient implements Closeable {
     }
 
     public void write(AtmMessage msg, boolean useMac) throws InterruptedException {
+        channel.attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(HeaderData.DATA);
         channel.attr(MacEncoder.MAC_ENCODER_USE_ATTRIBUTE_KEY).set(useMac);
+
+        ChannelFuture lastWriteFuture = channel.writeAndFlush(msg);
+        if (lastWriteFuture != null) {
+            lastWriteFuture.sync();
+        }
+    }
+
+    public void ping(Long atmId) throws InterruptedException {
+        channel.attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(HeaderData.PING);
+
+        AtmMessage msg = new AtmMessage(atmId, "");
 
         ChannelFuture lastWriteFuture = channel.writeAndFlush(msg);
         if (lastWriteFuture != null) {

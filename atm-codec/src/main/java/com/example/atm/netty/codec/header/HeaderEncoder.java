@@ -15,6 +15,9 @@ public class HeaderEncoder extends MessageToByteEncoder<ByteBuf> {
 
         Long id = ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).get();
         Byte type = ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).get();
+        if (type == null) {
+            type = HeaderData.DATA;
+        }
 
         HeaderData headerData = new HeaderData();
         headerData.setId(id);

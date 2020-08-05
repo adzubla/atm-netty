@@ -17,7 +17,8 @@ public class MacDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         LOG.debug(">>> decode {} in={}, out={}", ctx, in, out);
 
-        if (hasMac(in)) {
+        LOG.debug("readableBytes = {}", in.readableBytes());
+        if (in.readableBytes() > 62 && hasMac(in)) {
             try {
                 out.add(processMac(in));
             } catch (Exception e) {

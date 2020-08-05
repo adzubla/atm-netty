@@ -1,5 +1,6 @@
 package com.example.atm.netty.codec.header;
 
+import com.example.atm.netty.codec.atm.AtmMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -15,18 +16,30 @@ public class HeaderDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         LOG.debug(">>> decode {} in={}, out={}", ctx, in, out);
 
-        out.add(processHeader(in, ctx));
-    }
+        HeaderData headerData = HeaderUtil.deserialize(in);
+        Long id = headerData.getId();
+        Byte type = headerData.getTipo();
 
-    private ByteBuf processHeader(ByteBuf data, ChannelHandlerContext ctx) {
-        HeaderData headerData = HeaderUtil.deserialize(data);
+        LOG.debug("id = {}", id);
+        LOG.debug("type = {}", type);
 
-        ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).set(headerData.getId());
-        ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(headerData.getTipo());
+        ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).set(id);
 
-        ByteBuf content = data.readSlice(data.readableBytes());
+        if (headerData.getTipo() == HeaderData.PING) {
+            LOG.debug("Ping");
+            ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(HeaderData.PONG);
 
-        return content.retain();
+            in.skipBytes(in.readableBytes());
+
+            AtmMessage message = new AtmMessage(id, "pong");
+            ctx.channel().writeAndFlush(message);
+        } else {
+            ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(type);
+
+            ByteBuf content = in.readSlice(in.readableBytes());
+            ByteBuf result = content.retain();
+            out.add(result);
+        }
     }
 
 }

@@ -63,6 +63,10 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
                 if ("bye".equals(line.toLowerCase())) {
                     break;
                 }
+                if ("ping".equals(line.toLowerCase())) {
+                    client.ping(atmId);
+                    continue;
+                }
 
                 boolean useMac = true;
                 String mti = "0100";
