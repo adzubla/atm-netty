@@ -53,7 +53,7 @@ public class AtmMessageListener implements AtmServerListener {
         connectionManager.add(ctx);
 
         ConnectionEvent event = new ConnectionEvent();
-        event.setType("CONNECT");
+        event.setEventType("CONNECT");
         event.setInfo(ctx.toString());
         eventSender.send(event);
     }
@@ -64,7 +64,7 @@ public class AtmMessageListener implements AtmServerListener {
         connectionManager.remove(ctx);
 
         ConnectionEvent event = new ConnectionEvent();
-        event.setType("DISCONNECT");
+        event.setEventType("DISCONNECT");
         event.setInfo(ctx.toString());
         eventSender.send(event);
     }
@@ -134,15 +134,15 @@ public class AtmMessageListener implements AtmServerListener {
     }
 
     public static class ConnectionEvent {
-        private String type;
+        private String eventType;
         private String info;
 
-        public String getType() {
-            return type;
+        public String getEventType() {
+            return eventType;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setEventType(String eventType) {
+            this.eventType = eventType;
         }
 
         public String getInfo() {

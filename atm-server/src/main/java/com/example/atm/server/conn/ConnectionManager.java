@@ -70,7 +70,7 @@ public class ConnectionManager {
     }
 
     public static class ConnectionData {
-        private final String type = "ATMS";
+        private final String eventType = "ATMS";
         private final Instant creationTime;
         private final ChannelHandlerContext context;
 
@@ -116,8 +116,8 @@ public class ConnectionManager {
             }
         }
 
-        public String getType() {
-            return type;
+        public String getEventType() {
+            return eventType;
         }
 
         public Long getId() {
