@@ -14,6 +14,8 @@ public class MacEncoder extends MessageToByteEncoder<ByteBuf> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) {
+        LOG.debug("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
+
         if (useMac(ctx)) {
             out.writeBytes(appendMac(msg));
         } else {

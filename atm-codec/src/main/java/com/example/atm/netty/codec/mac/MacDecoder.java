@@ -15,6 +15,8 @@ public class MacDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+        LOG.debug(">>> decode {} in={}, out={}", ctx, in, out);
+
         if (hasMac(in)) {
             try {
                 out.add(processMac(in));
