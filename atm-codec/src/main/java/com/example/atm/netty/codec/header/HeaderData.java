@@ -4,7 +4,8 @@ import io.netty.util.AttributeKey;
 
 public class HeaderData {
 
-    public static final AttributeKey<HeaderData> HEADER_DATA_ATTRIBUTE_KEY = AttributeKey.newInstance("HeaderData.attr");
+    public static final AttributeKey<Long> HEADER_ID_ATTRIBUTE_KEY = AttributeKey.newInstance("HeaderData.id");
+    public static final AttributeKey<Byte> HEADER_TYPE_ATTRIBUTE_KEY = AttributeKey.newInstance("HeaderData.type");
 
     public static final byte PING = 1;
     public static final byte PONG = 2;
@@ -13,9 +14,12 @@ public class HeaderData {
     private byte versao = 1;
     private byte formato = 1;
     private byte servico = 5;
-    private byte tipo = 3;
+    private byte tipo = DATA;
     private byte formatoId = 1;
     private Long id;
+
+    public HeaderData() {
+    }
 
     public byte getVersao() {
         return versao;

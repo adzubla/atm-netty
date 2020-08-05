@@ -20,7 +20,9 @@ public class HeaderDecoder extends ByteToMessageDecoder {
 
     private ByteBuf processHeader(ByteBuf data, ChannelHandlerContext ctx) {
         HeaderData headerData = HeaderUtil.deserialize(data);
-        ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).set(headerData);
+
+        ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).set(headerData.getId());
+        ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(headerData.getTipo());
 
         ByteBuf content = data.readSlice(data.readableBytes());
 

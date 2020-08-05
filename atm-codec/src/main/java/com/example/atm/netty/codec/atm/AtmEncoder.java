@@ -18,10 +18,8 @@ public class AtmEncoder extends MessageToByteEncoder<AtmMessage> {
     protected void encode(ChannelHandlerContext ctx, AtmMessage msg, ByteBuf out) {
         LOG.debug("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
 
-        HeaderData headerData = new HeaderData();
-        headerData.setId(msg.getId());
-
-        ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).set(headerData);
+        ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).set(msg.getId());
+        ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(HeaderData.DATA);
 
         out.writeBytes(ByteBufUtil.encodeString(ctx.alloc(), CharBuffer.wrap(msg.getBody()), StandardCharsets.ISO_8859_1));
     }

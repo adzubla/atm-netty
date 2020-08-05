@@ -17,11 +17,11 @@ public class AtmDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
         LOG.debug(">>> decode {} in={}, out={}", ctx, in, out);
 
-        HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
+        Long id = ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).get();
 
         String body = in.readCharSequence(in.readableBytes(), StandardCharsets.ISO_8859_1).toString();
 
-        AtmMessage msg = new AtmMessage(headerData.getId(), body);
+        AtmMessage msg = new AtmMessage(id, body);
 
         out.add(msg);
     }
