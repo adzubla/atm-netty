@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import static com.example.atm.netty.codec.atm.AtmMessage.ID_LENGTH;
-
 @Service
 public class AtmRegistry {
     private static final Logger LOG = LoggerFactory.getLogger(AtmRegistry.class);
@@ -30,7 +28,7 @@ public class AtmRegistry {
     @Value("#{atmServerProperties.registryLocation}")
     private String location;
 
-    private Map<String, String> registry = Collections.emptyMap();
+    private Map<Long, String> registry = Collections.emptyMap();
 
     @PostConstruct
     public void init() throws IOException {
@@ -45,16 +43,16 @@ public class AtmRegistry {
         }
     }
 
-    public boolean isRegistered(String id) {
+    public boolean isRegistered(Long id) {
         return disable || registry.containsKey(id);
     }
 
-    public Set<String> getIds() {
+    public Set<Long> getIds() {
         return Collections.unmodifiableSet(registry.keySet());
     }
 
     public void load(Reader reader) throws IOException {
-        Map<String, String> newRegistry = new HashMap<>();
+        Map<Long, String> newRegistry = new HashMap<>();
 
         BufferedReader in = new BufferedReader(reader);
 
@@ -62,9 +60,9 @@ public class AtmRegistry {
         String line;
         while ((line = in.readLine()) != null) {
             LOG.debug("line = {}", line);
-            if (line.length() == ID_LENGTH && ONLY_DIGITS_PATTERN.matcher(line).matches()) {
+            if (ONLY_DIGITS_PATTERN.matcher(line).matches()) {
                 c++;
-                newRegistry.put(line, line);
+                newRegistry.put(Long.parseLong(line), line);
             } else {
                 LOG.warn("Ignoring '{}'", line);
             }

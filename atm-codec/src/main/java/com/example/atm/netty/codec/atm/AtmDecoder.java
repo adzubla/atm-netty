@@ -19,15 +19,11 @@ public class AtmDecoder extends ByteToMessageDecoder {
 
         HeaderData headerData = ctx.channel().attr(HeaderData.HEADER_DATA_ATTRIBUTE_KEY).get();
 
-        String headerDataId = headerData.getId();
         String body = in.readCharSequence(in.readableBytes(), StandardCharsets.ISO_8859_1).toString();
 
-        AtmMessage msg = new AtmMessage(headerIdToAtmId(headerDataId), body);
-        out.add(msg);
-    }
+        AtmMessage msg = new AtmMessage(headerData.getId(), body);
 
-    private String headerIdToAtmId(String headerDataId) {
-        return headerDataId.substring(headerDataId.length() - AtmMessage.ID_LENGTH);
+        out.add(msg);
     }
 
 }

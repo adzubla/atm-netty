@@ -4,13 +4,13 @@ import java.util.Objects;
 
 public class ConnectionKey {
 
-    private final String id;
+    private final Long id;
 
-    public ConnectionKey(String id) {
+    public ConnectionKey(Long id) {
         this.id = id;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class ConnectionKey {
 
     @Override
     public String toString() {
-        return id;
+        return String.valueOf(id);
     }
 
 }

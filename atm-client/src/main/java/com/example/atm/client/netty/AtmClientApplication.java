@@ -47,8 +47,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
         return 0;
     }
 
-    public void processConsole(long id) throws Exception {
-        String atmId = String.format("%07d", id);
+    public void processConsole(Long atmId) throws Exception {
 
         try (AtmClient client = new AtmClient(host, port);
              InputStreamReader streamReader = new InputStreamReader(System.in)) {
@@ -82,8 +81,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
         }
     }
 
-    public void processFile(long id, String fileName) throws Exception {
-        String atmId = String.format("%07d", id);
+    public void processFile(Long atmId, String fileName) throws Exception {
 
         try (AtmClient client = new AtmClient(host, port);
              FileReader fileReader = new FileReader(fileName)) {

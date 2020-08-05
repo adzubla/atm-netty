@@ -96,7 +96,7 @@ public class AtmMessageListener implements AtmServerListener {
     }
 
     private void dispatch(ChannelHandlerContext ctx, AtmMessage msg) {
-        String id = msg.getId();
+        Long id = msg.getId();
 
         connectionManager.add(id, ctx);
 
@@ -112,12 +112,12 @@ public class AtmMessageListener implements AtmServerListener {
 
             BytesMessage message = session.createBytesMessage();
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
-            message.setJMSCorrelationID(id);
+            message.setJMSCorrelationID(String.valueOf(id));
 
             message.setStringProperty("VERSION", "900");
             message.setStringProperty("MSG_FORMAT", "ISO8583/1987");
             message.setStringProperty("TERMID_FORMAT", "2");
-            message.setStringProperty("TERM_ID", id);
+            message.setStringProperty("TERM_ID", String.valueOf(id));
             message.setStringProperty("TYPE_ID", type);
             message.setStringProperty("SOURCE_CONTEXT", ctx.channel().id() + " / " + id);
             message.setStringProperty("TARGET_CONTEXT", "9201 / 0");

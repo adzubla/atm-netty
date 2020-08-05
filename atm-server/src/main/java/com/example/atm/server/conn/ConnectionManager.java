@@ -24,7 +24,7 @@ public class ConnectionManager {
         mapByCtx.put(ctx, data);
     }
 
-    public void add(String id, ChannelHandlerContext ctx) {
+    public void add(Long id, ChannelHandlerContext ctx) {
         ConnectionKey key = new ConnectionKey(id);
         ConnectionData data = mapByCtx.get(ctx);
         if (data.key == null) {
@@ -38,7 +38,7 @@ public class ConnectionManager {
         data.countInput();
     }
 
-    public ConnectionData get(String id) {
+    public ConnectionData get(Long id) {
         return mapByKey.get(new ConnectionKey(id));
     }
 
@@ -55,7 +55,7 @@ public class ConnectionManager {
         ctx.close();
     }
 
-    public void remove(String id) {
+    public void remove(Long id) {
         ConnectionData data = mapByKey.get(new ConnectionKey(id));
         if (data != null) {
             remove(data.context);
@@ -120,7 +120,7 @@ public class ConnectionManager {
             return type;
         }
 
-        public String getId() {
+        public Long getId() {
             return key == null ? null : key.getId();
         }
 

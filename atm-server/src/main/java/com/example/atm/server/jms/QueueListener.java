@@ -32,7 +32,7 @@ public class QueueListener {
         String targetContext = message.getStringProperty("TARGET_CONTEXT");
         LOG.debug("targetContext = {}", targetContext);
 
-        String id = getId(targetContext);
+        Long id = getId(targetContext);
 
         ConnectionManager.ConnectionData connectionData = connectionManager.get(id);
 
@@ -50,9 +50,9 @@ public class QueueListener {
         }
     }
 
-    private String getId(String targetContext) {
+    private Long getId(String targetContext) {
         int i = targetContext.indexOf('/');
-        return targetContext.substring(i + 2);
+        return Long.parseLong(targetContext.substring(i + 2));
     }
 
 }

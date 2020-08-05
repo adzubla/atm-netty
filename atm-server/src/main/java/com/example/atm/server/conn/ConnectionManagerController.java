@@ -18,7 +18,7 @@ public class ConnectionManagerController {
     }
 
     @GetMapping("/{id}")
-    public ConnectionManager.ConnectionData get(@PathVariable String id) {
+    public ConnectionManager.ConnectionData get(@PathVariable Long id) {
         return connectionManager.get(id);
     }
 
@@ -27,7 +27,7 @@ public class ConnectionManagerController {
         if ("all".equals(id)) {
             connectionManager.removeAll();
         } else {
-            connectionManager.remove(id);
+            connectionManager.remove(Long.parseLong(id));
         }
     }
 

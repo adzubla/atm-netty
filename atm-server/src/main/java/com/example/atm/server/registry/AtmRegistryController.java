@@ -15,7 +15,7 @@ public class AtmRegistryController {
     private AtmRegistry registry;
 
     @GetMapping("/")
-    public Set<String> list() {
+    public Set<Long> list() {
         return registry.getIds();
     }
 
