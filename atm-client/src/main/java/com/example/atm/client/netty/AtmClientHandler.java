@@ -21,7 +21,7 @@ public class AtmClientHandler extends SimpleChannelInboundHandler<AtmMessage> {
     public void channelRead0(ChannelHandlerContext ctx, AtmMessage msg) {
         Byte type = ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).get();
         if (type == HeaderData.PONG) {
-            System.err.println("[PONG] '" + msg.getBody() + "'");
+            System.err.println("[PONG] " + msg.getBody());
         } else {
             String body = msg.getBody();
 

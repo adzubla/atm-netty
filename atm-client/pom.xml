@@ -96,16 +96,12 @@
                         <banDuplicatePomDependencyVersions/>
 
                         <requireJavaVersion>
-                            <version>[11.0.3,)</version>
+                            <version>[11.0,)</version>
                         </requireJavaVersion>
 
                         <requireMavenVersion>
                             <version>[3.6.3,)</version>
                         </requireMavenVersion>
-
-                        <requireOS>
-                            <family>unix</family>
-                        </requireOS>
                     </rules>
                     <fail>true</fail>
                 </configuration>
