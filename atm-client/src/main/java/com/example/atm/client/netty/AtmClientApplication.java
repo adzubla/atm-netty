@@ -32,6 +32,9 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
         List<String> nonOptionArgs = args.getNonOptionArgs();
 
         long id = nonOptionArgs.size() <= 0 ? ProcessHandle.current().pid() : Long.parseLong(nonOptionArgs.get(0));
+        if (id > 9999999L) {
+            id = BigInteger.valueOf(id).mod(BigInteger.valueOf(10000000L)).longValue();
+        }
         System.err.printf("\nClient id: %d%n", id);
 
         if (nonOptionArgs.size() > 1) {

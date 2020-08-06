@@ -20,13 +20,11 @@ public class HeaderDecoder extends ByteToMessageDecoder {
         Long id = headerData.getId();
         Byte type = headerData.getTipo();
 
-        LOG.debug("id = {}", id);
-        LOG.debug("type = {}", type);
+        LOG.debug("id = {} type = {}", id, type);
 
         ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).set(id);
 
         if (headerData.getTipo() == HeaderData.PING) {
-            LOG.debug("Ping");
             ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(HeaderData.PONG);
 
             in.skipBytes(in.readableBytes());

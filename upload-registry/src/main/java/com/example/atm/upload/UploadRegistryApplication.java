@@ -46,15 +46,11 @@ public class UploadRegistryApplication implements ApplicationRunner {
         int c = 0;
         String line;
         while ((line = in.readLine()) != null) {
-            if (!line.isBlank() && line.length() == 7) {
-                builder.append(line).append('\n');
-                c++;
-            } else {
-                System.out.printf("Ignoring '%s'%n", line);
-            }
+            builder.append(line).append('\n');
+            c++;
         }
 
-        System.out.println(c + " items");
+        System.out.println(c + " lines");
 
         return builder.toString();
     }

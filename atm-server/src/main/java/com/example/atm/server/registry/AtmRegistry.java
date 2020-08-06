@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class AtmRegistry {
     private static final Logger LOG = LoggerFactory.getLogger(AtmRegistry.class);
 
-    private static final Pattern ONLY_DIGITS_PATTERN = Pattern.compile("^[0-9]+$");
+    private static final Pattern DIGITS_PATTERN = Pattern.compile("^[0-9]+\\s*$");
 
     @Value("#{atmServerProperties.registryDisable}")
     private boolean disable;
@@ -59,8 +59,7 @@ public class AtmRegistry {
         int c = 0;
         String line;
         while ((line = in.readLine()) != null) {
-            LOG.debug("line = {}", line);
-            if (ONLY_DIGITS_PATTERN.matcher(line).matches()) {
+            if (DIGITS_PATTERN.matcher(line).matches()) {
                 c++;
                 newRegistry.put(Long.parseLong(line), line);
             } else {
@@ -69,7 +68,7 @@ public class AtmRegistry {
         }
 
         this.registry = newRegistry;
-        LOG.info("Loaded {} items", c);
+        LOG.info("Loaded {} items into registry", c);
     }
 
 }
