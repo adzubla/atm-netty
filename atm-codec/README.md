@@ -1,4 +1,5 @@
 
+
 Formato das mensagens
 =====================
 
@@ -11,7 +12,7 @@ Frame
 | (2 bytes) |   (30 bytes)   |      (x bytes)      |
 
 
-- tamanho: tamanho da mensagem completa (2 | 30 | x)
+- tamanho: tamanho da mensagem completa (2 + 30 + x)
 - cabecalho: informações sobre mensagem
 - corpo: mensagem encriptada
 
@@ -29,8 +30,8 @@ Cabecalho
 - servico: 0x03 - GFT, 0x05 - Transacional (ATM)
 - tipo: 0x01 - ping, 0x02 - pong, 0x03 - dados
 - formatoId: 0x01
-- id: string no formato ASCII:<br>
-        `['00000'][IdTerminal (7 bytes)]`
+- id: string com IdTerminal em formato decimal, preenchido com '0' a esquerda
+    (IdTerminal deve ter no máximo 7 digitos)
 - reservado: preenchido com 0x00
 
 
@@ -56,7 +57,7 @@ Mensagem iso
 
 
 - mti: Message Type Indicator, é um campo numérico de quatro digitos decimais
-- bitmap: 16 caracteres hexadecimais no formato ASCII
+- bitmap: 16 caracteres hexadecimais no padrão ASCII
 - fields: campos especificados no bitmap
 
 Referência: <a href="https://en.wikipedia.org/wiki/ISO_8583">ISO-8583</a>
