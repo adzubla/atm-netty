@@ -23,69 +23,6 @@ import io.netty.util.concurrent.EventExecutorGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * <p>Servidor de comunicação com ATM.</p>
- * <p>Formato das mensagens recebidas:</p>
- * <p/>
- * <h1>Frame:</h1>
- * <pre>
- *     +-----------+----------------+---------------------+
- *     | tamanho   |   cabecalho    |      corpo          |
- *     | (2 bytes) |   (30 bytes)   |      (x bytes)      |
- *     +-----------+----------------+---------------------+
- * </pre>
- * <ul>
- *     <li>tamanho: tamanho da mensagem completa (2 + 30 + x)</li>
- *     <li>cabecalho: informações sobre mensagem</li>
- *     <li>corpo: mensagem encriptada</li>
- * </ul>
- * <p/>
- * <h1>Cabecalho:</h1>
- * <pre>
- *     +----------+----------+----------+----------+-----------+------------+------------+
- *     | versao   | formato  | servico  | tipo     | formatoId | id         | reservado  |
- *     | (1 byte) | (1 byte) | (1 byte) | (1 byte) | (1 byte)  | (12 bytes) | (13 bytes) |
- *     +----------+----------+----------+----------+-----------+------------+------------+
- * </pre>
- * <ul>
- *     <li>versao: 0x01</li>
- *     <li>formato: 0x01 - ISO8583, 0x02 - Texto (GFT)</li>
- *     <li>servico: 0x03 - GFT, 0x05 - Transacional (ATM)</li>
- *     <li>tipo: 0x01 - ping, 0x02 - pong, 0x03 - dados</li>
- *     <li>formatoId: 0x01</li>
- *     <li>id: string no formato ASCII:<br>
- *         <pre>['00000'][IdTerminal (7 bytes)]</pre></li>
- *     <li>reservado: preenchido com 0x00</li>
- * </ul>
- * <p/>
- * <h1>Corpo (Depois de decriptado):</h1>
- * <pre>
- *      +---------------------------+------------------+
- *      |        mensagem iso       |  mac (opcional)  |
- *      |        (y bytes)          |  (32 bytes)      |
- *      +---------------------------+------------------+
- * </pre>
- * <ul>
- *     <li>mensagem iso: mensagem no formato ISO 8583</li>
- *     <li>mac: código hash para a autenticação da mensagem (DES/ECB/PKCS5Padding).<br>
- *     O mac está presente se (!bit01 && bit64) || (bit01 && bit128)</li>
- * </ul>
- * <p/>
- * <h1>Mensagem iso:</h1>
- * <pre>
- *     +-------------+--------------+--------------------------+
- *     |  mti        |  bitmap      |    fields                |
- *     |  (4 bytes)  |  (16 bytes)  |    (y - 4 - 16 bytes)    |
- *     +-------------+--------------+--------------------------+
- * </pre>
- * <ul>
- *     <li>mti: Message Type Indicator, é um campo numérico de quatro digitos decimais</li>
- *     <li>bitmap: 16 caracteres hexadecimais no formato ASCII</li>
- *     <li>fields: campos especificados no bitmap</li>
- * </ul>
- * <p/>
- * <p><a href="https://en.wikipedia.org/wiki/ISO_8583">ISO-8583</a></p>
- */
 public final class AtmServer {
     private static final Logger LOG = LoggerFactory.getLogger(AtmServer.class);
 
