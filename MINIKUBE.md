@@ -26,7 +26,7 @@ Configuração para o Spring Boot Admin Server
     
 # Deploy
 
-    kubectl apply -f minikube/responder-deploy.yaml
+    kubectl apply -f minikube/dummy-responder-deploy.yaml
     
     kubectl apply -f minikube/atm-server-deploy.yaml
 
@@ -34,6 +34,6 @@ Configuração para o Spring Boot Admin Server
 
 Usar a opção `-k` para os clientes se conectarem aos pods em execução no Kubernetes
 
-    ./client.sh -k
+    ./client.sh -k [ATM_ID]
     
-    ./upload.sh -k
+    ./upload.sh -k [ATM_ID]
