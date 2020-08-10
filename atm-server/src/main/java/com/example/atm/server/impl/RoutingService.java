@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,49 +44,39 @@ public class RoutingService {
     public void load(Reader reader) throws IOException {
         List<RoutingRule> newRules = new ArrayList<>();
 
-        BufferedReader in = new BufferedReader(reader);
+        LineNumberReader in = new LineNumberReader(reader);
 
-        int rule = 0;
         String line;
         while ((line = in.readLine()) != null) {
             LOG.debug("line = {}", line);
             if (!line.matches("^#.*")) {
-                StringTokenizer tok = new StringTokenizer(line, "\t");
 
                 //ATM_ID\tMSG_ID\tDEST
-                LOG.debug("tokens = {}", tok.countTokens());
-                if (tok.countTokens() == 3) {
-                    List<String> routingTableLine = getTokens(line);
-                    rule++;
-                    newRules.add(new RoutingRule(routingTableLine.get(0), routingTableLine.get(1), routingTableLine.get(2)));
+                List<String> tokens = getTokens(line);
+
+                if (tokens.size() == 3) {
+                    newRules.add(new RoutingRule(in.getLineNumber(), tokens.get(0), tokens.get(1), tokens.get(2)));
                 } else {
                     LOG.warn("Pattern problem '{}'", line);
                 }
-            } else {
-                LOG.warn("Ignoring '{}'", line);
             }
         }
 
         this.rules = newRules;
-        LOG.info("Loaded {} items", rule);
+        LOG.info("Loaded {} items", newRules.size());
     }
 
-    //Analisa as regras de roteamento, baseado em CODIGO ATM e/ou CODIGO MENSAGEM
-    public String getDestination(String id, String type) {
-
-        int i = 0;
+    public String getDestinationQueue(String id, String type) {
+        //Analisa as regras de roteamento, baseado em CODIGO ATM e/ou CODIGO MENSAGEM
         for (RoutingRule rule : rules) {
-            LOG.debug("rule = {}", rule);
 
-            //Para ATM_ID utilizar expressao regular
-            if (rule.getAtmId().equals("*") || id.matches(rule.getAtmId())) {
+            if (rule.getAtmId().equals("*") || rule.getAtmIdPattern().matcher(id).matches()) {
                 if (rule.getMsgId().equals("*") || rule.getMsgId().equals(type)) {
-
-                    LOG.debug("Found rule {} (Queue={})!", i, rule.getDestinationQueue());
+                    LOG.debug("Match {}", rule);
                     return rule.getDestinationQueue();
                 }
             }
-            i++;
+
         }
 
         //Nao satisfez nenhuma regra, possivelmente FALHA no arquivo de roteamento

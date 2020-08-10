@@ -98,7 +98,7 @@ public class AtmMessageListener implements AtmServerListener {
         String body = msg.getBody();
         String type = body.substring(0, 4);
 
-        String queueName = routingService.getDestination(id, type);
+        String queueName = routingService.getDestinationQueue(id, type);
 
         jmsTemplate.send(queueName, session -> {
             if (LOG.isDebugEnabled()) {

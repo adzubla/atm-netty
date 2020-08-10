@@ -1,47 +1,51 @@
 package com.example.atm.server.impl;
 
+import java.util.regex.Pattern;
+
 public class RoutingRule {
 
-    private String atmId;
-    private String msgId;
-    private String destinationQueue;
+    private final Pattern atmIdPattern;
+    private final int lineNumber;
+    private final String atmId;
+    private final String msgId;
+    private final String destinationQueue;
 
-    public RoutingRule(String atmId, String msgId, String destinationQueue) {
+    public RoutingRule(int lineNumber, String atmId, String msgId, String destinationQueue) {
+        this.lineNumber = lineNumber;
         this.atmId = atmId;
         this.msgId = msgId;
         this.destinationQueue = destinationQueue;
+        if (!atmId.equals("*")) {
+            this.atmIdPattern = Pattern.compile(atmId);
+        } else {
+            this.atmIdPattern = null;
+        }
     }
 
     public String getAtmId() {
         return atmId;
     }
 
-    public void setAtmId(String atmId) {
-        this.atmId = atmId;
-    }
-
     public String getMsgId() {
         return msgId;
-    }
-
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
     }
 
     public String getDestinationQueue() {
         return destinationQueue;
     }
 
-    public void setDestinationQueue(String destinationQueue) {
-        this.destinationQueue = destinationQueue;
+    public Pattern getAtmIdPattern() {
+        return atmIdPattern;
     }
 
     @Override
     public String toString() {
         return "RoutingRule{" +
-                "atmId='" + atmId + '\'' +
+                "lineNumber=" + lineNumber +
+                ", atmId='" + atmId + '\'' +
                 ", msgId='" + msgId + '\'' +
                 ", destinationQueue='" + destinationQueue + '\'' +
                 '}';
     }
+
 }
