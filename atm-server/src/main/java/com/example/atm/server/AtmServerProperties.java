@@ -27,8 +27,7 @@ public class AtmServerProperties {
     private String registryLocation;
     private boolean registryDisable = false;
 
-    private String switchQueueName = "DEV.QUEUE.1";
-    private String offeringQueueName = "DEV.QUEUE.3";
+    private String routingLocation;
 
     public int getMqListenerConcurrency() {
         return mqListenerConcurrency;
@@ -142,20 +141,12 @@ public class AtmServerProperties {
         this.registryDisable = registryDisable;
     }
 
-    public String getSwitchQueueName() {
-        return switchQueueName;
+    public String getRoutingLocation() {
+        return routingLocation;
     }
 
-    public void setSwitchQueueName(String switchQueueName) {
-        this.switchQueueName = switchQueueName;
-    }
-
-    public String getOfferingQueueName() {
-        return offeringQueueName;
-    }
-
-    public void setOfferingQueueName(String offeringQueueName) {
-        this.offeringQueueName = offeringQueueName;
+    public void setRoutingLocation(String routingLocation) {
+        this.routingLocation = routingLocation;
     }
 
 }

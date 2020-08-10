@@ -11,7 +11,6 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,6 @@ public class AtmMessageListener implements AtmServerListener {
     private static final Logger LOG = LoggerFactory.getLogger(AtmMessageListener.class);
 
     private static final int MIN_MESSAGE_LENGTH = 20;
-    private static final String OFFERING_MSG_TYPE = "9380";
 
     @Autowired
     private ConnectionManager connectionManager;
@@ -39,13 +37,10 @@ public class AtmMessageListener implements AtmServerListener {
     private AtmRegistry registry;
 
     @Autowired
+    private RoutingService routingService;
+
+    @Autowired
     private EventSender eventSender;
-
-    @Value("#{atmServerProperties.switchQueueName}")
-    private String switchQueue;
-
-    @Value("#{atmServerProperties.offeringQueueName}")
-    private String offeringQueue;
 
     @Override
     public void onConnect(ChannelHandlerContext ctx) {
@@ -96,14 +91,14 @@ public class AtmMessageListener implements AtmServerListener {
     }
 
     private void dispatch(ChannelHandlerContext ctx, AtmMessage msg) {
-        Long id = msg.getId();
 
-        connectionManager.add(id, ctx);
+        connectionManager.add(msg.getId(), ctx);
 
+        String id = msg.getId().toString();
         String body = msg.getBody();
         String type = body.substring(0, 4);
 
-        String queueName = resolveQueueName(type);
+        String queueName = routingService.getDestination(id, type);
 
         jmsTemplate.send(queueName, session -> {
             if (LOG.isDebugEnabled()) {
@@ -112,12 +107,12 @@ public class AtmMessageListener implements AtmServerListener {
 
             BytesMessage message = session.createBytesMessage();
             message.setJMSReplyTo(replyToHolder.getReplyToQueue());
-            message.setJMSCorrelationID(String.valueOf(id));
+            message.setJMSCorrelationID(id);
 
             message.setStringProperty("VERSION", "900");
             message.setStringProperty("MSG_FORMAT", "ISO8583/1987");
             message.setStringProperty("TERMID_FORMAT", "2");
-            message.setStringProperty("TERM_ID", String.valueOf(id));
+            message.setStringProperty("TERM_ID", id);
             message.setStringProperty("TYPE_ID", type);
             message.setStringProperty("SOURCE_CONTEXT", ctx.channel().id() + " / " + id);
             message.setStringProperty("TARGET_CONTEXT", "9201 / 0");
@@ -126,11 +121,6 @@ public class AtmMessageListener implements AtmServerListener {
 
             return message;
         });
-    }
-
-    private String resolveQueueName(String type) {
-        // Verifica se destino eh autorizador OFFERING ou autorizador SWITCH
-        return type.startsWith(OFFERING_MSG_TYPE) ? offeringQueue : switchQueue;
     }
 
     public static class ConnectionEvent {
