@@ -38,6 +38,8 @@ services:
       spring_profiles_active: local
       spring.boot.admin.client.url: "http://spring-boot-admin-server:8080"
       ibm.mq.connName: "mq(1414)"
-      atm.server.registry-location: "/etc/registry.txt"
+      atm.server.registry-location: "/etc/atm-server/registry.txt"
+      atm.server.routing-location: "/etc/atm-server/routing.txt"
     volumes:
-      - ./upload-registry/registry.txt:/etc/registry.txt:ro
+      - ./upload-registry/registry.txt:/etc/atm-server/registry.txt:ro
+      - ./atm-server/routingTable.txt:/etc/atm-server/routing.txt:ro
