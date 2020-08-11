@@ -3,7 +3,7 @@
 
 Requisitos para fazer o build:
 
-- Java 11.0.7
+- Java 11.0.8
 - Maven 3.6.3
 
 Nos ambiente de desenvolvimento Linux, macOS e Cygwin, use o [sdkman](https://sdkman.io/) para instalar esses produtos.
@@ -16,7 +16,7 @@ Nos ambiente de desenvolvimento Linux, macOS e Cygwin, use o [sdkman](https://sd
 
 2. Abrir outro terminal e instalar Java e Maven:
     
-    `sdk install java 11.0.7.hs-adpt`
+    `sdk install java 11.0.8.hs-adpt`
     
     `sdk install maven 3.6.3`
 
@@ -28,7 +28,39 @@ Para executar o build
     mvn clean install
 
 
-# Executar
+## Profiles Maven
+
+### Profile "default"
+
+O profile "default" (quando nenhum profile é definido ao executar o Maven) não cria nenhuma imagem e é adequado
+para ser usado durante o desenvolvimento para execução local.
+
+A execução de cada serviço deve ser feita através do comando
+
+    mvn spring-boot:run
+
+
+### Profile build-image
+
+Cria imagem OCI através de um plugin nativo do Spring Boot baseado em Cloud Native Buildpacks (usando o Paketo Java buildpack)
+
+Para criar a imagem:
+
+    mvn clean install -P build-image
+
+Essa imagem pode ser usada no docker e docker-compose.
+
+
+### Profile kubernetes
+
+Acrescenta dependencia do *Spring Boot Cloud* para rodar em ambientes baseados em Kubernetes (como o OpenShift)
+
+A imagem deve ser criada com o comando a seguir:
+
+    mvn clean install -P build-image,kubernetes
+
+
+# Execução local
 
 ### Iniciar IBM MQ
 
@@ -89,7 +121,8 @@ Ver os ids registrados
 
     curl -s -X GET http://localhost:8081/registry/
 
-# Executar com Docker
+
+# Execução com Docker
 
 Instalar docker e docker-compose (no Ubuntu)
 
@@ -101,7 +134,7 @@ Instalar docker e docker-compose (no Ubuntu)
 
 Gerar as imagens
 
-    mvn clean install -P openshift,build-image
+    mvn clean install -P build-image
 
 Iniciar os serviços no docker (mq, spring-boot-admin-server, dummy-responder e atm-server)
 

@@ -22,7 +22,7 @@ Configuração para o Spring Boot Admin Server
 
 # Criação das imagens
 
-    mvn clean install -P kubernetes
+    mvn clean install -P build-image,kubernetes
     
 # Deploy
 
