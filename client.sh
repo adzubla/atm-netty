@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd atm-client || exit 1
+cd atm-client-cli || exit 1
 
 if [ "$1" == "-k" ]; then
   OPTS="--server.host=$(minikube ip) --server.port=30992"

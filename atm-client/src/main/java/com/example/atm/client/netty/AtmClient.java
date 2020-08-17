@@ -26,10 +26,12 @@ public final class AtmClient implements Closeable {
 
     private EventLoopGroup group;
     private Channel channel;
+    private final AtmClientHandler atmClientHandler;
 
-    public AtmClient(String host, int port) {
+    public AtmClient(String host, int port, AtmClientHandler atmClientHandler) {
         this.host = host;
         this.port = port;
+        this.atmClientHandler = atmClientHandler;
     }
 
     public void connect() throws InterruptedException {
@@ -53,7 +55,7 @@ public final class AtmClient implements Closeable {
                         pipeline.addLast(new HeaderEncoder());
                         pipeline.addLast(new AtmEncoder());
 
-                        pipeline.addLast(new AtmClientHandler());
+                        pipeline.addLast(atmClientHandler);
                     }
                 });
 

@@ -11,8 +11,9 @@
 
     <modules>
         <module>atm-codec</module>
-        <module>atm-client</module>
         <module>atm-server</module>
+        <module>atm-client</module>
+        <module>atm-client-cli</module>
         <module>upload-registry</module>
         <module>dummy-responder</module>
         <module>spring-boot-admin-server</module>

@@ -1,5 +1,6 @@
-package com.example.atm.client.netty;
+package com.example.atm.client.cli;
 
+import com.example.atm.client.netty.AtmClient;
 import com.example.atm.netty.codec.atm.AtmMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -52,7 +53,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
 
     public void processConsole(Long atmId) throws Exception {
 
-        try (AtmClient client = new AtmClient(host, port);
+        try (AtmClient client = new AtmClient(host, port, new CliAtmClientHandler());
              InputStreamReader streamReader = new InputStreamReader(System.in)) {
 
             client.connect();
@@ -90,7 +91,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
 
     public void processFile(Long atmId, String fileName) throws Exception {
 
-        try (AtmClient client = new AtmClient(host, port);
+        try (AtmClient client = new AtmClient(host, port, new CliAtmClientHandler());
              FileReader fileReader = new FileReader(fileName)) {
 
             client.connect();

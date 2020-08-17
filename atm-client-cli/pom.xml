@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>atm-client</artifactId>
+    <artifactId>atm-client-cli</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -39,7 +39,7 @@
 
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>atm-codec</artifactId>
+            <artifactId>atm-client</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
@@ -172,6 +172,24 @@
                 <configuration>
                     <generateBackupPoms>false</generateBackupPoms>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <profiles>
+                        <profile>local</profile>
+                    </profiles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-info</id>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>
