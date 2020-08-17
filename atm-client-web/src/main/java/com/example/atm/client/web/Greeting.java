@@ -1,25 +1,18 @@
 package com.example.atm.client.web;
 
-
 public class Greeting {
 
-    private long id;
     private String content;
 
-    public long getId() {
-        return id;
+    public Greeting() {
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public Greeting(String content) {
+        this.content = content;
     }
 
     public String getContent() {
         return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
 }
