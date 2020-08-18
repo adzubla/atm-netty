@@ -1,6 +1,7 @@
 package com.example.atm.client.web;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -24,10 +25,10 @@ public class MessageController {
         System.out.println("*** Disconnect");
     }
 
-    @MessageMapping("/receive")
-    @SendTo("/topic/response")
-    public ResponseMessage receive(ReceiveMessage message) throws Exception {
-        System.out.println("*** Received " + message.getName());
+    @MessageMapping("/receive/{atmId}")
+    @SendTo("/topic/response/{atmId}")
+    public ResponseMessage receive(ReceiveMessage message, @DestinationVariable Long atmId) throws Exception {
+        System.out.println("*** Received from " + atmId + ": " + message.getName());
         String response = message.getName().toUpperCase();
         return new ResponseMessage(HtmlUtils.htmlEscape(response));
     }

@@ -17,7 +17,8 @@ function connect() {
     stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/response', function (response) {
+        var atmId = $("#atmId").val();
+        stompClient.subscribe('/topic/response/' + atmId, function (response) {
             showResponse(JSON.parse(response.body).content);
         });
     });
@@ -32,7 +33,8 @@ function disconnect() {
 }
 
 function sendMessage() {
-    stompClient.send("/app/receive", {}, JSON.stringify({'name': $("#name").val()}));
+    var atmId = $("#atmId").val();
+    stompClient.send("/app/receive/" + atmId, {}, JSON.stringify({'name': $("#name").val()}));
 }
 
 function showResponse(message) {
