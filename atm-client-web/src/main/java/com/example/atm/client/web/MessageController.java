@@ -10,7 +10,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.util.HtmlUtils;
 
 @Controller
-public class GreetingController {
+public class MessageController {
 
     @EventListener
     public void handleSessionConnected(SessionConnectEvent event) {
@@ -24,12 +24,12 @@ public class GreetingController {
         System.out.println("*** Disconnect");
     }
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/greetings")
-    public Greeting greeting(HelloMessage message) throws Exception {
+    @MessageMapping("/receive")
+    @SendTo("/topic/response")
+    public ResponseMessage receive(ReceiveMessage message) throws Exception {
         System.out.println("*** Received " + message.getName());
         String response = message.getName().toUpperCase();
-        return new Greeting(HtmlUtils.htmlEscape(response));
+        return new ResponseMessage(HtmlUtils.htmlEscape(response));
     }
 
 }

@@ -1,13 +1,13 @@
 package com.example.atm.client.web;
 
-public class HelloMessage {
+public class ReceiveMessage {
 
     private String name;
 
-    public HelloMessage() {
+    public ReceiveMessage() {
     }
 
-    public HelloMessage(String name) {
+    public ReceiveMessage(String name) {
         this.name = name;
     }
 
