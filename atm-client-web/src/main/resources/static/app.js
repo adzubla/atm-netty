@@ -1,6 +1,7 @@
 var stompClient = null;
 
 function setConnected(connected) {
+    $("#atmId").prop("disabled", connected);
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
