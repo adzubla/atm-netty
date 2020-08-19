@@ -18,10 +18,10 @@ import java.util.List;
 @SpringBootApplication
 public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerator {
 
-    @Value("${server.host}")
+    @Value("${atm-server.host}")
     private String host;
 
-    @Value("${server.port}")
+    @Value("${atm-server.port}")
     private int port;
 
     public static void main(String[] args) {
