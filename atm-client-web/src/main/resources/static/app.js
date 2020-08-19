@@ -6,8 +6,10 @@ function setConnected(connected) {
     $("#disconnect").prop("disabled", !connected);
     if (connected) {
         $("#conversation").show();
+        $("#message-form").show();
     } else {
         $("#conversation").hide();
+        $("#message-form").hide();
     }
     $("#responses").html("");
 }
@@ -43,6 +45,7 @@ function showResponse(message) {
 }
 
 $(function () {
+    setConnected(false);
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
