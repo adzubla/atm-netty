@@ -16,7 +16,6 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.jms.BytesMessage;
-
 import java.util.Collections;
 
 import static com.example.atm.netty.codec.util.IsoUtil.dump;
