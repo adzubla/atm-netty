@@ -43,7 +43,6 @@ public class ResponseListener implements MessageListener {
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Received from queue: {}", dump(body));
-            LOG.debug("targetContext = {}", targetContext);
         }
 
         Long id = getId(targetContext);
@@ -57,7 +56,7 @@ public class ResponseListener implements MessageListener {
 
             ChannelHandlerContext channelHandlerContext = connectionData.channelHandlerContext();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Responding to client {}: {}", channelHandlerContext, dump(body));
+                LOG.debug("Responding to ATM {}: {} {}", id, dump(body), channelHandlerContext.channel());
             }
             connectionData.countOutput();
             channelHandlerContext.writeAndFlush(msg);
