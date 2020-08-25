@@ -34,7 +34,7 @@ public class EventSender {
     @Scheduled(fixedRateString = "#{atmServerProperties.eventSendRate}")
     public void connectionStats() {
         Collection<ConnectionManager.ConnectionData> list = connectionManager.list();
-        LOG.debug("{} connections", list.size());
+        LOG.trace("{} open connections", list.size());
 
         send(list);
     }

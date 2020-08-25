@@ -8,18 +8,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MacEncoder extends MessageToByteEncoder<ByteBuf> {
-    public static final AttributeKey<Boolean> MAC_ENCODER_USE_ATTRIBUTE_KEY = AttributeKey.newInstance("MacEncoder.useMac");
-
     private static final Logger LOG = LoggerFactory.getLogger(MacEncoder.class);
+
+    public static final AttributeKey<Boolean> MAC_ENCODER_USE_ATTRIBUTE_KEY = AttributeKey.newInstance("MacEncoder.useMac");
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) {
-        LOG.debug("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
+        LOG.trace("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
 
         if (useMac(ctx)) {
             out.writeBytes(appendMac(msg));
         } else {
-            LOG.debug("No MAC processing");
+            LOG.trace("No MAC processing");
             out.writeBytes(msg);
         }
     }

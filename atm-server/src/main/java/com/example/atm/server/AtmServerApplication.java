@@ -17,7 +17,6 @@ import java.util.Arrays;
 @EnableJms
 @EnableScheduling
 public class AtmServerApplication {
-
     private static final Logger LOG = LoggerFactory.getLogger(AtmServerApplication.class);
 
     @Autowired

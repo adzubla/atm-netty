@@ -3,6 +3,7 @@ package com.example.atm.server.impl;
 import com.example.atm.netty.codec.atm.AtmMessage;
 import com.example.atm.netty.codec.util.IsoUtil;
 import com.example.atm.server.conn.ConnectionManager;
+import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public class ResponseListener implements MessageListener {
             try {
                 byte[] data = message.getBody(byte[].class);
                 String targetContext = message.getStringProperty("TARGET_CONTEXT");
-                LOG.debug("targetContext = {}", targetContext);
 
                 handleMessage(data, targetContext);
             } catch (JMSException ex) {
@@ -43,6 +43,7 @@ public class ResponseListener implements MessageListener {
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Received from queue: {}", dump(body));
+            LOG.debug("targetContext = {}", targetContext);
         }
 
         Long id = getId(targetContext);
@@ -52,14 +53,14 @@ public class ResponseListener implements MessageListener {
         if (connectionData == null) {
             LOG.warn("Corresponding connection not found. Discarding: {}", dump(body));
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Responding to client: {}", dump(body));
-            }
-
             AtmMessage msg = new AtmMessage(id, body);
 
+            ChannelHandlerContext channelHandlerContext = connectionData.channelHandlerContext();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Responding to client {}: {}", channelHandlerContext, dump(body));
+            }
             connectionData.countOutput();
-            connectionData.channelHandlerContext().writeAndFlush(msg);
+            channelHandlerContext.writeAndFlush(msg);
         }
     }
 

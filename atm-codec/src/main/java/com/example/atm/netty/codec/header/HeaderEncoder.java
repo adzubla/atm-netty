@@ -11,7 +11,7 @@ public class HeaderEncoder extends MessageToByteEncoder<ByteBuf> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) {
-        LOG.debug("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
+        LOG.trace("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
 
         Long id = ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).get();
         Byte type = ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).get();

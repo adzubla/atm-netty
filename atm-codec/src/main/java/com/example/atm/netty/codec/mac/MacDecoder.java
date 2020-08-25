@@ -15,9 +15,9 @@ public class MacDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        LOG.debug(">>> decode {} in={}, out={}", ctx, in, out);
+        LOG.trace(">>> decode {} in={}, out={}", ctx, in, out);
 
-        LOG.debug("readableBytes = {}", in.readableBytes());
+        LOG.trace("readableBytes = {}", in.readableBytes());
         if (in.readableBytes() > 62 && hasMac(in)) {
             try {
                 out.add(processMac(in));
@@ -25,7 +25,7 @@ public class MacDecoder extends ByteToMessageDecoder {
                 LOG.warn("Discarding message, MAC error: " + e);
             }
         } else {
-            LOG.debug("No MAC processing");
+            LOG.trace("No MAC processing");
             out.add(in.readBytes(in.readableBytes()));
         }
     }

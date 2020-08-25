@@ -13,7 +13,7 @@ public class CryptoDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        LOG.debug(">>> decode {} in={}, out={}", ctx, in, out);
+        LOG.trace(">>> decode {} in={}, out={}", ctx, in, out);
 
         out.add(decrypt(in));
     }

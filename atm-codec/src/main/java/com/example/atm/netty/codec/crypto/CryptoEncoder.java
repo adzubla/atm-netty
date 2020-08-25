@@ -11,7 +11,7 @@ public class CryptoEncoder extends MessageToByteEncoder<ByteBuf> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) {
-        LOG.debug("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
+        LOG.trace("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
 
         out.writeBytes(encrypt(msg));
     }

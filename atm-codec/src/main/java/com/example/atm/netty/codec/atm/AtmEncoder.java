@@ -16,7 +16,7 @@ public class AtmEncoder extends MessageToByteEncoder<AtmMessage> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, AtmMessage msg, ByteBuf out) {
-        LOG.debug("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
+        LOG.trace("<<< encode ctx={} msg={}, out={}", ctx, msg, out);
 
         ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).set(msg.getId());
 

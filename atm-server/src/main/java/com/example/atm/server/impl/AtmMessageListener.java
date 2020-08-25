@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import javax.jms.BytesMessage;
 
+import java.util.Collections;
+
 import static com.example.atm.netty.codec.util.IsoUtil.dump;
 
 @Component
@@ -51,7 +53,7 @@ public class AtmMessageListener implements AtmServerListener {
         ConnectionEvent event = new ConnectionEvent();
         event.setEventType("CONNECT");
         event.setInfo(ctx.toString());
-        eventSender.send(event);
+        eventSender.send(Collections.singletonList(event));
     }
 
     @Override
@@ -62,7 +64,7 @@ public class AtmMessageListener implements AtmServerListener {
         ConnectionEvent event = new ConnectionEvent();
         event.setEventType("DISCONNECT");
         event.setInfo(ctx.toString());
-        eventSender.send(event);
+        eventSender.send(Collections.singletonList(event));
     }
 
     @Override
@@ -104,7 +106,7 @@ public class AtmMessageListener implements AtmServerListener {
         JmsTemplate jmsTemplate = jmsConfig.getJmsTemplate(route.getQueueManager());
         jmsTemplate.send(route.getDestinationQueue(), session -> {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending to {}: {}", route.getQueueManager(), dump(body));
+                LOG.debug("Sending to {} {}: {}", route.getQueueManager(), route.getDestinationQueue(), dump(body));
             }
 
             BytesMessage message = session.createBytesMessage();

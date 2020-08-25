@@ -15,7 +15,7 @@ public class AtmDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        LOG.debug(">>> decode {} in={}, out={}", ctx, in, out);
+        LOG.trace(">>> decode {} in={}, out={}", ctx, in, out);
 
         Long id = ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).get();
 
