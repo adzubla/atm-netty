@@ -4,6 +4,7 @@ import com.example.atm.netty.codec.atm.AtmMessage;
 import com.example.atm.netty.codec.util.IsoUtil;
 import com.example.atm.server.conn.ConnectionManager;
 import com.example.atm.server.event.EventSender;
+import com.example.atm.server.jms.JmsConfig;
 import com.example.atm.server.jms.ReplyToHolder;
 import com.example.atm.server.netty.AtmServerListener;
 import com.example.atm.server.registry.AtmRegistry;
@@ -28,7 +29,7 @@ public class AtmMessageListener implements AtmServerListener {
     private ConnectionManager connectionManager;
 
     @Autowired
-    private JmsTemplate jmsTemplate;
+    private JmsConfig jmsConfig;
 
     @Autowired
     private ReplyToHolder replyToHolder;
@@ -99,14 +100,16 @@ public class AtmMessageListener implements AtmServerListener {
         String type = body.substring(0, 4);
 
         String queueName = routingService.getDestinationQueue(id, type);
+        String qm = "QM1";
 
+        JmsTemplate jmsTemplate = jmsConfig.getJmsTemplate(qm);
         jmsTemplate.send(queueName, session -> {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Sending to {}: {}", queueName, dump(body));
             }
 
             BytesMessage message = session.createBytesMessage();
-            message.setJMSReplyTo(replyToHolder.getReplyToQueue());
+            message.setJMSReplyTo(replyToHolder.getReplyToQueue(qm));
             message.setJMSCorrelationID(id);
 
             message.setStringProperty("VERSION", "900");

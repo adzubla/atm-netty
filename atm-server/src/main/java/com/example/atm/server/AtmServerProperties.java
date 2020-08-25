@@ -7,8 +7,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "atm.server")
 public class AtmServerProperties {
 
-    private int mqListenerConcurrency;
-
     private int socketPort;
     private int bossThreads;
     private int workerThreads;
@@ -28,14 +26,6 @@ public class AtmServerProperties {
     private boolean registryDisable = false;
 
     private String routingLocation;
-
-    public int getMqListenerConcurrency() {
-        return mqListenerConcurrency;
-    }
-
-    public void setMqListenerConcurrency(int mqListenerConcurrency) {
-        this.mqListenerConcurrency = mqListenerConcurrency;
-    }
 
     public int getSocketPort() {
         return socketPort;
