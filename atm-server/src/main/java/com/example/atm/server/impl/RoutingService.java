@@ -34,7 +34,7 @@ public class RoutingService {
 
     public List<String> getTokens(String str) {
         List<String> tokens = new ArrayList<>();
-        StringTokenizer tokenizer = new StringTokenizer(str, "\t");
+        StringTokenizer tokenizer = new StringTokenizer(str, "\t ");
         while (tokenizer.hasMoreElements()) {
             tokens.add(tokenizer.nextToken());
         }
@@ -51,11 +51,11 @@ public class RoutingService {
             LOG.debug("line = {}", line);
             if (!line.matches("^#.*")) {
 
-                //ATM_ID\tMSG_ID\tDEST
+                //ATM_ID\tMSG_ID\tDEST\tQM
                 List<String> tokens = getTokens(line);
 
-                if (tokens.size() == 3) {
-                    newRules.add(new RoutingRule(in.getLineNumber(), tokens.get(0), tokens.get(1), tokens.get(2)));
+                if (tokens.size() == 4) {
+                    newRules.add(new RoutingRule(in.getLineNumber(), tokens.get(0), tokens.get(1), tokens.get(2), tokens.get(3)));
                 } else {
                     LOG.warn("Pattern problem '{}'", line);
                 }
@@ -66,14 +66,14 @@ public class RoutingService {
         LOG.info("Loaded {} items", newRules.size());
     }
 
-    public String getDestinationQueue(String id, String type) {
+    public Route getRoute(String id, String type) {
         //Analisa as regras de roteamento, baseado em CODIGO ATM e/ou CODIGO MENSAGEM
         for (RoutingRule rule : rules) {
 
             if (rule.getAtmId().equals("*") || rule.getAtmIdPattern().matcher(id).matches()) {
                 if (rule.getMsgId().equals("*") || rule.getMsgId().equals(type)) {
                     LOG.debug("Match {}", rule);
-                    return rule.getDestinationQueue();
+                    return new Route(rule.getQueueManager(), rule.getDestinationQueue());
                 }
             }
 

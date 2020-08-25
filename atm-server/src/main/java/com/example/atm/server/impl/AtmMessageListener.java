@@ -99,17 +99,16 @@ public class AtmMessageListener implements AtmServerListener {
         String body = msg.getBody();
         String type = body.substring(0, 4);
 
-        String queueName = routingService.getDestinationQueue(id, type);
-        String qm = "QM1";
+        Route route = routingService.getRoute(id, type);
 
-        JmsTemplate jmsTemplate = jmsConfig.getJmsTemplate(qm);
-        jmsTemplate.send(queueName, session -> {
+        JmsTemplate jmsTemplate = jmsConfig.getJmsTemplate(route.getQueueManager());
+        jmsTemplate.send(route.getDestinationQueue(), session -> {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Sending to {}: {}", queueName, dump(body));
+                LOG.debug("Sending to {}: {}", route.getQueueManager(), dump(body));
             }
 
             BytesMessage message = session.createBytesMessage();
-            message.setJMSReplyTo(replyToHolder.getReplyToQueue(qm));
+            message.setJMSReplyTo(replyToHolder.getReplyToQueue(route.getQueueManager()));
             message.setJMSCorrelationID(id);
 
             message.setStringProperty("VERSION", "900");

@@ -23,15 +23,15 @@ class RoutingServiceTest {
 
     @Test
     void getDestination() {
-        assertEquals("DEV.QUEUE.3", routingService.getDestinationQueue("9901", "9380")); // match rule 0
-        assertEquals("DEV.QUEUE.2", routingService.getDestinationQueue("9901", "7200")); // match rule 1
-        assertEquals("DEV.QUEUE.9", routingService.getDestinationQueue("9901", "9999")); // match rule 2
+        assertEquals(new Route("QM2", "DEV.QUEUE.3"), routingService.getRoute("9901", "9380")); // match rule 0
+        assertEquals(new Route("QM1", "DEV.QUEUE.2"), routingService.getRoute("9901", "7200")); // match rule 1
+        assertEquals(new Route("QM2", "DEV.QUEUE.9"), routingService.getRoute("9901", "9999")); // match rule 2
 
-        assertEquals("DEV.QUEUE.9", routingService.getDestinationQueue("992", "1000")); // match rule 3
-        assertEquals("DEV.QUEUE.1", routingService.getDestinationQueue("991", "9999")); // match rule 4
+        assertEquals(new Route("QM2", "DEV.QUEUE.9"), routingService.getRoute("992", "1000")); // match rule 3
+        assertEquals(new Route("QM1", "DEV.QUEUE.1"), routingService.getRoute("991", "9999")); // match rule 4
 
-        assertEquals("DEV.QUEUE.3", routingService.getDestinationQueue("99", "9380")); // match rule 5
-        assertEquals("DEV.QUEUE.1", routingService.getDestinationQueue("99", "9999")); // match rule 6
+        assertEquals(new Route("QM2", "DEV.QUEUE.3"), routingService.getRoute("99", "9380")); // match rule 5
+        assertEquals(new Route("QM1", "DEV.QUEUE.1"), routingService.getRoute("99", "9999")); // match rule 6
     }
 
 }

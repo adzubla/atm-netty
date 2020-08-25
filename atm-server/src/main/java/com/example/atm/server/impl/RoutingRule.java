@@ -9,12 +9,14 @@ public class RoutingRule {
     private final String atmId;
     private final String msgId;
     private final String destinationQueue;
+    private final String queueManager;
 
-    public RoutingRule(int lineNumber, String atmId, String msgId, String destinationQueue) {
+    public RoutingRule(int lineNumber, String atmId, String msgId, String destinationQueue, String queueManager) {
         this.lineNumber = lineNumber;
         this.atmId = atmId;
         this.msgId = msgId;
         this.destinationQueue = destinationQueue;
+        this.queueManager = queueManager;
         if (!atmId.equals("*")) {
             this.atmIdPattern = Pattern.compile(atmId);
         } else {
@@ -34,6 +36,10 @@ public class RoutingRule {
         return destinationQueue;
     }
 
+    public String getQueueManager() {
+        return queueManager;
+    }
+
     public Pattern getAtmIdPattern() {
         return atmIdPattern;
     }
@@ -45,6 +51,7 @@ public class RoutingRule {
                 ", atmId='" + atmId + '\'' +
                 ", msgId='" + msgId + '\'' +
                 ", destinationQueue='" + destinationQueue + '\'' +
+                ", queueManager='" + queueManager + '\'' +
                 '}';
     }
 
