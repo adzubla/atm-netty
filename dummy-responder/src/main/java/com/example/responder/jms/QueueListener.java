@@ -26,13 +26,14 @@ public class QueueListener {
 
     @JmsListener(destination = "DEV.QUEUE.1", concurrency = "2")
     public void receiveMessage(byte[] body, Message message) throws JMSException {
-        LOG.info("Received from queue: {}", body);
-        logJmsProperties(message);
+        //LOG.info("Received from queue: {}", body);
+        //logJmsProperties(message);
 
         String sourceContext = message.getStringProperty("SOURCE_CONTEXT");
         String targetContext = message.getStringProperty("TARGET_CONTEXT");
 
         Destination replyTo = message.getJMSReplyTo();
+        LOG.debug("replyTo = {} targetContext = {}", replyTo, targetContext);
 
         jmsTemplate.send(replyTo, session -> {
             BytesMessage response = session.createBytesMessage();
