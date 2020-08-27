@@ -121,6 +121,10 @@ Ver os ids registrados
 
     curl -s -X GET http://localhost:8081/registry/
 
+Ver as regras de roteamento
+
+    curl -s -X GET http://localhost:8081/routingrules/
+
 
 # Execução com Docker
 

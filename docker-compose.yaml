@@ -1,7 +1,7 @@
 version: '3'
 services:
 
-  mq:
+  mq1:
     image: "ibmcom/mq"
     environment:
       LICENSE: accept
@@ -26,7 +26,8 @@ services:
       STARTUP_WAIT_TIME: 10
       spring_profiles_active: local
       spring.boot.admin.client.url: "http://spring-boot-admin-server:8080"
-      ibm.mq.connName: "mq(1414)"
+      ibm.mq.queueManager: "QM1"
+      ibm.mq.connName: "mq1(1414)"
 
   atm-server:
     image: "atm-server:1.0-SNAPSHOT"
@@ -37,7 +38,10 @@ services:
       STARTUP_WAIT_TIME: 20
       spring_profiles_active: local
       spring.boot.admin.client.url: "http://spring-boot-admin-server:8080"
-      ibm.mq.connName: "mq(1414)"
+      qm.list.0.queueManager: "QM1"
+      qm.list.0.connName: "mq1(1414)"
+      ibm.mq.queueManager: "QM1"
+      ibm.mq.connName: "mq1(1414)"
       atm.server.registry-location: "/etc/atm-server/registry.txt"
       atm.server.routing-location: "/etc/atm-server/routing.txt"
     volumes:
