@@ -1,5 +1,6 @@
 package com.example.atm.server.conn;
 
+import com.example.atm.server.event.EventObject;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class ConnectionManager {
             data.key = key;
             ConnectionData prev = mapByKey.put(key, data);
             if (prev != null) {
+                LOG.debug("Removing previous {}", ctx);
                 mapByCtx.remove(prev.context);
                 prev.context.close();
             }
@@ -69,8 +71,8 @@ public class ConnectionManager {
         }
     }
 
-    public static class ConnectionData {
-        private final String eventType = "ATMS";
+    public static class ConnectionData implements EventObject {
+        private final String eventType = "ACTIVE";
         private final Instant creationTime;
         private final ChannelHandlerContext context;
 

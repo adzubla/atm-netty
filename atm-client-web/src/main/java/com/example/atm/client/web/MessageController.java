@@ -58,8 +58,8 @@ public class MessageController {
 
     private String createIsoMessage(String line) {
         String mti = "0100";
-        StringBuilder bitmap = new StringBuilder("0010001000010000000000000001000100000010110000000100100000000101");
-        String bitmapHex = (new BigInteger(bitmap.toString(), 2)).toString(16).toUpperCase();
+        StringBuilder bitmapBin = new StringBuilder("0010001000010000000000000001000100000010110000000100100000000101");
+        String bitmapHex = (new BigInteger(bitmapBin.toString(), 2)).toString(16).toUpperCase();
         assert bitmapHex.length() == 16;
         return mti + bitmapHex + line;
     }

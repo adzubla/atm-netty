@@ -18,14 +18,14 @@ class MacDecoderTest {
 
     @Test
     void testWithMac() {
-        String binStr = "01010503013030303030303030333333" +
+        String data = "01010503013030303030303030333333" +
                 "33000000000000000000000000003132" +
                 "33343232313030303131303243303438" +
                 "30356162634331333235383331354544" +
                 "38443943413237364537323138354232" +
                 "3332463945";
 
-        ByteBuf buf = createBuffer(binStr);
+        ByteBuf buf = createBuffer(data);
         MacDecoder decoder = new MacDecoder();
 
         assertTrue(decoder.hasMac(buf));
@@ -33,12 +33,12 @@ class MacDecoderTest {
 
     @Test
     void testWithoutMac() {
-        String binStr = "01010503013030303030303030333333" +
+        String data = "01010503013030303030303030333333" +
                 "33000000000000000000000000003132" +
                 "33343232313030303131303243303438" +
                 "303478797a";
 
-        ByteBuf buf = createBuffer(binStr);
+        ByteBuf buf = createBuffer(data);
         MacDecoder decoder = new MacDecoder();
 
         assertFalse(decoder.hasMac(buf));

@@ -39,7 +39,7 @@ public class EventSender {
         send(list);
     }
 
-    public void send(Object obj) {
+    public void send(Collection<? extends EventObject> obj) {
         sendText(serialize(obj));
     }
 

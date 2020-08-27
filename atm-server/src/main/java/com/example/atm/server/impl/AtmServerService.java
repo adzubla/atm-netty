@@ -18,7 +18,7 @@ public class AtmServerService {
     private AtmServerProperties config;
 
     @Autowired
-    private AtmMessageListener listener;
+    private AtmListener listener;
 
     private AtmServer server;
 

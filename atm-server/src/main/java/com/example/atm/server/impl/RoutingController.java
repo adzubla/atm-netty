@@ -12,11 +12,11 @@ import java.util.List;
 public class RoutingController {
 
     @Autowired
-    private RoutingService routingRules;
+    private RoutingService routingService;
 
     @GetMapping("/")
     public List<RoutingRule> list() {
-        return routingRules.getRules();
+        return routingService.getRules();
     }
 
 }

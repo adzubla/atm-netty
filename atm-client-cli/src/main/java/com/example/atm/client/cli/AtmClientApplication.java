@@ -74,13 +74,13 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
 
                 boolean useMac = true;
                 String mti = "0100";
-                StringBuilder bitmap = new StringBuilder("0010001000010000000000000001000100000010110000000100100000000101");
+                StringBuilder bitmapBin = new StringBuilder("0010001000010000000000000001000100000010110000000100100000000101");
                 if (line.startsWith("x")) {
                     // sem o MAC
-                    bitmap.setCharAt(63, '0');
+                    bitmapBin.setCharAt(63, '0');
                     useMac = false;
                 }
-                String bitmapHex = (new BigInteger(bitmap.toString(), 2)).toString(16).toUpperCase();
+                String bitmapHex = (new BigInteger(bitmapBin.toString(), 2)).toString(16).toUpperCase();
                 assert bitmapHex.length() == 16;
 
                 AtmMessage msg = new AtmMessage(atmId, mti + bitmapHex + line);

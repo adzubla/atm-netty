@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Route {
 
-    private String queueManager;
-    private String destinationQueue;
+    private final String queueManager;
+    private final String destinationQueue;
 
     public Route(String queueManager, String destinationQueue) {
         this.queueManager = queueManager;
@@ -16,16 +16,8 @@ public class Route {
         return queueManager;
     }
 
-    public void setQueueManager(String queueManager) {
-        this.queueManager = queueManager;
-    }
-
     public String getDestinationQueue() {
         return destinationQueue;
-    }
-
-    public void setDestinationQueue(String destinationQueue) {
-        this.destinationQueue = destinationQueue;
     }
 
     @Override

@@ -18,6 +18,8 @@ public class CryptoUtil {
     }
 
     public static ByteBuf decrypt(ByteBuf data) {
+        // Implementação de criptografia como exemplo
+
         int length = data.readableBytes();
         ByteBuf result = Unpooled.buffer(length);
 

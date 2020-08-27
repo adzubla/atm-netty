@@ -3,6 +3,7 @@ package com.example.atm.server.impl;
 import com.example.atm.netty.codec.atm.AtmMessage;
 import com.example.atm.netty.codec.util.IsoUtil;
 import com.example.atm.server.conn.ConnectionManager;
+import com.example.atm.server.event.EventObject;
 import com.example.atm.server.event.EventSender;
 import com.example.atm.server.jms.JmsConfig;
 import com.example.atm.server.jms.ReplyToHolder;
@@ -21,8 +22,8 @@ import java.util.Collections;
 import static com.example.atm.netty.codec.util.IsoUtil.dump;
 
 @Component
-public class AtmMessageListener implements AtmServerListener {
-    private static final Logger LOG = LoggerFactory.getLogger(AtmMessageListener.class);
+public class AtmListener implements AtmServerListener {
+    private static final Logger LOG = LoggerFactory.getLogger(AtmListener.class);
 
     private static final int MIN_MESSAGE_LENGTH = 20;
 
@@ -126,7 +127,7 @@ public class AtmMessageListener implements AtmServerListener {
         });
     }
 
-    public static class ConnectionEvent {
+    public static class ConnectionEvent implements EventObject {
         private String eventType;
         private String info;
 

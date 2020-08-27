@@ -26,7 +26,7 @@ public class RoutingService {
 
     @PostConstruct
     public void init() throws IOException {
-        LOG.debug("Reading registry from {}", routingLocation);
+        LOG.debug("Reading routes from {}", routingLocation);
         try (FileReader reader = new FileReader(routingLocation)) {
             load(reader);
         }
