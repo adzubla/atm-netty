@@ -32,7 +32,7 @@ Configuração para o Spring Boot Admin Server
 
 # Execução dos clientes
 
-Usar a opção `-k` para os clientes se conectarem aos pods em execução no Kubernetes
+Usar a opção `-k` para os clientes se conectarem aos pods em execução no Minikube
 
     ./client.sh -k [ATM_ID]
     
