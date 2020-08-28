@@ -4,7 +4,7 @@ metadata:
   name: atm-server-configmap
 data:
   application.properties: |-
-    spring.boot.admin.client.url=http://admin:8080
+    spring.boot.admin.client.url=http://spring-boot-admin-server:8080
     spring.zipkin.baseUrl=http://zipkin.istio-system:9411
     spring.zipkin.enabled=true
     qm.list.0.queueManager=QM1
