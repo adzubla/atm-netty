@@ -148,6 +148,10 @@ Executar o client local, acessando os serviços no docker
 
     ./client.sh
 
+O Spring Boot Admin pode ser acessado pelo endereço
+
+    http://localhost:8080/
+    
 Para terminar todos os serviços
 
     docker-compose down
