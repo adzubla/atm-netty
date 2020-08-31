@@ -7,11 +7,11 @@ data:
     spring.boot.admin.client.url=http://spring-boot-admin-server:8080
     spring.zipkin.baseUrl=http://zipkin.istio-system:9411
     spring.zipkin.enabled=true
-    qm.list.0.channel=${MQ_CHANNEL}
-    qm.list.0.connName=${MQ_HOST}(${MQ_PORT})
-    qm.list.0.password=${MQ_PASSWORD}
-    qm.list.0.queueManager=${MQ_QM}
-    qm.list.0.user=${MQ_USER}
+    qm.list.0.channel=${MQ_0_CHANNEL}
+    qm.list.0.connName=${MQ_0_HOST}(${MQ_0_PORT})
+    qm.list.0.password=${MQ_0_PASSWORD}
+    qm.list.0.queueManager=${MQ_0_QM}
+    qm.list.0.user=${MQ_0_USER}
     ibm.mq.channel=${MQ_CHANNEL}
     ibm.mq.connName=${MQ_HOST}(${MQ_PORT})
     ibm.mq.password=${MQ_PASSWORD}
@@ -101,6 +101,36 @@ spec:
                 configMapKeyRef:
                   name: mq-configmap
                   key: mq-qm
+            - name: MQ_0_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mq-secret
+                  key: mq-0-user
+            - name: MQ_0_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mq-secret
+                  key: mq-0-password
+            - name: MQ_0_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: mq-configmap
+                  key: mq-0-host
+            - name: MQ_0_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: mq-configmap
+                  key: mq-0-port
+            - name: MQ_0_CHANNEL
+              valueFrom:
+                configMapKeyRef:
+                  name: mq-configmap
+                  key: mq-0-channel
+            - name: MQ_0_QM
+              valueFrom:
+                configMapKeyRef:
+                  name: mq-configmap
+                  key: mq-0-qm
           volumeMounts:
             - name: atm-server-volume
               mountPath: /etc/atm-server

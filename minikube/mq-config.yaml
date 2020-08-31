@@ -7,6 +7,10 @@ data:
   mq-port: "1414"
   mq-channel: "DEV.ADMIN.SVRCONN"
   mq-qm: "QM1"
+  mq-0-host: "mq"
+  mq-0-port: "1414"
+  mq-0-channel: "DEV.ADMIN.SVRCONN"
+  mq-0-qm: "QM1"
 
 ---
 
@@ -18,3 +22,5 @@ type: Opaque
 data:
   mq-user: "YWRtaW4="
   mq-password: "cGFzc3cwcmQ="
+  mq-0-user: "YWRtaW4="
+  mq-0-password: "cGFzc3cwcmQ="

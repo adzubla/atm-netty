@@ -7,11 +7,11 @@ data:
     spring.boot.admin.client.url=http://spring-boot-admin-server:8080
     spring.zipkin.baseUrl=http://zipkin.istio-system:9411
     spring.zipkin.enabled=true
-    ibm.mq.channel=${MQ_CHANNEL}
-    ibm.mq.connName=${MQ_HOST}(${MQ_PORT})
-    ibm.mq.password=${MQ_PASSWORD}
-    ibm.mq.queueManager=${MQ_QM}
-    ibm.mq.user=${MQ_USER}
+    ibm.mq.channel=${MQ_0_CHANNEL}
+    ibm.mq.connName=${MQ_0_HOST}(${MQ_0_PORT})
+    ibm.mq.password=${MQ_0_PASSWORD}
+    ibm.mq.queueManager=${MQ_0_QM}
+    ibm.mq.user=${MQ_0_USER}
 
 ---
 
@@ -45,36 +45,36 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: minikube
-            - name: MQ_USER
+            - name: MQ_0_USER
               valueFrom:
                 secretKeyRef:
                   name: mq-secret
-                  key: mq-user
-            - name: MQ_PASSWORD
+                  key: mq-0-user
+            - name: MQ_0_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mq-secret
-                  key: mq-password
-            - name: MQ_HOST
+                  key: mq-0-password
+            - name: MQ_0_HOST
               valueFrom:
                 configMapKeyRef:
                   name: mq-configmap
-                  key: mq-host
-            - name: MQ_PORT
+                  key: mq-0-host
+            - name: MQ_0_PORT
               valueFrom:
                 configMapKeyRef:
                   name: mq-configmap
-                  key: mq-port
-            - name: MQ_CHANNEL
+                  key: mq-0-port
+            - name: MQ_0_CHANNEL
               valueFrom:
                 configMapKeyRef:
                   name: mq-configmap
-                  key: mq-channel
-            - name: MQ_QM
+                  key: mq-0-channel
+            - name: MQ_0_QM
               valueFrom:
                 configMapKeyRef:
                   name: mq-configmap
-                  key: mq-qm
+                  key: mq-0-qm
 
 ---
 
