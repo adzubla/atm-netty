@@ -7,9 +7,11 @@ data:
     spring.boot.admin.client.url=http://spring-boot-admin-server:8080
     spring.zipkin.baseUrl=http://zipkin.istio-system:9411
     spring.zipkin.enabled=true
-    ibm.mq.connName=mq(1414)
-    ibm.mq.user=admin
-    ibm.mq.password=passw0rd
+    ibm.mq.channel=${MQ_CHANNEL}
+    ibm.mq.connName=${MQ_HOST}(${MQ_PORT})
+    ibm.mq.password=${MQ_PASSWORD}
+    ibm.mq.queueManager=${MQ_QM}
+    ibm.mq.user=${MQ_USER}
 
 ---
 
