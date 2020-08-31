@@ -29,13 +29,13 @@ data:
     #ATM_ID	MSG_ID	DEST
     .*01$	9380	DEV.QUEUE.3 QM1
     .*01$	7200	DEV.QUEUE.2 QM1
-    .*01$	*	DEV.QUEUE.9 QM1
-    .*2$	*	DEV.QUEUE.9 QM1
-    .*1$	*	DEV.QUEUE.1 QM1
-    .*3$	*	DEV.QUEUE.1 QM1
-    .*4$	*	DEV.QUEUE.1 QM1
-    *	9380	DEV.QUEUE.3 QM1
-    *	*	DEV.QUEUE.1 QM1
+    .*01$	*	    DEV.QUEUE.9 QM1
+    .*2$	*	    DEV.QUEUE.9 QM1
+    .*1$	*	    DEV.QUEUE.1 QM1
+    .*3$	*	    DEV.QUEUE.1 QM1
+    .*4$	*	    DEV.QUEUE.1 QM1
+    *	    9380	DEV.QUEUE.3 QM1
+    *	    *	    DEV.QUEUE.1 QM1
 
 ---
 
