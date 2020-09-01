@@ -47,3 +47,14 @@ services:
     volumes:
       - ./upload-registry/registry.txt:/etc/atm-server/registry.txt:ro
       - ./atm-server/routingTable.txt:/etc/atm-server/routing.txt:ro
+
+  atm-client-web:
+    image: "atm-client-web:1.0-SNAPSHOT"
+    ports:
+      - 8083:8083
+    environment:
+      STARTUP_WAIT_TIME: 30
+      spring_profiles_active: local
+      spring.boot.admin.client.url: "http://spring-boot-admin-server:8080"
+      atm-server.host: atm-server
+      atm-server.port: 8992
