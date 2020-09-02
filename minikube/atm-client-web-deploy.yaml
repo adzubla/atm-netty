@@ -27,7 +27,7 @@ spec:
         app: atm-client-web
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "8083"
+        prometheus.io/port: "8085"
         prometheus.io/scheme: "http"
         prometheus.io/path: "/actuator/prometheus"
         kiali.io/runtimes: springboot-jvm,springboot-jvm-pool,springboot-tomcat
@@ -37,7 +37,7 @@ spec:
           image: "atm-client-web:1.0-SNAPSHOT"
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8083
+            - containerPort: 8085
               name: http
 
 ---
@@ -56,8 +56,8 @@ spec:
   ports:
     - protocol: TCP
       name: http
-      port: 8083
-      targetPort: 8083
-      nodePort: 30083
+      port: 8085
+      targetPort: 8085
+      nodePort: 30085
 
 ---

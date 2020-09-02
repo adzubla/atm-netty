@@ -51,7 +51,7 @@ services:
   atm-client-web:
     image: "atm-client-web:1.0-SNAPSHOT"
     ports:
-      - 8083:8083
+      - 8085:8085
     environment:
       STARTUP_WAIT_TIME: 30
       spring_profiles_active: local
