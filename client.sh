@@ -3,7 +3,7 @@
 cd atm-client-cli || exit 1
 
 if [ "$1" == "-k" ]; then
-  OPTS="--atm-server.host=$(minikube ip) --atm-server.port=30992"
+  OPTS="--iso-server-host=$(minikube ip) --iso-server-port=30992"
   shift
 fi
 

@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: atm-client-web-configmap
+data:
+  application.properties: |-
+    spring.boot.admin.client.url=http://spring-boot-admin-server:8080
+    spring.zipkin.baseUrl=http://zipkin.istio-system:9411
+    spring.zipkin.enabled=true
+    iso-server-host=atm-server
+    iso-server-port=8992
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atm-client-web-deployment
+spec:
+  selector:
+    matchLabels:
+      app: atm-client-web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: atm-client-web
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8083"
+        prometheus.io/scheme: "http"
+        prometheus.io/path: "/actuator/prometheus"
+        kiali.io/runtimes: springboot-jvm,springboot-jvm-pool,springboot-tomcat
+    spec:
+      containers:
+        - name: atm-client-web
+          image: "atm-client-web:1.0-SNAPSHOT"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8083
+              name: http
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: atm-client-web
+  labels:
+    app: atm-client-web
+    spring-boot: "true"
+spec:
+  selector:
+    app: atm-client-web
+  type: NodePort
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8083
+      targetPort: 8083
+      nodePort: 30083
+
+---

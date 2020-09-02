@@ -56,5 +56,5 @@ services:
       STARTUP_WAIT_TIME: 30
       spring_profiles_active: local
       spring.boot.admin.client.url: "http://spring-boot-admin-server:8080"
-      atm-server.host: atm-server
-      atm-server.port: 8992
+      iso-server-host: atm-server
+      iso-server-port: 8992

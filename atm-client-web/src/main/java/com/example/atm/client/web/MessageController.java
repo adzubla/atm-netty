@@ -24,10 +24,10 @@ public class MessageController {
     @Autowired
     private SimpMessagingTemplate template;
 
-    @Value("${atm-server.host}")
+    @Value("${iso-server-host}")
     private String host;
 
-    @Value("${atm-server.port}")
+    @Value("${iso-server-port}")
     private int port;
 
     private AtmClient client;
@@ -37,6 +37,9 @@ public class MessageController {
         LOG.info("*** Connect");
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
         LOG.debug("headers = " + headers);
+
+        LOG.debug("host = {}", host);
+        LOG.debug("port = {}", port);
 
         client = new AtmClient(host, port, new WebAtmClientHandler(template));
         client.connect();
