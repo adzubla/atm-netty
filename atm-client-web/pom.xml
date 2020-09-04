@@ -10,6 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <docker.repository.prefix></docker.repository.prefix>
     </properties>
 
     <parent>
@@ -254,6 +255,11 @@
 
         <profile>
             <id>kubernetes</id>
+
+            <properties>
+                <docker.repository.prefix></docker.repository.prefix>
+            </properties>
+
             <dependencies>
 
                 <!-- Spring Cloud -->
