@@ -31,10 +31,10 @@ public class ResponseListener implements MessageListener {
 
                 handleMessage(data, targetContext);
             } catch (JMSException ex) {
-                throw new RuntimeException(ex);
+                LOG.error("JMS error. Discarding message {}", message, ex);
             }
         } else {
-            throw new IllegalArgumentException("Message must be of type BytesMessage");
+            LOG.error("Message must be of type BytesMessage. Discarding message {}", message);
         }
     }
 
