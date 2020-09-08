@@ -188,11 +188,22 @@
         <!-- ======================================================================================================= -->
 
         <profile>
-            <id>kubernetes</id>
-
+            <id>ci-environment</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>env.IMAGE_REGISTRY</name>
+                </property>
+            </activation>
             <properties>
-                <docker.repository.prefix></docker.repository.prefix>
+                <docker.repository.prefix>${env.IMAGE_REGISTRY}/</docker.repository.prefix>
             </properties>
+        </profile>
+
+        <!-- ======================================================================================================= -->
+
+        <profile>
+            <id>kubernetes</id>
 
             <dependencies>
 
@@ -304,7 +315,7 @@
                         </executions>
                         <configuration>
                             <tag>${project.version}</tag>
-                            <repository>${project.artifactId}</repository>
+                            <repository>${docker.repository.prefix}${project.artifactId}</repository>
                         </configuration>
                     </plugin>
 
