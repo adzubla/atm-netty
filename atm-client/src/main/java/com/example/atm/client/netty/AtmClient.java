@@ -81,7 +81,8 @@ public final class AtmClient implements Closeable {
     public void ping(Long atmId) throws InterruptedException {
         channel.attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(HeaderData.PING);
 
-        AtmMessage msg = new AtmMessage(atmId, "");
+        byte[] empty = new byte[0];
+        AtmMessage msg = new AtmMessage(atmId, empty);
 
         ChannelFuture lastWriteFuture = channel.writeAndFlush(msg);
         if (lastWriteFuture != null) {

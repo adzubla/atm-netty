@@ -17,6 +17,7 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.jms.BytesMessage;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static com.example.atm.netty.codec.util.IsoUtil.dump;
@@ -71,7 +72,7 @@ public class AtmListener implements AtmServerListener {
     public void onMessage(ChannelHandlerContext ctx, AtmMessage msg) {
 
         //Verifica se tem no minimo o codigo da mensagem + mapa de bits
-        if (msg.getBody().length() < MIN_MESSAGE_LENGTH) {
+        if (msg.getBody().length < MIN_MESSAGE_LENGTH) {
             LOG.warn("Invalid Msg Received <{}>", msg);
             ctx.disconnect();
             return;
@@ -98,8 +99,8 @@ public class AtmListener implements AtmServerListener {
         connectionManager.add(msg.getId(), ctx);
 
         String id = msg.getId().toString();
-        String body = msg.getBody();
-        String type = body.substring(0, 4);
+        byte[] body = msg.getBody();
+        String type = new String(Arrays.copyOf(body, 4));
 
         Route route = routingService.getRoute(id, type);
 

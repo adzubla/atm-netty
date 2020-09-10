@@ -10,8 +10,8 @@ public class IsoUtil {
     private static final int BITMAP_STRING_SIZE = BITMAP_SIZE * 2;
     private static final char[] HEX_DIGITS = "0123456789ABCDEF".toCharArray();
 
-    public static byte[] compactBitmap(String data) {
-        if (data == null || data.length() < MTI_SIZE + BITMAP_STRING_SIZE) {
+    public static byte[] compactBitmap(byte[] data) {
+        if (data == null || data.length < MTI_SIZE + BITMAP_STRING_SIZE) {
             throw new IllegalArgumentException("Dados invalidos: " + data);
         }
 
@@ -22,34 +22,32 @@ public class IsoUtil {
         // Se estiver setado, existem 2 mapas de 64 bits
         int totBitMapSize = BITMAP_SIZE;
         int totBitMapStringSize = BITMAP_STRING_SIZE;
-        if (Character.digit(data.charAt(MTI_SIZE), 16) >= 0x08) {
+        if (Character.digit(data[MTI_SIZE], 16) >= 0x08) {
             totBitMapSize *= 2;
             totBitMapStringSize *= 2;
         }
 
-        byte[] result = new byte[data.length() - (totBitMapStringSize - totBitMapSize)];
+        byte[] result = new byte[data.length - (totBitMapStringSize - totBitMapSize)];
 
         // copia MTI
-        byte[] mti = data.substring(0, MTI_SIZE).getBytes(StandardCharsets.ISO_8859_1);
-        System.arraycopy(mti, 0, result, 0, MTI_SIZE);
+        System.arraycopy(data, 0, result, 0, MTI_SIZE);
 
         // compacta bitmap: hex ascii -> binario
         for (int i = MTI_SIZE; i < MTI_SIZE + totBitMapStringSize; i += 2) {
-            int c1 = Character.digit(data.charAt(i), 16);
-            int c2 = Character.digit(data.charAt(i + 1), 16);
+            int c1 = Character.digit(data[i], 16);
+            int c2 = Character.digit(data[i + 1], 16);
             int b = c1 * 16 + c2;
 
             result[(MTI_SIZE + i) / 2] = (byte) (b & 0xFF);
         }
 
         // concatena o resto da mensagem ao bitmap
-        byte[] body = data.substring(MTI_SIZE + totBitMapStringSize).getBytes(StandardCharsets.ISO_8859_1);
-        System.arraycopy(body, 0, result, MTI_SIZE + totBitMapSize, body.length);
+        System.arraycopy(data, MTI_SIZE + totBitMapStringSize, result, MTI_SIZE + totBitMapSize, data.length - (MTI_SIZE + totBitMapStringSize));
 
         return result;
     }
 
-    public static String expandBitmap(byte[] data) {
+    public static byte[] expandBitmap(byte[] data) {
         if (data == null || data.length < MTI_SIZE + BITMAP_SIZE) {
             throw new IllegalArgumentException("Dados invalidos: " + Arrays.toString(data));
         }
@@ -66,34 +64,33 @@ public class IsoUtil {
             totBitMapStringSize *= 2;
         }
 
-        StringBuilder result = new StringBuilder(data.length + (totBitMapStringSize - totBitMapSize));
+        byte[] result = new byte[data.length + (totBitMapStringSize - totBitMapSize)];
 
         // copia MTI
-        String mti = new String(Arrays.copyOfRange(data, 0, MTI_SIZE), StandardCharsets.ISO_8859_1);
-        result.append(mti);
+        System.arraycopy(data, 0, result, 0, MTI_SIZE);
 
         // expande bitmap: binario -> hex ascii
+        int j = MTI_SIZE;
         for (int i = MTI_SIZE; i < MTI_SIZE + totBitMapSize; i++) {
             int b = data[i] & 0xFF;
 
-            result.append(HEX_DIGITS[b >> 4]);
-            result.append(HEX_DIGITS[b & 0x0F]);
+            result[j++] = (byte) HEX_DIGITS[b >> 4];
+            result[j++] = (byte) HEX_DIGITS[b & 0x0F];
         }
 
         // concatena o resto da mensagem ao bitmap
-        String body = new String(Arrays.copyOfRange(data, MTI_SIZE + totBitMapSize, data.length), StandardCharsets.ISO_8859_1);
-        result.append(body);
+        System.arraycopy(data, MTI_SIZE + totBitMapSize, result, j, data.length - (MTI_SIZE + totBitMapSize));
 
-        return result.toString();
+        return result;
     }
 
-    public static String dump(String data) {
+    public static String dump(byte[] data) {
         if (data == null) {
             return "<null>";
-        } else if (data.length() <= 20) {
-            return "<" + data + ">";
+        } else if (data.length <= 20) {
+            return "<" + new String(data, StandardCharsets.ISO_8859_1) + ">";
         } else {
-            return "<" + data.substring(0, 4) + " " + data.substring(4, 20) + "...>";
+            return "<" + new String(Arrays.copyOf(data, 20), StandardCharsets.ISO_8859_1) + "...>";
         }
     }
 

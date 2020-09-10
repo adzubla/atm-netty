@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @SpringBootApplication
@@ -83,7 +84,8 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
                 String bitmapHex = (new BigInteger(bitmapBin.toString(), 2)).toString(16).toUpperCase();
                 assert bitmapHex.length() == 16;
 
-                AtmMessage msg = new AtmMessage(atmId, mti + bitmapHex + line);
+                String body = mti + bitmapHex + line;
+                AtmMessage msg = new AtmMessage(atmId, body.getBytes(StandardCharsets.ISO_8859_1));
                 client.write(msg, useMac);
             }
         }
@@ -105,7 +107,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
             }
             System.err.printf("%nMsgAtm: %s%n", m);
 
-            AtmMessage msgAtm = new AtmMessage(atmId, m.toString());
+            AtmMessage msgAtm = new AtmMessage(atmId, m.toString().getBytes(StandardCharsets.ISO_8859_1));
             client.write(msgAtm, false);
 
             // Espera pela resposta

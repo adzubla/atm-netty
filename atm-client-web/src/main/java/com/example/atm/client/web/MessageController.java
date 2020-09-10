@@ -16,6 +16,7 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
 @Controller
 public class MessageController {
@@ -55,7 +56,7 @@ public class MessageController {
     public void receive(ReceiveMessage message, @DestinationVariable Long atmId) throws Exception {
         LOG.debug("*** Received from " + atmId + ": " + message.getName());
 
-        AtmMessage atmMessage = new AtmMessage(atmId, createIsoMessage(message.getName()));
+        AtmMessage atmMessage = new AtmMessage(atmId, createIsoMessage(message.getName()).getBytes(StandardCharsets.ISO_8859_1));
         client.write(atmMessage, true);
     }
 

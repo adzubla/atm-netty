@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.util.HtmlUtils;
 
+import java.nio.charset.StandardCharsets;
+
 public class WebAtmClientHandler extends AtmClientHandler {
     private static final Logger LOG = LoggerFactory.getLogger(WebAtmClientHandler.class);
 
@@ -33,9 +35,9 @@ public class WebAtmClientHandler extends AtmClientHandler {
         Byte type = ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).get();
         String response;
         if (type == HeaderData.PONG) {
-            response = String.format("[PONG] %s", msg.getBody());
+            response = "[PONG]";
         } else {
-            String body = msg.getBody();
+            String body = new String(msg.getBody(), StandardCharsets.ISO_8859_1);
 
             String mti = body.substring(0, 4);
             String bitmap = body.substring(4, 20);

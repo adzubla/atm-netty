@@ -7,10 +7,13 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class HeaderDecoder extends ByteToMessageDecoder {
     private static final Logger LOG = LoggerFactory.getLogger(HeaderDecoder.class);
+
+    private static final byte[] PONG_BYTE_ARRAY = " PONG ".getBytes(StandardCharsets.ISO_8859_1);
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
@@ -29,7 +32,7 @@ public class HeaderDecoder extends ByteToMessageDecoder {
 
             in.skipBytes(in.readableBytes());
 
-            AtmMessage message = new AtmMessage(id, " PONG ");
+            AtmMessage message = new AtmMessage(id, PONG_BYTE_ARRAY);
             ctx.channel().writeAndFlush(message);
         } else {
             ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(type);

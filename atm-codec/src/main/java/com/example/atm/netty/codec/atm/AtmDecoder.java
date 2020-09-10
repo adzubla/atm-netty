@@ -7,7 +7,6 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class AtmDecoder extends ByteToMessageDecoder {
@@ -19,7 +18,8 @@ public class AtmDecoder extends ByteToMessageDecoder {
 
         Long id = ctx.channel().attr(HeaderData.HEADER_ID_ATTRIBUTE_KEY).get();
 
-        String body = in.readCharSequence(in.readableBytes(), StandardCharsets.ISO_8859_1).toString();
+        byte[] body = new byte[in.readableBytes()];
+        in.readBytes(body);
 
         AtmMessage msg = new AtmMessage(id, body);
 

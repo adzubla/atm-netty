@@ -2,6 +2,7 @@ package com.example.atm.netty.codec.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,14 +13,14 @@ class IsoUtilTest {
     void testBitmap() {
         String m = "01107F010203040506FFxyz";
 
-        byte[] byteArray = IsoUtil.compactBitmap(m);
+        byte[] byteArray = IsoUtil.compactBitmap(m.getBytes(StandardCharsets.ISO_8859_1));
 
         System.out.println("byteArray = " + Arrays.toString(byteArray));
         System.out.println("  as ints = " + Arrays.toString(toIntArray(byteArray)));
 
         assertEquals(15, byteArray.length);
 
-        String s = IsoUtil.expandBitmap(byteArray);
+        String s = new String(IsoUtil.expandBitmap(byteArray));
 
         System.out.println("m = " + m);
         System.out.println("s = " + s);

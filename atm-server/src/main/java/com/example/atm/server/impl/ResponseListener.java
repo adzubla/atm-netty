@@ -39,7 +39,7 @@ public class ResponseListener implements MessageListener {
     }
 
     private void handleMessage(byte[] data, String targetContext) {
-        String body = IsoUtil.expandBitmap(data);
+        byte[] body = IsoUtil.expandBitmap(data);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Received from queue: {}", dump(body));

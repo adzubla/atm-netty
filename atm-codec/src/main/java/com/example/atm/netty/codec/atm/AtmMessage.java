@@ -2,10 +2,10 @@ package com.example.atm.netty.codec.atm;
 
 public class AtmMessage {
 
-    private final String body;
+    private final byte[] body;
     private final Long id;
 
-    public AtmMessage(Long id, String body) {
+    public AtmMessage(Long id, byte[] body) {
         this.id = id;
         this.body = body;
     }
@@ -14,7 +14,7 @@ public class AtmMessage {
         return id;
     }
 
-    public String getBody() {
+    public byte[] getBody() {
         return body;
     }
 
