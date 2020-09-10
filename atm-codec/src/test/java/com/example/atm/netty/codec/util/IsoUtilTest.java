@@ -10,7 +10,7 @@ class IsoUtilTest {
 
     @Test
     void testBitmap() {
-        String m = "0110FF010203040506FFxyz";
+        String m = "01107F010203040506FFxyz";
 
         byte[] byteArray = IsoUtil.compactBitmap(m);
 
