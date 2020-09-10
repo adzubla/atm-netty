@@ -53,7 +53,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
 
     public void processConsole(Long atmId) throws Exception {
 
-        try (AtmClient client = new AtmClient(host, port, new CliAtmClientHandler());
+        try (AtmClient client = new AtmClient(host, port, false, new CliAtmClientHandler());
              InputStreamReader streamReader = new InputStreamReader(System.in)) {
 
             client.connect();
@@ -91,7 +91,7 @@ public class AtmClientApplication implements ApplicationRunner, ExitCodeGenerato
 
     public void processFile(Long atmId, String fileName) throws Exception {
 
-        try (AtmClient client = new AtmClient(host, port, new CliAtmClientHandler());
+        try (AtmClient client = new AtmClient(host, port, false, new CliAtmClientHandler());
              FileReader fileReader = new FileReader(fileName)) {
 
             client.connect();

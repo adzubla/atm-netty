@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 public final class AtmServer {
     private static final Logger LOG = LoggerFactory.getLogger(AtmServer.class);
 
+    private final boolean encryption;
+
     private final ServerBootstrap bootstrap;
     private final EventLoopGroup bossGroup;
     private final EventLoopGroup workerGroup;
@@ -34,10 +36,12 @@ public final class AtmServer {
     private final EventExecutorGroup handlerGroup;
 
     public AtmServer(AtmServerProperties config, AtmServerListener listener) {
+        encryption = !config.isCryptoDisable();
+
         bossGroup = TransportType.newEventLoopGroup(config.getBossThreads());
         workerGroup = TransportType.newEventLoopGroup(config.getWorkerThreads());
 
-        cryptoGroup = new DefaultEventExecutorGroup(config.getCryptoThreads());
+        cryptoGroup = encryption ? new DefaultEventExecutorGroup(config.getCryptoThreads()) : null;
         handlerGroup = new DefaultEventExecutorGroup(config.getHandlerThreads());
 
         bootstrap = new ServerBootstrap();
@@ -54,13 +58,17 @@ public final class AtmServer {
                         ChannelPipeline pipeline = ch.pipeline();
 
                         pipeline.addLast(new LengthFrameDecoder());
-                        pipeline.addLast(cryptoGroup, new CryptoDecoder());
+                        if (encryption) {
+                            pipeline.addLast(cryptoGroup, new CryptoDecoder());
+                        }
                         pipeline.addLast(new MacDecoder());
                         pipeline.addLast(new HeaderDecoder());
                         pipeline.addLast(new AtmDecoder());
 
                         pipeline.addLast(new LengthPrepender());
-                        pipeline.addLast(cryptoGroup, new CryptoEncoder());
+                        if (encryption) {
+                            pipeline.addLast(cryptoGroup, new CryptoEncoder());
+                        }
                         pipeline.addLast(new HeaderEncoder());
                         pipeline.addLast(new AtmEncoder());
 
@@ -76,20 +84,20 @@ public final class AtmServer {
     }
 
     public void shutdown() throws InterruptedException {
-        LOG.info("Shutdown workerGroup");
         if (workerGroup != null) {
+            LOG.info("Shutdown workerGroup");
             workerGroup.shutdownGracefully().sync().await();
         }
-        LOG.info("Shutdown bossGroup");
         if (bossGroup != null) {
+            LOG.info("Shutdown bossGroup");
             bossGroup.shutdownGracefully().sync().await();
         }
-        LOG.info("Shutdown cryptoGroup");
         if (cryptoGroup != null) {
+            LOG.info("Shutdown cryptoGroup");
             cryptoGroup.shutdownGracefully().sync().await();
         }
-        LOG.info("Shutdown handlerGroup");
         if (handlerGroup != null) {
+            LOG.info("Shutdown handlerGroup");
             handlerGroup.shutdownGracefully().sync().await();
         }
     }

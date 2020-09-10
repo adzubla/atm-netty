@@ -27,6 +27,8 @@ public class AtmServerProperties {
 
     private String routingLocation;
 
+    private boolean cryptoDisable = false;
+
     public int getSocketPort() {
         return socketPort;
     }
@@ -137,6 +139,14 @@ public class AtmServerProperties {
 
     public void setRoutingLocation(String routingLocation) {
         this.routingLocation = routingLocation;
+    }
+
+    public boolean isCryptoDisable() {
+        return cryptoDisable;
+    }
+
+    public void setCryptoDisable(boolean cryptoDisable) {
+        this.cryptoDisable = cryptoDisable;
     }
 
 }

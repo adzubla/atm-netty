@@ -41,7 +41,7 @@ public class MessageController {
         LOG.debug("host = {}", host);
         LOG.debug("port = {}", port);
 
-        client = new AtmClient(host, port, new WebAtmClientHandler(template));
+        client = new AtmClient(host, port, false, new WebAtmClientHandler(template));
         client.connect();
     }
 

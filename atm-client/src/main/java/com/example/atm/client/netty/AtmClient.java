@@ -23,14 +23,16 @@ public final class AtmClient implements Closeable {
 
     private final String host;
     private final int port;
+    private final boolean encryption;
 
     private EventLoopGroup group;
     private Channel channel;
     private final AtmClientHandler atmClientHandler;
 
-    public AtmClient(String host, int port, AtmClientHandler atmClientHandler) {
+    public AtmClient(String host, int port, boolean encryption, AtmClientHandler atmClientHandler) {
         this.host = host;
         this.port = port;
+        this.encryption = encryption;
         this.atmClientHandler = atmClientHandler;
     }
 
@@ -45,12 +47,16 @@ public final class AtmClient implements Closeable {
                         ChannelPipeline pipeline = ch.pipeline();
 
                         pipeline.addLast(new LengthFrameDecoder());
-                        pipeline.addLast(new CryptoDecoder());
+                        if (encryption) {
+                            pipeline.addLast(new CryptoDecoder());
+                        }
                         pipeline.addLast(new HeaderDecoder());
                         pipeline.addLast(new AtmDecoder());
 
                         pipeline.addLast(new LengthPrepender());
-                        pipeline.addLast(new CryptoEncoder());
+                        if (encryption) {
+                            pipeline.addLast(new CryptoEncoder());
+                        }
                         pipeline.addLast(new MacEncoder());
                         pipeline.addLast(new HeaderEncoder());
                         pipeline.addLast(new AtmEncoder());
