@@ -29,7 +29,7 @@ public class HeaderDecoder extends ByteToMessageDecoder {
 
             in.skipBytes(in.readableBytes());
 
-            AtmMessage message = new AtmMessage(id, "pong");
+            AtmMessage message = new AtmMessage(id, " PONG ");
             ctx.channel().writeAndFlush(message);
         } else {
             ctx.channel().attr(HeaderData.HEADER_TYPE_ATTRIBUTE_KEY).set(type);
