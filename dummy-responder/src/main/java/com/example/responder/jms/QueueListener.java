@@ -73,6 +73,17 @@ public class QueueListener {
             String value = message.getStringProperty(key);
             LOG.debug("{} = {}", key, value);
         }
+        LOG.debug("getJMSCorrelationID = {}", message.getJMSCorrelationID());
+        LOG.debug("getJMSDeliveryMode = {}", message.getJMSDeliveryMode());
+        LOG.debug("getJMSDeliveryTime = {}", message.getJMSDeliveryTime());
+        LOG.debug("getJMSDestination = {}", message.getJMSDestination());
+        LOG.debug("getJMSExpiration = {}", message.getJMSExpiration());
+        LOG.debug("getJMSMessageID = {}", message.getJMSMessageID());
+        LOG.debug("getJMSPriority = {}", message.getJMSPriority());
+        LOG.debug("getJMSRedelivered = {}", message.getJMSRedelivered());
+        LOG.debug("getJMSReplyTo = {}", message.getJMSReplyTo());
+        LOG.debug("getJMSTimestamp = {}", message.getJMSTimestamp());
+        LOG.debug("getJMSType = {}", message.getJMSType());
     }
 
 }
