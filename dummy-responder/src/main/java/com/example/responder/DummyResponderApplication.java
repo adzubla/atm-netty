@@ -14,9 +14,9 @@ import java.util.Arrays;
 
 @SpringBootApplication
 @EnableJms
-public class ResponderApplication {
+public class DummyResponderApplication {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ResponderApplication.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DummyResponderApplication.class);
 
     @Autowired
     private BuildProperties buildProperties;
@@ -25,7 +25,7 @@ public class ResponderApplication {
     private Environment environment;
 
     public static void main(String[] args) {
-        SpringApplication.run(ResponderApplication.class, args);
+        SpringApplication.run(DummyResponderApplication.class, args);
     }
 
     @PostConstruct
