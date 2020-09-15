@@ -31,6 +31,9 @@ public class EventSender {
     @Value("#{atmServerProperties.eventQueueName}")
     private String eventQueue;
 
+    @Value("#{atmServerProperties.eventDisable}")
+    private boolean eventDisable;
+
     @Scheduled(fixedRateString = "#{atmServerProperties.eventSendRate}")
     public void connectionStats() {
         Collection<ConnectionManager.ConnectionData> list = connectionManager.list();
@@ -40,7 +43,9 @@ public class EventSender {
     }
 
     public void send(Collection<? extends EventObject> obj) {
-        sendText(serialize(obj));
+        if (!eventDisable) {
+            sendText(serialize(obj));
+        }
     }
 
     private void sendText(String text) {

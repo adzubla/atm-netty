@@ -19,6 +19,7 @@ public class AtmServerProperties {
 
     private String eventQueueName;
     private long eventSendRate = 60000;
+    private boolean eventDisable = false;
 
     private String configTopicName;
 
@@ -107,6 +108,14 @@ public class AtmServerProperties {
 
     public void setEventSendRate(long eventSendRate) {
         this.eventSendRate = eventSendRate;
+    }
+
+    public boolean isEventDisable() {
+        return eventDisable;
+    }
+
+    public void setEventDisable(boolean eventDisable) {
+        this.eventDisable = eventDisable;
     }
 
     public String getConfigTopicName() {
