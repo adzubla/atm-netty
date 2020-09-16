@@ -1,3 +1,4 @@
+# Compiled class file
 *.class
 
 # Package Files #
@@ -7,6 +8,9 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Java annotation processor (APT)
+.factorypath
 
 # Maven
 **/target/
@@ -38,6 +42,7 @@ local.properties
 .loadpath
 .recommenders
 .project
+*.launch
 
 # Netbeans
 **/nbproject/private/
@@ -49,6 +54,14 @@ dist/
 nbdist/
 .nb-gradle/
 
+# Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
 # Local Docker Compose configurations
 docker-compose-local.yaml
 
@@ -56,7 +69,3 @@ docker-compose-local.yaml
 
 # Log files
 *.log
-
-# Diretorio de tranferencia
-transf/
-
