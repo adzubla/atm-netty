@@ -114,7 +114,7 @@ public class AtmListener implements AtmServerListener {
             message.setJMSReplyTo(replyToHolder.getReplyToQueue(route.getQueueManager()));
             message.setJMSCorrelationID(id);
 
-            message.setStringProperty("VERSION", "900");
+            message.setStringProperty("VERSION", "300");
             message.setStringProperty("MSG_FORMAT", "ISO8583/1987");
             message.setStringProperty("TERMID_FORMAT", "2");
             message.setStringProperty("TERM_ID", id);
